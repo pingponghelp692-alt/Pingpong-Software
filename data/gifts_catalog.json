@@ -1,0 +1,112 @@
+[
+  {
+    "id": "gift_teddy_heart",
+    "name": "Teddy Heart",
+    "image": null,
+    "sound": null,
+    "price": 10,
+    "effectType": "small",
+    "tier": "normal",
+    "enabled": true,
+    "createdAt": "2026-08-22T10:58:38.985Z"
+  },
+  {
+    "id": "gift_galaxy_heart",
+    "name": "Galaxy Heart",
+    "image": null,
+    "sound": null,
+    "price": 50,
+    "effectType": "small",
+    "tier": "normal",
+    "enabled": true,
+    "createdAt": "2026-08-22T10:58:38.985Z"
+  },
+  {
+    "id": "gift_magic_wand",
+    "name": "Magic Wand",
+    "image": null,
+    "sound": null,
+    "price": 30,
+    "effectType": "small",
+    "tier": "normal",
+    "enabled": true,
+    "createdAt": "2026-08-22T10:58:38.985Z"
+  },
+  {
+    "id": "gift_diamond_crown",
+    "name": "Diamond Crown",
+    "image": null,
+    "sound": null,
+    "price": 100,
+    "effectType": "small",
+    "tier": "vip",
+    "enabled": true,
+    "createdAt": "2026-08-22T10:58:38.985Z"
+  },
+  {
+    "id": "gift_unicorn",
+    "name": "Unicorn",
+    "image": null,
+    "sound": null,
+    "price": 150,
+    "effectType": "small",
+    "tier": "vip",
+    "enabled": true,
+    "createdAt": "2026-08-22T10:58:38.985Z"
+  },
+  {
+    "id": "gift_baby_dragon",
+    "name": "Baby Dragon",
+    "image": null,
+    "sound": null,
+    "price": 200,
+    "effectType": "small",
+    "tier": "vip",
+    "enabled": true,
+    "createdAt": "2026-08-22T10:58:38.985Z"
+  },
+  {
+    "id": "gift_treasure_chest",
+    "name": "Treasure Chest",
+    "image": null,
+    "sound": null,
+    "price": 500,
+    "effectType": "full_screen",
+    "tier": "vip",
+    "enabled": true,
+    "createdAt": "2026-08-22T10:58:38.985Z"
+  },
+  {
+    "id": "gift_neon_rocket",
+    "name": "Neon Rocket",
+    "image": null,
+    "sound": null,
+    "price": 1000,
+    "effectType": "full_screen",
+    "tier": "legend",
+    "enabled": true,
+    "createdAt": "2026-08-22T10:58:38.985Z"
+  },
+  {
+    "id": "gift_golden_car",
+    "name": "Golden Car",
+    "image": null,
+    "sound": null,
+    "price": 2000,
+    "effectType": "full_screen",
+    "tier": "legend",
+    "enabled": true,
+    "createdAt": "2026-08-22T10:58:38.985Z"
+  },
+  {
+    "id": "gift_phoenix",
+    "name": "Phoenix",
+    "image": null,
+    "sound": null,
+    "price": 5000,
+    "effectType": "full_screen",
+    "tier": "legend",
+    "enabled": true,
+    "createdAt": "2026-08-22T10:58:38.985Z"
+  }
+]

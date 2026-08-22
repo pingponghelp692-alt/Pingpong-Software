@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "upiId": "labib3@axl",
+  "receiverName": "PingPong",
+  "qrImageUrl": "/images/payment-qr.jpg",
+  "methods": {
+    "upi": true,
+    "phonepe": true,
+    "gpay": true
+  },
+  "minAmountINR": 10,
+  "maxAmountINR": 10000,
+  "instructions": "Scan the QR shown on the payment screen and pay the selected amount. Coins are credited only after server-side payment verification.",
+  "updatedAt": "2026-08-17T00:00:00.000Z",
+  "updatedBy": "system"
+}

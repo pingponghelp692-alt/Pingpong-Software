@@ -1,0 +1,28 @@
+{
+  "101": {
+    "roomId": "101",
+    "roomNumber": "101",
+    "roomName": "AI Customer Service",
+    "hostId": "pingpong_ai_help",
+    "hostName": "Robin",
+    "official": true,
+    "aiCustomerService": true,
+    "aiAgentId": "CS-AI-101",
+    "adminIds": [],
+    "lockedSeats": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "background": "/images/room-default-theme.jpg",
+    "logo": null,
+    "agencyId": null,
+    "gameEnabled": true,
+    "roomLocked": false,
+    "roomPasswordHash": null,
+    "countryId": "OTHERS"
+  }
+}

@@ -1,0 +1,1142 @@
+{"time":"2026-08-16T14:16:20.371Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":0,"tokens":2}
+{"time":"2026-08-16T14:16:20.372Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T14:16:20.373Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T14:16:20.373Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T14:16:20.373Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 503: overloaded","durationMs":1}
+{"time":"2026-08-16T14:16:20.373Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-success","durationMs":0,"tokens":2,"primaryError":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T14:16:20.374Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-16T14:16:20.374Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-16T14:16:20.374Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 500"}
+{"time":"2026-08-16T14:16:20.374Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 500","durationMs":0}
+{"time":"2026-08-16T14:16:20.375Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-16T14:16:20.375Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-16T14:16:20.375Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-16T14:16:20.375Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 429: rate limited","durationMs":0}
+{"time":"2026-08-16T14:16:20.376Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-16T14:16:20.376Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-16T14:16:20.376Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini down"}
+{"time":"2026-08-16T14:16:20.376Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini down","durationMs":0}
+{"time":"2026-08-16T14:16:20.376Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-16T14:16:20.376Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-16T14:16:20.376Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"OpenAI also down"}
+{"time":"2026-08-16T14:16:20.376Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-error","error":"OpenAI also down","durationMs":0}
+{"time":"2026-08-16T14:16:36.313Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.314Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.314Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.314Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.314Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.314Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.314Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":27,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.314Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":28,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.314Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":29,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.314Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":30,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.314Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":31,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.314Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":32,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.314Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":33,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.314Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":34,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.314Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":35,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.314Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":36,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.314Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":37,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.314Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":38,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.314Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":39,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.314Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":40,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.315Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.315Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.315Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.315Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.315Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.315Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:16:36.315Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":13,"windowMs":10000,"max":12}
+{"time":"2026-08-16T14:16:36.315Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":14,"windowMs":10000,"max":12}
+{"time":"2026-08-16T14:16:36.315Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":15,"windowMs":10000,"max":12}
+{"time":"2026-08-16T14:16:36.434Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated transient 503"}
+{"time":"2026-08-16T14:16:36.434Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-16T14:16:36.435Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-16T14:16:36.435Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-16T14:16:36.435Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"simulated permanent outage"}
+{"time":"2026-08-16T14:16:36.435Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"simulated permanent outage","durationMs":0}
+{"time":"2026-08-16T14:19:43.252Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":0,"tokens":2}
+{"time":"2026-08-16T14:19:43.253Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T14:19:43.253Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T14:19:43.253Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T14:19:43.253Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 503: overloaded","durationMs":0}
+{"time":"2026-08-16T14:19:43.253Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-success","durationMs":0,"tokens":2,"primaryError":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T14:19:43.254Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-16T14:19:43.254Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-16T14:19:43.254Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 500"}
+{"time":"2026-08-16T14:19:43.254Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 500","durationMs":0}
+{"time":"2026-08-16T14:19:43.255Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-16T14:19:43.255Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-16T14:19:43.255Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-16T14:19:43.256Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 429: rate limited","durationMs":1}
+{"time":"2026-08-16T14:19:43.257Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-16T14:19:43.257Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-16T14:19:43.257Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini down"}
+{"time":"2026-08-16T14:19:43.257Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini down","durationMs":1}
+{"time":"2026-08-16T14:19:43.257Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-16T14:19:43.257Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-16T14:19:43.257Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"OpenAI also down"}
+{"time":"2026-08-16T14:19:43.257Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-error","error":"OpenAI also down","durationMs":0}
+{"time":"2026-08-16T14:19:59.132Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.132Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.132Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.132Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.133Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.133Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.133Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":27,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.133Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":28,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.133Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":29,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.133Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":30,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.133Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":31,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.133Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":32,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.133Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":33,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.133Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":34,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.133Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":35,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.133Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":36,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.133Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":37,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.133Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":38,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.133Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":39,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.133Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":40,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.133Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.133Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.133Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.133Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.134Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.134Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:19:59.134Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":13,"windowMs":10000,"max":12}
+{"time":"2026-08-16T14:19:59.134Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":14,"windowMs":10000,"max":12}
+{"time":"2026-08-16T14:19:59.134Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":15,"windowMs":10000,"max":12}
+{"time":"2026-08-16T14:19:59.272Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated transient 503"}
+{"time":"2026-08-16T14:19:59.272Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-16T14:19:59.273Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-16T14:19:59.273Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-16T14:19:59.273Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"simulated permanent outage"}
+{"time":"2026-08-16T14:19:59.274Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"simulated permanent outage","durationMs":1}
+{"time":"2026-08-16T14:25:24.424Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-16T14:25:24.425Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T14:25:24.425Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T14:25:24.425Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T14:25:24.426Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 503: overloaded","durationMs":0}
+{"time":"2026-08-16T14:25:24.426Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-success","durationMs":0,"tokens":2,"primaryError":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T14:25:24.427Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-16T14:25:24.427Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-16T14:25:24.427Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 500"}
+{"time":"2026-08-16T14:25:24.427Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 500","durationMs":0}
+{"time":"2026-08-16T14:25:24.428Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-16T14:25:24.428Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-16T14:25:24.428Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-16T14:25:24.428Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 429: rate limited","durationMs":0}
+{"time":"2026-08-16T14:25:24.429Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-16T14:25:24.429Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-16T14:25:24.429Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini down"}
+{"time":"2026-08-16T14:25:24.429Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini down","durationMs":0}
+{"time":"2026-08-16T14:25:24.429Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-16T14:25:24.429Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-16T14:25:24.429Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"OpenAI also down"}
+{"time":"2026-08-16T14:25:24.429Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-error","error":"OpenAI also down","durationMs":0}
+{"time":"2026-08-16T14:25:40.324Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":27,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":28,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":29,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":30,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":31,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":32,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":33,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":34,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":35,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":36,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":37,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":38,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":39,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":40,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.326Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.326Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.326Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.326Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.326Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.326Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-16T14:25:40.326Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":13,"windowMs":10000,"max":12}
+{"time":"2026-08-16T14:25:40.326Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":14,"windowMs":10000,"max":12}
+{"time":"2026-08-16T14:25:40.326Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":15,"windowMs":10000,"max":12}
+{"time":"2026-08-16T14:25:40.480Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated transient 503"}
+{"time":"2026-08-16T14:25:40.480Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-16T14:25:40.481Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-16T14:25:40.481Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-16T14:25:40.481Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"simulated permanent outage"}
+{"time":"2026-08-16T14:25:40.481Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"simulated permanent outage","durationMs":0}
+{"time":"2026-08-16T20:23:45.090Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":0,"tokens":2}
+{"time":"2026-08-16T20:23:45.092Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T20:23:45.092Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T20:23:45.092Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T20:23:45.092Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 503: overloaded","durationMs":0}
+{"time":"2026-08-16T20:23:45.092Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-success","durationMs":0,"tokens":2,"primaryError":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T20:23:45.093Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-16T20:23:45.093Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-16T20:23:45.093Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 500"}
+{"time":"2026-08-16T20:23:45.093Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 500","durationMs":0}
+{"time":"2026-08-16T20:23:45.094Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-16T20:23:45.094Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-16T20:23:45.094Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-16T20:23:45.094Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 429: rate limited","durationMs":0}
+{"time":"2026-08-16T20:23:45.095Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-16T20:23:45.095Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-16T20:23:45.095Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini down"}
+{"time":"2026-08-16T20:23:45.095Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini down","durationMs":0}
+{"time":"2026-08-16T20:23:45.095Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-16T20:23:45.095Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-16T20:23:45.095Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"OpenAI also down"}
+{"time":"2026-08-16T20:23:45.095Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-error","error":"OpenAI also down","durationMs":0}
+{"time":"2026-08-16T20:24:00.903Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.903Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.903Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.903Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.903Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.903Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.903Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":27,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.903Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":28,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.903Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":29,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.903Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":30,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.903Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":31,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.903Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":32,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.904Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":33,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.904Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":34,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.904Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":35,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.904Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":36,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.904Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":37,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.904Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":38,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.904Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":39,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.904Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":40,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.904Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.904Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.904Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.904Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.904Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.904Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:00.904Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":13,"windowMs":10000,"max":12}
+{"time":"2026-08-16T20:24:00.904Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":14,"windowMs":10000,"max":12}
+{"time":"2026-08-16T20:24:00.904Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":15,"windowMs":10000,"max":12}
+{"time":"2026-08-16T20:24:01.000Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated transient 503"}
+{"time":"2026-08-16T20:24:01.000Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-16T20:24:01.001Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-16T20:24:01.001Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-16T20:24:01.001Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"simulated permanent outage"}
+{"time":"2026-08-16T20:24:01.001Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"simulated permanent outage","durationMs":0}
+{"time":"2026-08-16T20:24:30.317Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":0,"tokens":2}
+{"time":"2026-08-16T20:24:30.318Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T20:24:30.318Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T20:24:30.318Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T20:24:30.318Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 503: overloaded","durationMs":0}
+{"time":"2026-08-16T20:24:30.319Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-success","durationMs":1,"tokens":2,"primaryError":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T20:24:30.319Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-16T20:24:30.319Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-16T20:24:30.319Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 500"}
+{"time":"2026-08-16T20:24:30.319Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 500","durationMs":0}
+{"time":"2026-08-16T20:24:30.320Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-16T20:24:30.320Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-16T20:24:30.320Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-16T20:24:30.320Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 429: rate limited","durationMs":0}
+{"time":"2026-08-16T20:24:30.321Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-16T20:24:30.321Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-16T20:24:30.321Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini down"}
+{"time":"2026-08-16T20:24:30.321Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini down","durationMs":0}
+{"time":"2026-08-16T20:24:30.321Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-16T20:24:30.321Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-16T20:24:30.321Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"OpenAI also down"}
+{"time":"2026-08-16T20:24:30.321Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-error","error":"OpenAI also down","durationMs":0}
+{"time":"2026-08-16T20:24:46.101Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":27,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":28,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":29,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":30,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":31,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":32,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":33,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":34,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":35,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":36,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":37,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":38,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":39,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":40,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.102Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:24:46.103Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":13,"windowMs":10000,"max":12}
+{"time":"2026-08-16T20:24:46.103Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":14,"windowMs":10000,"max":12}
+{"time":"2026-08-16T20:24:46.103Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":15,"windowMs":10000,"max":12}
+{"time":"2026-08-16T20:24:46.195Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated transient 503"}
+{"time":"2026-08-16T20:24:46.196Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-16T20:24:46.196Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-16T20:24:46.196Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-16T20:24:46.196Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"simulated permanent outage"}
+{"time":"2026-08-16T20:24:46.196Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"simulated permanent outage","durationMs":0}
+{"time":"2026-08-16T20:26:59.511Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":0,"tokens":2}
+{"time":"2026-08-16T20:26:59.513Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T20:26:59.513Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T20:26:59.513Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T20:26:59.513Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 503: overloaded","durationMs":1}
+{"time":"2026-08-16T20:26:59.513Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-success","durationMs":0,"tokens":2,"primaryError":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T20:26:59.514Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-16T20:26:59.514Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-16T20:26:59.514Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 500"}
+{"time":"2026-08-16T20:26:59.514Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 500","durationMs":1}
+{"time":"2026-08-16T20:26:59.515Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-16T20:26:59.515Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-16T20:26:59.515Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-16T20:26:59.515Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 429: rate limited","durationMs":1}
+{"time":"2026-08-16T20:26:59.515Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-16T20:26:59.515Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-16T20:26:59.515Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini down"}
+{"time":"2026-08-16T20:26:59.515Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini down","durationMs":0}
+{"time":"2026-08-16T20:26:59.516Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-16T20:26:59.516Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-16T20:26:59.516Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"OpenAI also down"}
+{"time":"2026-08-16T20:26:59.516Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-error","error":"OpenAI also down","durationMs":0}
+{"time":"2026-08-16T20:27:15.660Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.660Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.660Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.660Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.660Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.660Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.660Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":27,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.660Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":28,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.660Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":29,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.660Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":30,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.660Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":31,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.660Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":32,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.660Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":33,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.660Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":34,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.660Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":35,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.660Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":36,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.660Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":37,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.660Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":38,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.660Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":39,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.660Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":40,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.661Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.661Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.661Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.661Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.661Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.661Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:27:15.661Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":13,"windowMs":10000,"max":12}
+{"time":"2026-08-16T20:27:15.661Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":14,"windowMs":10000,"max":12}
+{"time":"2026-08-16T20:27:15.661Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":15,"windowMs":10000,"max":12}
+{"time":"2026-08-16T20:27:15.751Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated transient 503"}
+{"time":"2026-08-16T20:27:15.752Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-16T20:27:15.752Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-16T20:27:15.752Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-16T20:27:15.752Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"simulated permanent outage"}
+{"time":"2026-08-16T20:27:15.752Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"simulated permanent outage","durationMs":0}
+{"time":"2026-08-16T20:30:03.596Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-16T20:30:03.597Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T20:30:03.597Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T20:30:03.597Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T20:30:03.597Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 503: overloaded","durationMs":0}
+{"time":"2026-08-16T20:30:03.597Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-success","durationMs":0,"tokens":2,"primaryError":"Gemini API error 503: overloaded"}
+{"time":"2026-08-16T20:30:03.598Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-16T20:30:03.598Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-16T20:30:03.598Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 500"}
+{"time":"2026-08-16T20:30:03.598Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 500","durationMs":0}
+{"time":"2026-08-16T20:30:03.599Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-16T20:30:03.599Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-16T20:30:03.599Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-16T20:30:03.599Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 429: rate limited","durationMs":0}
+{"time":"2026-08-16T20:30:03.600Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-16T20:30:03.600Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-16T20:30:03.600Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini down"}
+{"time":"2026-08-16T20:30:03.600Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini down","durationMs":0}
+{"time":"2026-08-16T20:30:03.600Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-16T20:30:03.600Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-16T20:30:03.600Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"OpenAI also down"}
+{"time":"2026-08-16T20:30:03.600Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-error","error":"OpenAI also down","durationMs":0}
+{"time":"2026-08-16T20:30:19.855Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":27,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":28,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":29,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":30,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":31,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":32,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":33,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":34,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":35,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":36,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":37,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":38,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":39,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":40,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.856Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-16T20:30:19.857Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":13,"windowMs":10000,"max":12}
+{"time":"2026-08-16T20:30:19.857Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":14,"windowMs":10000,"max":12}
+{"time":"2026-08-16T20:30:19.857Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":15,"windowMs":10000,"max":12}
+{"time":"2026-08-16T20:30:19.947Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated transient 503"}
+{"time":"2026-08-16T20:30:19.948Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-16T20:30:19.949Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-16T20:30:19.949Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-16T20:30:19.949Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"simulated permanent outage"}
+{"time":"2026-08-16T20:30:19.949Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"simulated permanent outage","durationMs":0}
+{"time":"2026-08-17T01:33:31.108Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":0,"tokens":2}
+{"time":"2026-08-17T01:33:31.109Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:33:31.109Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:33:31.109Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:33:31.110Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 503: overloaded","durationMs":0}
+{"time":"2026-08-17T01:33:31.110Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-success","durationMs":0,"tokens":2,"primaryError":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:33:31.110Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-17T01:33:31.110Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-17T01:33:31.110Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 500"}
+{"time":"2026-08-17T01:33:31.110Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 500","durationMs":0}
+{"time":"2026-08-17T01:33:31.111Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-17T01:33:31.111Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-17T01:33:31.111Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-17T01:33:31.111Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 429: rate limited","durationMs":0}
+{"time":"2026-08-17T01:33:31.112Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-17T01:33:31.112Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-17T01:33:31.112Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini down"}
+{"time":"2026-08-17T01:33:31.112Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini down","durationMs":0}
+{"time":"2026-08-17T01:33:31.112Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-17T01:33:31.112Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-17T01:33:31.112Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"OpenAI also down"}
+{"time":"2026-08-17T01:33:31.112Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-error","error":"OpenAI also down","durationMs":0}
+{"time":"2026-08-17T01:33:47.324Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.324Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.324Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.324Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.324Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.324Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.324Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":27,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.324Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":28,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.324Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":29,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.324Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":30,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.324Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":31,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.324Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":32,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.324Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":33,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.324Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":34,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.324Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":35,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.324Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":36,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.324Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":37,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.324Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":38,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.324Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":39,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.324Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":40,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:33:47.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":13,"windowMs":10000,"max":12}
+{"time":"2026-08-17T01:33:47.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":14,"windowMs":10000,"max":12}
+{"time":"2026-08-17T01:33:47.325Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":15,"windowMs":10000,"max":12}
+{"time":"2026-08-17T01:33:47.415Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated transient 503"}
+{"time":"2026-08-17T01:33:47.415Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-17T01:33:47.416Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-17T01:33:47.416Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-17T01:33:47.416Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"simulated permanent outage"}
+{"time":"2026-08-17T01:33:47.416Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"simulated permanent outage","durationMs":0}
+{"time":"2026-08-17T01:34:48.736Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":0,"tokens":2}
+{"time":"2026-08-17T01:34:48.738Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:34:48.738Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:34:48.738Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:34:48.738Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 503: overloaded","durationMs":1}
+{"time":"2026-08-17T01:34:48.738Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-success","durationMs":0,"tokens":2,"primaryError":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:34:48.739Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-17T01:34:48.739Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-17T01:34:48.739Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 500"}
+{"time":"2026-08-17T01:34:48.739Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 500","durationMs":0}
+{"time":"2026-08-17T01:34:48.740Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-17T01:34:48.740Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-17T01:34:48.740Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-17T01:34:48.740Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 429: rate limited","durationMs":0}
+{"time":"2026-08-17T01:34:48.742Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-17T01:34:48.742Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-17T01:34:48.742Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini down"}
+{"time":"2026-08-17T01:34:48.742Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini down","durationMs":0}
+{"time":"2026-08-17T01:34:48.742Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-17T01:34:48.742Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-17T01:34:48.742Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"OpenAI also down"}
+{"time":"2026-08-17T01:34:48.742Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-error","error":"OpenAI also down","durationMs":0}
+{"time":"2026-08-17T01:35:04.899Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.899Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":27,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":28,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":29,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":30,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":31,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":32,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":33,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":34,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":35,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":36,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":37,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":38,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":39,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":40,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.900Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:04.901Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":13,"windowMs":10000,"max":12}
+{"time":"2026-08-17T01:35:04.901Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":14,"windowMs":10000,"max":12}
+{"time":"2026-08-17T01:35:04.901Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":15,"windowMs":10000,"max":12}
+{"time":"2026-08-17T01:35:04.992Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated transient 503"}
+{"time":"2026-08-17T01:35:04.992Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-17T01:35:04.993Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-17T01:35:04.993Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-17T01:35:04.993Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"simulated permanent outage"}
+{"time":"2026-08-17T01:35:04.993Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"simulated permanent outage","durationMs":0}
+{"time":"2026-08-17T01:35:17.737Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":0,"tokens":2}
+{"time":"2026-08-17T01:35:17.738Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:35:17.738Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:35:17.738Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:35:17.738Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 503: overloaded","durationMs":0}
+{"time":"2026-08-17T01:35:17.738Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-success","durationMs":0,"tokens":2,"primaryError":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:35:17.739Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-17T01:35:17.739Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-17T01:35:17.739Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 500"}
+{"time":"2026-08-17T01:35:17.739Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 500","durationMs":0}
+{"time":"2026-08-17T01:35:17.740Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-17T01:35:17.740Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-17T01:35:17.740Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-17T01:35:17.740Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 429: rate limited","durationMs":1}
+{"time":"2026-08-17T01:35:17.741Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-17T01:35:17.741Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-17T01:35:17.741Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini down"}
+{"time":"2026-08-17T01:35:17.741Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini down","durationMs":1}
+{"time":"2026-08-17T01:35:17.741Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-17T01:35:17.741Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-17T01:35:17.741Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"OpenAI also down"}
+{"time":"2026-08-17T01:35:17.741Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-error","error":"OpenAI also down","durationMs":0}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":27,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":28,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":29,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":30,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":31,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":32,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":33,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":34,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":35,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":36,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":37,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":38,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":39,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":40,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.918Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.919Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.919Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:35:33.919Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":13,"windowMs":10000,"max":12}
+{"time":"2026-08-17T01:35:33.919Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":14,"windowMs":10000,"max":12}
+{"time":"2026-08-17T01:35:33.919Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":15,"windowMs":10000,"max":12}
+{"time":"2026-08-17T01:35:34.002Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated transient 503"}
+{"time":"2026-08-17T01:35:34.003Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-17T01:35:34.003Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-17T01:35:34.003Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-17T01:35:34.004Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"simulated permanent outage"}
+{"time":"2026-08-17T01:35:34.004Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"simulated permanent outage","durationMs":1}
+{"time":"2026-08-17T01:35:44.997Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":0,"tokens":2}
+{"time":"2026-08-17T01:35:44.998Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:35:44.998Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:35:44.998Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:35:44.998Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 503: overloaded","durationMs":0}
+{"time":"2026-08-17T01:35:44.998Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-success","durationMs":0,"tokens":2,"primaryError":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:35:44.999Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-17T01:35:44.999Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-17T01:35:44.999Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 500"}
+{"time":"2026-08-17T01:35:44.999Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 500","durationMs":0}
+{"time":"2026-08-17T01:35:45.000Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-17T01:35:45.000Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-17T01:35:45.000Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-17T01:35:45.000Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 429: rate limited","durationMs":0}
+{"time":"2026-08-17T01:35:45.001Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-17T01:35:45.001Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-17T01:35:45.001Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini down"}
+{"time":"2026-08-17T01:35:45.001Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini down","durationMs":0}
+{"time":"2026-08-17T01:35:45.001Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-17T01:35:45.001Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-17T01:35:45.001Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"OpenAI also down"}
+{"time":"2026-08-17T01:35:45.001Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-error","error":"OpenAI also down","durationMs":0}
+{"time":"2026-08-17T01:36:01.158Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.158Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.158Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.158Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.158Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":27,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":28,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":29,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":30,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":31,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":32,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":33,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":34,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":35,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":36,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":37,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":38,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":39,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":40,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":13,"windowMs":10000,"max":12}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":14,"windowMs":10000,"max":12}
+{"time":"2026-08-17T01:36:01.159Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":15,"windowMs":10000,"max":12}
+{"time":"2026-08-17T01:36:01.247Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated transient 503"}
+{"time":"2026-08-17T01:36:01.248Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-17T01:36:01.249Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-17T01:36:01.249Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-17T01:36:01.249Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"simulated permanent outage"}
+{"time":"2026-08-17T01:36:01.249Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"simulated permanent outage","durationMs":1}
+{"time":"2026-08-17T01:36:57.712Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-17T01:36:57.713Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:36:57.713Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:36:57.713Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:36:57.713Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 503: overloaded","durationMs":0}
+{"time":"2026-08-17T01:36:57.713Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-success","durationMs":0,"tokens":2,"primaryError":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:36:57.714Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-17T01:36:57.714Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-17T01:36:57.714Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 500"}
+{"time":"2026-08-17T01:36:57.714Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 500","durationMs":0}
+{"time":"2026-08-17T01:36:57.715Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-17T01:36:57.715Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-17T01:36:57.715Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-17T01:36:57.715Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 429: rate limited","durationMs":0}
+{"time":"2026-08-17T01:36:57.716Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-17T01:36:57.716Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-17T01:36:57.716Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini down"}
+{"time":"2026-08-17T01:36:57.716Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini down","durationMs":0}
+{"time":"2026-08-17T01:36:57.716Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-17T01:36:57.716Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-17T01:36:57.716Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"OpenAI also down"}
+{"time":"2026-08-17T01:36:57.716Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-error","error":"OpenAI also down","durationMs":0}
+{"time":"2026-08-17T01:37:13.870Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.870Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.870Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.870Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.870Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.870Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.870Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":27,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.870Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":28,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.870Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":29,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.870Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":30,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.870Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":31,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.870Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":32,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.870Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":33,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.870Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":34,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.870Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":35,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.870Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":36,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.870Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":37,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.870Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":38,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.870Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":39,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.870Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":40,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.871Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.871Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.871Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.871Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.871Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.871Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:37:13.871Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":13,"windowMs":10000,"max":12}
+{"time":"2026-08-17T01:37:13.871Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":14,"windowMs":10000,"max":12}
+{"time":"2026-08-17T01:37:13.871Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":15,"windowMs":10000,"max":12}
+{"time":"2026-08-17T01:37:13.957Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated transient 503"}
+{"time":"2026-08-17T01:37:13.957Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-17T01:37:13.958Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-17T01:37:13.958Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-17T01:37:13.958Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"simulated permanent outage"}
+{"time":"2026-08-17T01:37:13.958Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"simulated permanent outage","durationMs":0}
+{"time":"2026-08-17T01:37:44.853Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-17T01:37:44.854Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:37:44.854Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:37:44.854Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:37:44.854Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 503: overloaded","durationMs":0}
+{"time":"2026-08-17T01:37:44.854Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-success","durationMs":0,"tokens":2,"primaryError":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:37:44.855Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-17T01:37:44.855Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-17T01:37:44.855Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 500"}
+{"time":"2026-08-17T01:37:44.855Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 500","durationMs":0}
+{"time":"2026-08-17T01:37:44.856Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-17T01:37:44.856Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-17T01:37:44.856Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-17T01:37:44.856Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 429: rate limited","durationMs":0}
+{"time":"2026-08-17T01:37:44.857Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-17T01:37:44.857Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-17T01:37:44.857Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini down"}
+{"time":"2026-08-17T01:37:44.857Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini down","durationMs":0}
+{"time":"2026-08-17T01:37:44.857Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-17T01:37:44.857Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-17T01:37:44.857Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"OpenAI also down"}
+{"time":"2026-08-17T01:37:44.857Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-error","error":"OpenAI also down","durationMs":0}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":27,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":28,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":29,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":30,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":31,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":32,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":33,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":34,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":35,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":36,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":37,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":38,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":39,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":40,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.018Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.019Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.019Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.019Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:01.019Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":13,"windowMs":10000,"max":12}
+{"time":"2026-08-17T01:38:01.019Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":14,"windowMs":10000,"max":12}
+{"time":"2026-08-17T01:38:01.019Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":15,"windowMs":10000,"max":12}
+{"time":"2026-08-17T01:38:01.099Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated transient 503"}
+{"time":"2026-08-17T01:38:01.099Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-17T01:38:01.100Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-17T01:38:01.100Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-17T01:38:01.100Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"simulated permanent outage"}
+{"time":"2026-08-17T01:38:01.100Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"simulated permanent outage","durationMs":0}
+{"time":"2026-08-17T01:38:21.018Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":0,"tokens":2}
+{"time":"2026-08-17T01:38:21.021Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:38:21.021Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:38:21.021Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:38:21.021Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 503: overloaded","durationMs":0}
+{"time":"2026-08-17T01:38:21.021Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-success","durationMs":0,"tokens":2,"primaryError":"Gemini API error 503: overloaded"}
+{"time":"2026-08-17T01:38:21.022Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-17T01:38:21.022Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-17T01:38:21.022Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 500"}
+{"time":"2026-08-17T01:38:21.022Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 500","durationMs":0}
+{"time":"2026-08-17T01:38:21.023Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-17T01:38:21.023Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-17T01:38:21.023Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-17T01:38:21.023Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 429: rate limited","durationMs":0}
+{"time":"2026-08-17T01:38:21.024Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-17T01:38:21.024Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-17T01:38:21.024Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini down"}
+{"time":"2026-08-17T01:38:21.024Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini down","durationMs":1}
+{"time":"2026-08-17T01:38:21.024Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-17T01:38:21.024Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-17T01:38:21.024Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"OpenAI also down"}
+{"time":"2026-08-17T01:38:21.024Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-error","error":"OpenAI also down","durationMs":0}
+{"time":"2026-08-17T01:38:37.147Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.147Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":27,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":28,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":29,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":30,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":31,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":32,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":33,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":34,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":35,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":36,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":37,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":38,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":39,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":40,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.148Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-17T01:38:37.149Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":13,"windowMs":10000,"max":12}
+{"time":"2026-08-17T01:38:37.149Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":14,"windowMs":10000,"max":12}
+{"time":"2026-08-17T01:38:37.149Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":15,"windowMs":10000,"max":12}
+{"time":"2026-08-17T01:38:37.237Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated transient 503"}
+{"time":"2026-08-17T01:38:37.237Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-17T01:38:37.238Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-17T01:38:37.238Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-17T01:38:37.238Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"simulated permanent outage"}
+{"time":"2026-08-17T01:38:37.238Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"simulated permanent outage","durationMs":0}
+{"time":"2026-08-20T01:35:26.388Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-20T01:35:26.389Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-20T01:35:26.389Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-20T01:35:26.389Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-20T01:35:26.389Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 503: overloaded","durationMs":0}
+{"time":"2026-08-20T01:35:26.390Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-success","durationMs":1,"tokens":2,"primaryError":"Gemini API error 503: overloaded"}
+{"time":"2026-08-20T01:35:26.391Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-20T01:35:26.391Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-20T01:35:26.391Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 500"}
+{"time":"2026-08-20T01:35:26.391Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 500","durationMs":0}
+{"time":"2026-08-20T01:35:26.392Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-20T01:35:26.392Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-20T01:35:26.392Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-20T01:35:26.392Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 429: rate limited","durationMs":0}
+{"time":"2026-08-20T01:35:26.393Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-20T01:35:26.393Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-20T01:35:26.393Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini down"}
+{"time":"2026-08-20T01:35:26.393Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini down","durationMs":0}
+{"time":"2026-08-20T01:35:26.393Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-20T01:35:26.394Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-20T01:35:26.394Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"OpenAI also down"}
+{"time":"2026-08-20T01:35:26.394Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-error","error":"OpenAI also down","durationMs":1}
+{"time":"2026-08-20T01:35:44.107Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.107Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.107Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.107Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.107Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.108Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.108Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":27,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.108Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":28,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.108Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":29,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.108Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":30,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.108Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":31,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.108Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":32,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.108Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":33,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.108Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":34,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.108Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":35,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.108Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":36,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.108Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":37,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.108Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":38,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.108Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":39,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.108Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":40,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.109Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.109Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.109Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.109Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.109Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.109Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:35:44.109Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":13,"windowMs":10000,"max":12}
+{"time":"2026-08-20T01:35:44.109Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":14,"windowMs":10000,"max":12}
+{"time":"2026-08-20T01:35:44.109Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":15,"windowMs":10000,"max":12}
+{"time":"2026-08-20T01:35:44.443Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated transient 503"}
+{"time":"2026-08-20T01:35:44.444Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-20T01:35:44.445Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-20T01:35:44.445Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-20T01:35:44.445Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"simulated permanent outage"}
+{"time":"2026-08-20T01:35:44.445Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"simulated permanent outage","durationMs":0}
+{"time":"2026-08-20T01:38:32.067Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":0,"tokens":2}
+{"time":"2026-08-20T01:38:32.068Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-20T01:38:32.068Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-20T01:38:32.068Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-20T01:38:32.068Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 503: overloaded","durationMs":0}
+{"time":"2026-08-20T01:38:32.068Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-success","durationMs":0,"tokens":2,"primaryError":"Gemini API error 503: overloaded"}
+{"time":"2026-08-20T01:38:32.070Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-20T01:38:32.070Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-20T01:38:32.070Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 500"}
+{"time":"2026-08-20T01:38:32.070Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 500","durationMs":0}
+{"time":"2026-08-20T01:38:32.071Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-20T01:38:32.071Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-20T01:38:32.071Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-20T01:38:32.071Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 429: rate limited","durationMs":0}
+{"time":"2026-08-20T01:38:32.073Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-20T01:38:32.073Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-20T01:38:32.073Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini down"}
+{"time":"2026-08-20T01:38:32.073Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini down","durationMs":1}
+{"time":"2026-08-20T01:38:32.073Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-20T01:38:32.073Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-20T01:38:32.073Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"OpenAI also down"}
+{"time":"2026-08-20T01:38:32.073Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-error","error":"OpenAI also down","durationMs":0}
+{"time":"2026-08-20T01:38:49.386Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.387Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.387Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.387Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.387Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.387Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.387Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":27,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.387Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":28,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.387Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":29,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.387Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":30,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.388Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":31,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.388Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":32,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.388Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":33,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.388Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":34,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.388Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":35,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.388Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":36,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.388Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":37,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.388Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":38,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.388Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":39,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.388Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":40,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.388Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.388Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.388Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.388Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.388Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.389Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-20T01:38:49.389Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":13,"windowMs":10000,"max":12}
+{"time":"2026-08-20T01:38:49.389Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":14,"windowMs":10000,"max":12}
+{"time":"2026-08-20T01:38:49.389Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":15,"windowMs":10000,"max":12}
+{"time":"2026-08-20T01:38:49.637Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated transient 503"}
+{"time":"2026-08-20T01:38:49.638Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":2,"tokens":2}
+{"time":"2026-08-20T01:38:49.639Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-20T01:38:49.639Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-20T01:38:49.639Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"simulated permanent outage"}
+{"time":"2026-08-20T01:38:49.639Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"simulated permanent outage","durationMs":0}
+{"time":"2026-08-20T03:18:06.356Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":2,"tokens":2}
+{"time":"2026-08-20T03:18:06.359Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-20T03:18:06.359Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-20T03:18:06.359Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-20T03:18:06.359Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 503: overloaded","durationMs":0}
+{"time":"2026-08-20T03:18:06.360Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-success","durationMs":0,"tokens":2,"primaryError":"Gemini API error 503: overloaded"}
+{"time":"2026-08-20T03:18:06.362Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-20T03:18:06.362Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-20T03:18:06.362Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 500"}
+{"time":"2026-08-20T03:18:06.362Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 500","durationMs":0}
+{"time":"2026-08-20T03:18:06.364Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-20T03:18:06.364Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-20T03:18:06.365Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-20T03:18:06.365Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 429: rate limited","durationMs":1}
+{"time":"2026-08-20T03:18:06.367Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-20T03:18:06.367Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-20T03:18:06.367Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini down"}
+{"time":"2026-08-20T03:18:06.367Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini down","durationMs":0}
+{"time":"2026-08-20T03:18:06.367Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-20T03:18:06.367Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-20T03:18:06.367Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"OpenAI also down"}
+{"time":"2026-08-20T03:18:06.367Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-error","error":"OpenAI also down","durationMs":0}
+{"time":"2026-08-20T03:18:24.545Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.546Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.546Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.546Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.546Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.546Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.546Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":27,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.546Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":28,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.546Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":29,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.546Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":30,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.546Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":31,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.546Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":32,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.547Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":33,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.547Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":34,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.547Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":35,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.547Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":36,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.547Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":37,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.547Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":38,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.547Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":39,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.547Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":40,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.547Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.547Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.547Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.548Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.548Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.548Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-20T03:18:24.548Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":13,"windowMs":10000,"max":12}
+{"time":"2026-08-20T03:18:24.548Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":14,"windowMs":10000,"max":12}
+{"time":"2026-08-20T03:18:24.548Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":15,"windowMs":10000,"max":12}
+{"time":"2026-08-20T03:18:24.903Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated transient 503"}
+{"time":"2026-08-20T03:18:24.904Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":2,"tokens":2}
+{"time":"2026-08-20T03:18:24.905Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-20T03:18:24.905Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-20T03:18:24.906Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"simulated permanent outage"}
+{"time":"2026-08-20T03:18:24.906Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"simulated permanent outage","durationMs":1}
+{"time":"2026-08-22T00:30:35.396Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-22T00:30:35.397Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-22T00:30:35.397Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-22T00:30:35.397Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-22T00:30:35.397Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 503: overloaded","durationMs":1}
+{"time":"2026-08-22T00:30:35.397Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-success","durationMs":0,"tokens":2,"primaryError":"Gemini API error 503: overloaded"}
+{"time":"2026-08-22T00:30:35.397Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-22T00:30:35.397Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-22T00:30:35.398Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 500"}
+{"time":"2026-08-22T00:30:35.398Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 500","durationMs":1}
+{"time":"2026-08-22T00:30:35.398Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-22T00:30:35.398Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-22T00:30:35.398Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-22T00:30:35.398Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 429: rate limited","durationMs":0}
+{"time":"2026-08-22T00:30:35.399Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-22T00:30:35.399Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-22T00:30:35.399Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini down"}
+{"time":"2026-08-22T00:30:35.399Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini down","durationMs":0}
+{"time":"2026-08-22T00:30:35.399Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-22T00:30:35.399Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-22T00:30:35.399Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"OpenAI also down"}
+{"time":"2026-08-22T00:30:35.399Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-error","error":"OpenAI also down","durationMs":0}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":27,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":28,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":29,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":30,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":31,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":32,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":33,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":34,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":35,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":36,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":37,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":38,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":39,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":40,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.450Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:30:51.451Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":13,"windowMs":10000,"max":12}
+{"time":"2026-08-22T00:30:51.451Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":14,"windowMs":10000,"max":12}
+{"time":"2026-08-22T00:30:51.451Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":15,"windowMs":10000,"max":12}
+{"time":"2026-08-22T00:30:51.518Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated transient 503"}
+{"time":"2026-08-22T00:30:51.518Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-22T00:30:51.519Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-22T00:30:51.519Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-22T00:30:51.519Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"simulated permanent outage"}
+{"time":"2026-08-22T00:30:51.519Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"simulated permanent outage","durationMs":0}
+{"time":"2026-08-22T00:35:08.026Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":0,"tokens":2}
+{"time":"2026-08-22T00:35:08.027Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-22T00:35:08.027Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-22T00:35:08.027Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-22T00:35:08.027Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 503: overloaded","durationMs":0}
+{"time":"2026-08-22T00:35:08.027Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-success","durationMs":0,"tokens":2,"primaryError":"Gemini API error 503: overloaded"}
+{"time":"2026-08-22T00:35:08.028Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-22T00:35:08.028Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-22T00:35:08.028Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 500"}
+{"time":"2026-08-22T00:35:08.028Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 500","durationMs":0}
+{"time":"2026-08-22T00:35:08.029Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-22T00:35:08.029Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-22T00:35:08.029Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-22T00:35:08.029Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 429: rate limited","durationMs":0}
+{"time":"2026-08-22T00:35:08.030Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-22T00:35:08.030Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-22T00:35:08.030Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini down"}
+{"time":"2026-08-22T00:35:08.030Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini down","durationMs":0}
+{"time":"2026-08-22T00:35:08.030Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-22T00:35:08.030Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-22T00:35:08.030Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"OpenAI also down"}
+{"time":"2026-08-22T00:35:08.030Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-error","error":"OpenAI also down","durationMs":0}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":27,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":28,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":29,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":30,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":31,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":32,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":33,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":34,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":35,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":36,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":37,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":38,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":39,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":40,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.092Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.093Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.093Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.093Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.093Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-22T00:35:24.093Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":13,"windowMs":10000,"max":12}
+{"time":"2026-08-22T00:35:24.093Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":14,"windowMs":10000,"max":12}
+{"time":"2026-08-22T00:35:24.093Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":15,"windowMs":10000,"max":12}
+{"time":"2026-08-22T00:35:24.171Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated transient 503"}
+{"time":"2026-08-22T00:35:24.172Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-22T00:35:24.172Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-22T00:35:24.172Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-22T00:35:24.172Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"simulated permanent outage"}
+{"time":"2026-08-22T00:35:24.172Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"simulated permanent outage","durationMs":0}
+{"time":"2026-08-22T07:30:42.896Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-22T07:30:42.896Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-22T07:30:42.896Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-22T07:30:42.897Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 503: overloaded"}
+{"time":"2026-08-22T07:30:42.897Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 503: overloaded","durationMs":1}
+{"time":"2026-08-22T07:30:42.897Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-success","durationMs":0,"tokens":2,"primaryError":"Gemini API error 503: overloaded"}
+{"time":"2026-08-22T07:30:42.897Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-22T07:30:42.897Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 500"}
+{"time":"2026-08-22T07:30:42.898Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 500"}
+{"time":"2026-08-22T07:30:42.898Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 500","durationMs":1}
+{"time":"2026-08-22T07:30:42.898Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-22T07:30:42.898Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-22T07:30:42.898Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini API error 429: rate limited"}
+{"time":"2026-08-22T07:30:42.898Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini API error 429: rate limited","durationMs":0}
+{"time":"2026-08-22T07:30:42.899Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-22T07:30:42.899Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"Gemini down"}
+{"time":"2026-08-22T07:30:42.899Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"Gemini down"}
+{"time":"2026-08-22T07:30:42.899Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"Gemini down","durationMs":0}
+{"time":"2026-08-22T07:30:42.899Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-22T07:30:42.899Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"OpenAI also down"}
+{"time":"2026-08-22T07:30:42.899Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"OpenAI also down"}
+{"time":"2026-08-22T07:30:42.899Z","module":"ai-service","action":"generate","provider":"openai","result":"fallback-error","error":"OpenAI also down","durationMs":0}
+{"time":"2026-08-22T07:30:58.978Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.978Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":27,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":28,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":29,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":30,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":31,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":32,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":33,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":34,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":35,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":36,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":37,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":38,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":39,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-B","count":40,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":21,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":22,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":23,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":24,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":25,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"mod-action:host-C","count":26,"windowMs":5000,"max":20}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":13,"windowMs":10000,"max":12}
+{"time":"2026-08-22T07:30:58.979Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":14,"windowMs":10000,"max":12}
+{"time":"2026-08-22T07:30:58.980Z","module":"ai-security","action":"rate-limit","result":"flagged","key":"chat:shared-user-1","count":15,"windowMs":10000,"max":12}
+{"time":"2026-08-22T07:30:59.047Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated transient 503"}
+{"time":"2026-08-22T07:30:59.048Z","module":"ai-service","action":"generate","provider":"gemini","result":"success","durationMs":1,"tokens":2}
+{"time":"2026-08-22T07:30:59.048Z","module":"ai-recovery","action":"retry","attempt":1,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-22T07:30:59.048Z","module":"ai-recovery","action":"retry","attempt":2,"result":"retrying","error":"simulated permanent outage"}
+{"time":"2026-08-22T07:30:59.048Z","module":"ai-recovery","action":"retry","attempt":3,"result":"gave-up","error":"simulated permanent outage"}
+{"time":"2026-08-22T07:30:59.048Z","module":"ai-service","action":"generate","provider":"gemini","result":"error","error":"simulated permanent outage","durationMs":0}
+{"time":"2026-08-22T11:00:39.235Z","module":"ai-monitor","action":"health-alert","result":"warning","snapshot":{"time":"2026-08-22T11:00:39.232Z","status":"warning","memoryMB":23,"memoryTotalMB":26,"loadAvg":28.6,"eventLoopLagMs":1,"uptimeSec":122,"onlineUsers":1,"activeRooms":2}}
+{"time":"2026-08-22T11:03:09.235Z","module":"ai-monitor","action":"health-alert","result":"critical","snapshot":{"time":"2026-08-22T11:03:09.233Z","status":"critical","memoryMB":24,"memoryTotalMB":26,"loadAvg":24.56,"eventLoopLagMs":1,"uptimeSec":272,"onlineUsers":0,"activeRooms":2}}

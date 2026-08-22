@@ -1,0 +1,29 @@
+{
+  "feature": "Official AI Customer Service Room 101",
+  "roomId": "101",
+  "roomName": "AI Customer Service",
+  "agentId": "CS-AI-101",
+  "normalSeats": 8,
+  "specialSeat": "top",
+  "voice": {
+    "transport": "existing PingPong voice layer + browser SpeechRecognition/SpeechSynthesis",
+    "persona": "fixed-female",
+    "providerFallback": "browser"
+  },
+  "serverEvents": [
+    "cs101:start",
+    "cs101:message",
+    "cs101:reply",
+    "cs101:error"
+  ],
+  "api": [
+    "GET /api/customer-service/room101"
+  ],
+  "notes": [
+    "Existing 8 normal seats are unchanged.",
+    "The AI seat is virtual and does not consume a normal seat.",
+    "Room 101 is protected from normal room deletion.",
+    "AI uses the existing PingPong ai-service provider configuration.",
+    "Real provider API keys remain server-side in .env."
+  ]
+}

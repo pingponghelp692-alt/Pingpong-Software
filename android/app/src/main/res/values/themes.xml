@@ -1,0 +1,14 @@
+<resources>
+    <style name="Theme.PingPong" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/pp_splash_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_pingpong_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.PingPongPostSplash</item>
+    </style>
+
+    <style name="Theme.PingPongPostSplash" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:navigationBarColor">@color/pp_splash_background</item>
+        <item name="android:statusBarColor">@color/pp_splash_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

@@ -1,0 +1,17 @@
+const fs = require('fs');
+const assert = require('assert');
+const voice = fs.readFileSync('public/voice-sfu.js', 'utf8');
+const app = fs.readFileSync('public/app.js', 'utf8');
+const sync = fs.readFileSync('voice_sfu/sync.js', 'utf8');
+const manifest = fs.readFileSync('android/app/src/main/AndroidManifest.xml', 'utf8');
+const main = fs.readFileSync('android/app/src/main/java/com/pingpong/voice/MainActivity.kt', 'utf8');
+assert(voice.includes('RoomEvent.Reconnected'));
+assert(voice.includes('RoomEvent.Disconnected'));
+assert(voice.includes('getTrackPublication'));
+assert(app.includes('scheduleSfuRecovery'));
+assert(app.includes('sfuVoiceLeaving'));
+assert(sync.includes('SEAT_SYNC_RETRY_DELAYS_MS'));
+assert(manifest.includes('FOREGROUND_SERVICE_MICROPHONE'));
+assert(manifest.includes('FileProvider'));
+assert(main.includes('AndroidVoiceBridge'));
+console.log('voiceRecoveryStatic: PASS');

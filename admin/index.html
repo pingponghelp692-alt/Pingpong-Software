@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PingPong Control — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=20260811-cs101">
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<!-- ============ LOGIN ============ -->
+<section id="view-login" class="login-screen active">
+  <div class="login-card">
+    <div class="login-mark" id="login-mark">PP<span>/ctl</span></div>
+    <h1 id="login-title">PingPong Control</h1>
+    <p class="login-sub" id="login-sub">Operations access only. Every action here is logged.</p>
+    <label class="field-label">Username</label>
+    <input id="login-username" type="text" class="field" autocomplete="username">
+    <label class="field-label">Password</label>
+    <input id="login-password" type="password" class="field" autocomplete="current-password">
+    <button id="btn-login" class="btn btn-primary btn-block">Enter control room</button>
+    <p id="login-error" class="login-error hidden"></p>
+  </div>
+</section>
+
+<!-- ============ APP SHELL ============ -->
+<div id="app-shell" class="shell hidden">
+
+  <div class="live-strip">
+    <span id="panel-badge" class="live-metric" style="font-weight:800;"></span>
+    <span class="live-sep">·</span>
+    <div class="live-dot"></div>
+    <span class="live-label">LIVE</span>
+    <span class="live-metric"><b id="strip-online">0</b> online</span>
+    <span class="live-sep">·</span>
+    <span class="live-metric"><b id="strip-rooms">0</b> active rooms</span>
+    <span class="live-sep">·</span>
+    <span class="live-metric"><b id="strip-users">0</b> total users</span>
+    <button id="btn-logout" class="live-logout">Log out ⏻</button>
+  </div>
+
+  <div class="shell-body">
+    <nav class="sidebar">
+      <button class="side-item active" data-section="dashboard" data-permission="dashboard:view"><span class="side-ico">◈</span>Dashboard</button>
+      <button class="side-item hidden" id="side-approval-center" data-section="approval-center"><span class="side-ico">✔</span>Approval Center</button>
+      <button class="side-item" data-section="ban-management" data-permission="ban:view"><span class="side-ico">⛔</span>Ban Management</button>
+      <button class="side-item hidden" id="side-analytics" data-section="analytics"><span class="side-ico">📊</span>Dashboard &amp; Analytics</button>
+      <button class="side-item" data-section="users" data-permission="users:view"><span class="side-ico">☰</span>Users</button>
+      <button class="side-item" data-section="rooms" data-permission="rooms:view"><span class="side-ico">▣</span>Rooms</button>
+      <button class="side-item" data-section="cs101" data-permission="ai-core:view"><span class="side-ico">🎧</span>AI Customer Service 101</button>
+      <button class="side-item" data-section="economy" data-permission="economy:view"><span class="side-ico">◎</span>Economy</button>
+      <button class="side-item" data-section="coin-center" data-permission="coin-center:view"><span class="side-ico">$</span>Coin Center</button>
+      <button class="side-item" data-section="frames" data-permission="frames:view"><span class="side-ico">▢</span>Frames</button>
+      <button class="side-item" data-section="tags" data-permission="tags:manage"><span class="side-ico">◆</span>Tags</button>
+      <button class="side-item" data-section="name-effects" data-permission="namefx:view"><span class="side-ico">✨</span>Profile Name Color</button>
+      <button class="side-item" data-section="svip-tags" data-permission="svip-tags:manage"><span class="side-ico">★</span>SVIP Tags</button>
+      <button class="side-item" data-section="gift-manager" data-permission="gifts:manage"><span class="side-ico">🎁</span>Gift Manager</button>
+      <button class="side-item" data-section="video-gifts" data-permission="video-gifts:manage"><span class="side-ico">▶</span>Video Gifts</button>
+      <button class="side-item" data-section="vehicles" data-permission="vehicles:manage"><span class="side-ico">🚗</span>Vehicle Management</button>
+      <button class="side-item" data-section="agencies" data-permission="agencies:view"><span class="side-ico">▲</span>Agencies</button>
+      <button class="side-item" data-section="merchants" data-permission="merchant:view"><span class="side-ico">🏬</span>Merchants</button>
+      <button class="side-item" data-section="coin-sellers" data-permission="coin-seller:view"><span class="side-ico"><img src="/images/icons/icon-diamond.png" class="currency-icon" alt="diamond"></span>Manage Coin Sellers</button>
+      <button class="side-item" data-section="payment-recharge" data-permission="payment:view"><span class="side-ico">💳</span>Payment / Recharge</button>
+      <button class="side-item" data-section="announce" data-permission="announce:send"><span class="side-ico">◭</span>Announcements</button>
+      <button class="side-item" data-section="chest" data-permission="chest:manage"><span class="side-ico">◧</span>Treasure Chest</button>
+      <button class="side-item" data-section="theme-library" data-permission="theme-library:manage"><span class="side-ico">🎨</span>Theme Library</button>
+      <button class="side-item" data-section="banner-management" data-permission="banners:manage"><span class="side-ico">🖼️</span>Banner Management</button>
+      <button class="side-item" data-section="level-management" data-permission="level:manage"><span class="side-ico">⭐</span>Level Management</button>
+      <button class="side-item" data-section="badge-management" data-permission="badges:manage"><span class="side-ico">💎</span>Badge Management</button>
+      <button class="side-item" data-section="call-hosting" data-permission="callhosting:manage"><span class="side-ico">📹</span>Call Hosting</button>
+      <button class="side-item" data-section="voice-sfu" data-permission="voice-sfu:manage"><span class="side-ico">🎙️</span>Voice SFU</button>
+      <button class="side-item" data-section="relationship-settings" data-permission="relationships:manage"><span class="side-ico">💞</span>Relationship Settings</button>
+      <button class="side-item" data-section="super-admin" data-permission="godpower:manage"><span class="side-ico">⚡</span>Super Admin</button>
+      <button class="side-item" data-section="ai-core" data-permission="ai-core:view"><span class="side-ico">✦</span>AI Core</button>
+      <button class="side-item" data-section="role-management" data-permission="role:manage"><span class="side-ico">👑</span>Role &amp; Country</button>
+    </nav>
+
+    <main class="main">
+
+      <!-- DASHBOARD -->
+      <section id="sec-dashboard" class="sec active">
+        <h2>Dashboard</h2>
+        <div class="stat-grid">
+          <div class="stat-card"><span class="stat-num" id="dash-users">0</span><span class="stat-lbl">Total Users</span></div>
+          <div class="stat-card"><span class="stat-num" id="dash-rooms">0</span><span class="stat-lbl">Total Rooms</span></div>
+          <div class="stat-card accent"><span class="stat-num" id="dash-online">0</span><span class="stat-lbl">Online Now</span></div>
+          <div class="stat-card warn"><span class="stat-num" id="dash-banned">0</span><span class="stat-lbl">Banned</span></div>
+        </div>
+
+        <h3 class="sub-head">Active Rooms <span class="hint">(live, refreshes every 10s)</span></h3>
+        <div id="live-rooms-list" class="data-list"></div>
+        <div id="live-rooms-empty" class="empty-note hidden">No one is in any room right now.</div>
+      </section>
+
+      <!-- APPROVAL CENTER (Phase 7 — Unified) -->
+      <section id="sec-approval-center" class="sec">
+        <div class="ac-head-row">
+          <h2>Approval Center</h2>
+          <div class="ac-head-actions">
+            <input id="ac-global-search" class="field" type="text" placeholder="🔎 Search all modules (Request ID, User, name...)">
+            <button id="ac-btn-refresh" class="btn btn-ghost btn-sm">↻ Refresh</button>
+          </div>
+        </div>
+
+        <div id="ac-stat-grid" class="ac-stat-grid"></div>
+
+        <div class="panel ac-filter-panel">
+          <div class="ac-filter-grid">
+            <div>
+              <label class="field-label">Date From</label>
+              <input id="ac-f-from" type="date" class="field">
+            </div>
+            <div>
+              <label class="field-label">Date To</label>
+              <input id="ac-f-to" type="date" class="field">
+            </div>
+            <div>
+              <label class="field-label">Module</label>
+              <select id="ac-f-module" class="field">
+                <option value="">All Modules</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label">Status</label>
+              <select id="ac-f-status" class="field">
+                <option value="">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="review">Under Review</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+                <option value="expired">Expired / Suspended</option>
+                <option value="reopened">Reopened</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label">Country</label>
+              <select id="ac-f-country" class="field">
+                <option value="">All Countries</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label">Role (Submitted By)</label>
+              <select id="ac-f-role" class="field">
+                <option value="">All Roles</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label">Reviewer</label>
+              <input id="ac-f-reviewer" type="text" class="field" placeholder="username">
+            </div>
+            <div>
+              <label class="field-label">Applicant / User</label>
+              <input id="ac-f-applicant" type="text" class="field" placeholder="User ID / Name">
+            </div>
+            <div>
+              <label class="field-label">VIP Tier</label>
+              <select id="ac-f-viptier" class="field">
+                <option value="">All Tiers</option>
+                <option value="VIP_SILVER">VIP Silver</option>
+                <option value="VIP_GOLD">VIP Gold</option>
+                <option value="VIP_PLATINUM">VIP Platinum</option>
+                <option value="VIP_DIAMOND">VIP Diamond</option>
+                <option value="VIP_ROYAL">VIP Royal</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label">Agency</label>
+              <input id="ac-f-agency" type="text" class="field" placeholder="Agency Name / Owner ID">
+            </div>
+            <div>
+              <label class="field-label">Diamond Seller</label>
+              <input id="ac-f-dseller" type="text" class="field" placeholder="Name / KYC ID">
+            </div>
+            <div class="ac-filter-actions">
+              <button id="ac-btn-apply" class="btn btn-primary btn-sm">Apply Filter</button>
+              <button id="ac-btn-clear" class="btn btn-ghost btn-sm">Clear</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ac-table-wrap">
+          <table class="data-table ac-table">
+            <thead>
+              <tr>
+                <th>Request ID</th><th>Module</th><th>User</th><th>Country</th>
+                <th>Submitted By</th><th>Reviewer</th><th>Status</th>
+                <th>Created</th><th>Updated</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="ac-table-rows"></tbody>
+          </table>
+          <div id="ac-table-empty" class="empty-note hidden">No requests found.</div>
+          <div id="ac-table-loading" class="empty-note hidden">Loading...</div>
+        </div>
+
+        <div class="ac-pagination">
+          <span id="ac-page-info" class="hint"></span>
+          <div class="ac-page-controls">
+            <select id="ac-page-size" class="field field-inline">
+              <option value="25">25 / page</option>
+              <option value="50" selected>50 / page</option>
+              <option value="100">100 / page</option>
+              <option value="200">200 / page</option>
+            </select>
+            <button id="ac-btn-prev" class="btn btn-ghost btn-sm">‹ Prev</button>
+            <button id="ac-btn-next" class="btn btn-ghost btn-sm">Next ›</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- BAN MANAGEMENT (Phase 8) -->
+      <section id="sec-ban-management" class="sec">
+        <div class="ac-head-row">
+          <h2>Ban Management</h2>
+          <div class="ac-head-actions">
+            <input id="bm-global-search" class="field" type="text" placeholder="🔎 Search (Ban ID, User, Reason...)">
+            <button id="bm-btn-new" class="btn btn-primary btn-sm hidden">+ New Ban</button>
+            <button id="bm-btn-refresh" class="btn btn-ghost btn-sm">↻ Refresh</button>
+          </div>
+        </div>
+
+        <div id="bm-stat-grid" class="ac-stat-grid"></div>
+
+        <div class="ac-tabs">
+          <button class="ac-tab active" data-bmtab="list">Ban List</button>
+          <button class="ac-tab" data-bmtab="requests">Pending Requests</button>
+        </div>
+
+        <!-- ===== TAB: BAN LIST ===== -->
+        <div id="bm-panel-list" class="bm-panel">
+          <div class="panel ac-filter-panel">
+            <div class="ac-filter-grid">
+              <div>
+                <label class="field-label">Country</label>
+                <select id="bm-f-country" class="field"><option value="">All Countries</option></select>
+              </div>
+              <div>
+                <label class="field-label">Ban Type</label>
+                <select id="bm-f-type" class="field">
+                  <option value="">All Types</option>
+                  <option value="temporary">Temporary</option>
+                  <option value="permanent">Permanent</option>
+                  <option value="device">Device</option>
+                  <option value="ip">IP</option>
+                </select>
+              </div>
+              <div>
+                <label class="field-label">Status</label>
+                <select id="bm-f-status" class="field">
+                  <option value="">All Statuses</option>
+                  <option value="active">Active</option>
+                  <option value="restored">Restored</option>
+                </select>
+              </div>
+              <div>
+                <label class="field-label">Reason</label>
+                <input id="bm-f-reason" type="text" class="field" placeholder="Search Reason">
+              </div>
+              <div>
+                <label class="field-label">Date From</label>
+                <input id="bm-f-from" type="date" class="field">
+              </div>
+              <div>
+                <label class="field-label">Date To</label>
+                <input id="bm-f-to" type="date" class="field">
+              </div>
+              <div class="ac-filter-actions">
+                <button id="bm-btn-apply" class="btn btn-primary btn-sm">Apply Filter</button>
+                <button id="bm-btn-clear" class="btn btn-ghost btn-sm">Clear</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="ac-table-wrap">
+            <table class="data-table ac-table">
+              <thead>
+                <tr>
+                  <th>Ban ID</th><th>User</th><th>Country</th><th>Ban Type</th><th>Reason</th>
+                  <th>Duration</th><th>Status</th><th>Assigned Admin</th><th>Created</th><th>Expiry</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="bm-table-rows"></tbody>
+            </table>
+            <div id="bm-table-empty" class="empty-note hidden">No ban records found.</div>
+            <div id="bm-table-loading" class="empty-note hidden">Loading...</div>
+          </div>
+
+          <div class="ac-pagination">
+            <span id="bm-page-info" class="hint"></span>
+            <div class="ac-page-controls">
+              <select id="bm-page-size" class="field field-inline">
+                <option value="25">25 / page</option>
+                <option value="50" selected>50 / page</option>
+                <option value="100">100 / page</option>
+                <option value="200">200 / page</option>
+              </select>
+              <button id="bm-btn-prev" class="btn btn-ghost btn-sm">‹ Prev</button>
+              <button id="bm-btn-next" class="btn btn-ghost btn-sm">Next ›</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TAB: PENDING REQUESTS (Submit -> Review -> Approve queue) ===== -->
+        <div id="bm-panel-requests" class="bm-panel hidden">
+          <div class="ac-table-wrap">
+            <table class="data-table ac-table">
+              <thead>
+                <tr>
+                  <th>Request ID</th><th>User</th><th>Country</th><th>Ban Type</th><th>Reason</th>
+                  <th>Duration</th><th>Status</th><th>Submitted By</th><th>Created</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="bm-req-rows"></tbody>
+            </table>
+            <div id="bm-req-empty" class="empty-note hidden">No Pending Requests.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DASHBOARD & ANALYTICS (Phase 9) -->
+      <section id="sec-analytics" class="sec">
+        <div class="ac-head-row">
+          <h2>Dashboard &amp; Analytics</h2>
+          <div class="ac-head-actions">
+            <select id="an-f-country" class="field"><option value="">All Countries (based on your access)</option></select>
+            <select id="an-f-range" class="field">
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly" selected>Monthly</option>
+            </select>
+            <button id="an-btn-export-csv" class="btn btn-ghost btn-sm hidden">⬇ CSV Export</button>
+            <button id="an-btn-export-pdf" class="btn btn-ghost btn-sm hidden">⬇ PDF (Print)</button>
+            <button id="an-btn-refresh" class="btn btn-ghost btn-sm">↻ Refresh</button>
+          </div>
+        </div>
+        <p class="hint" id="an-scope-note" style="margin-bottom:10px;"></p>
+
+        <div class="ac-tabs">
+          <button class="ac-tab active" data-antab="overview">Overview</button>
+          <button class="ac-tab" data-antab="revenue">Revenue</button>
+          <button class="ac-tab" data-antab="approvals">Approvals</button>
+          <button class="ac-tab" data-antab="bans">Bans</button>
+          <button class="ac-tab" data-antab="users">Users</button>
+          <button class="ac-tab" data-antab="rooms">Rooms</button>
+        </div>
+
+        <!-- OVERVIEW -->
+        <div id="an-panel-overview" class="an-panel">
+          <h3 class="sub-head" style="margin-top:0;">Global / Country Statistics</h3>
+          <div id="an-overview-grid" class="ac-stat-grid an-grid-13"></div>
+
+          <h3 class="sub-head">Live Monitoring <span class="hint">(auto-refreshes every 30 seconds)</span></h3>
+          <div id="an-live-grid" class="ac-stat-grid an-grid-5"></div>
+        </div>
+
+        <!-- REVENUE -->
+        <div id="an-panel-revenue" class="an-panel hidden">
+          <div class="an-chart-card">
+            <h3 class="sub-head" style="margin-top:0;">Revenue Trend <span id="an-rev-range-label" class="hint"></span></h3>
+            <div id="an-rev-line" class="an-chart-wrap"></div>
+          </div>
+          <div class="an-chart-row">
+            <div class="an-chart-card">
+              <h3 class="sub-head" style="margin-top:0;">Recharge vs Withdraw</h3>
+              <div id="an-rev-bar1" class="an-chart-wrap"></div>
+            </div>
+            <div class="an-chart-card">
+              <h3 class="sub-head" style="margin-top:0;">Diamond Sales vs Commission</h3>
+              <div id="an-rev-bar2" class="an-chart-wrap"></div>
+            </div>
+          </div>
+          <p class="hint">"Coin Sales" is not a separate event from "Recharge" in this system — it's shown as the same transaction category.</p>
+        </div>
+
+        <!-- APPROVALS -->
+        <div id="an-panel-approvals" class="an-panel hidden">
+          <div class="an-chart-card">
+            <h3 class="sub-head" style="margin-top:0;">Status by Module</h3>
+            <div id="an-appr-bar" class="an-chart-wrap"></div>
+          </div>
+          <div class="ac-table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Module</th><th>Pending</th><th>Under Review</th><th>Approved</th><th>Rejected</th><th>Reopened</th></tr></thead>
+              <tbody id="an-appr-rows"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- BANS -->
+        <div id="an-panel-bans" class="an-panel hidden">
+          <div class="ac-stat-grid an-grid-7" id="an-ban-grid"></div>
+          <div class="an-chart-row">
+            <div class="an-chart-card">
+              <h3 class="sub-head" style="margin-top:0;">Ban Type Distribution</h3>
+              <div id="an-ban-pie" class="an-chart-wrap"></div>
+            </div>
+            <div class="an-chart-card">
+              <h3 class="sub-head" style="margin-top:0;">Appeal Status</h3>
+              <div id="an-ban-appeal-pie" class="an-chart-wrap"></div>
+            </div>
+          </div>
+          <p class="hint">In this system, Ban Type is only Temporary/Permanent/Device/IP — there is no separate Chat/Voice/Room-based Ban category in the database (room-level chat-mute is a different, non-persistent feature), so it isn't shown here.</p>
+        </div>
+
+        <!-- USERS -->
+        <div id="an-panel-users" class="an-panel hidden">
+          <div class="an-chart-row">
+            <div class="an-chart-card">
+              <h3 class="sub-head" style="margin-top:0;">VIP Tier Distribution</h3>
+              <div id="an-user-vip-pie" class="an-chart-wrap"></div>
+            </div>
+            <div class="an-chart-card">
+              <h3 class="sub-head" style="margin-top:0;">Diamond Seller Status Distribution</h3>
+              <div id="an-user-dseller-pie" class="an-chart-wrap"></div>
+            </div>
+          </div>
+          <p class="hint">⚠️ New Registrations, Daily/Monthly Active Users are not shown here — since no registration/last-login timestamp is stored in the user record, these metrics can't be calculated with real data. Total/Online/Banned user counts are available in the Overview tab above.</p>
+        </div>
+
+        <!-- ROOMS -->
+        <div id="an-panel-rooms" class="an-panel hidden">
+          <div class="ac-stat-grid an-grid-4" id="an-room-grid"></div>
+          <h3 class="sub-head">Popular Rooms <span class="hint">(highest Online right now — historical view-count is not tracked)</span></h3>
+          <div class="ac-table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Room</th><th>Host</th><th>Online Now</th><th>Locked?</th></tr></thead>
+              <tbody id="an-room-rows"></tbody>
+            </table>
+          </div>
+          <p class="hint">⚠️ "Deleted Rooms" is not shown — this system doesn't keep a soft-delete/audit trail when a room is deleted, so there's no data to calculate historical deleted-room counts.</p>
+        </div>
+      </section>
+
+      <!-- USERS -->
+      <section id="sec-users" class="sec">
+        <h2>Users</h2>
+        <div class="toolbar">
+          <input id="user-search" type="text" placeholder="Search by name, ID or mobile..." class="field field-inline">
+          <button id="btn-refresh-users" class="btn btn-ghost">Refresh</button>
+        </div>
+        <table class="data-table">
+          <thead><tr>
+            <th>User</th><th>Mobile</th><th>Country</th><th>Coins</th><th>Diamonds</th><th>VIP</th><th>Status</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="users-tbody"></tbody>
+        </table>
+      </section>
+
+      <!-- ROOMS -->
+      <section id="sec-rooms" class="sec">
+        <h2>Rooms</h2>
+        <div class="toolbar">
+          <button id="btn-refresh-rooms" class="btn btn-ghost">Refresh</button>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>Room</th><th>Host</th><th>Online</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="rooms-tbody"></tbody>
+        </table>
+      </section>
+
+      <!-- AI CUSTOMER SERVICE ROOM 101 -->
+      <section id="sec-cs101" class="sec">
+        <h2>AI Customer Service — Room 101</h2>
+        <p class="hint">Official Room #101. Robin is the permanent AI Room Administrator. Configure the room image, female avatar, greeting, customer-service guidelines, official contacts and customer-seat policy here. Changes apply live without restarting the server.</p>
+        <div class="panel" style="margin-top:16px;">
+          <div style="display:grid;grid-template-columns:minmax(180px,260px) 1fr;gap:18px;align-items:start;">
+            <div>
+              <div id="cs101-admin-avatar-preview" style="width:180px;height:180px;border-radius:50%;overflow:hidden;border:3px solid var(--accent,#f7ce7e);background:#17120d;display:flex;align-items:center;justify-content:center;"></div>
+              <label class="field-label" style="margin-top:12px;">Female AI image</label>
+              <input id="cs101-admin-avatar" type="file" accept="image/*" class="field">
+              <button id="cs101-admin-upload" class="btn btn-primary" style="margin-top:8px;">Upload AI Image</button>
+            </div>
+            <div>
+              <label class="field-label">AI Name</label>
+              <input id="cs101-admin-name" class="field" maxlength="80" placeholder="AI Customer Service">
+              <label class="field-label" style="margin-top:10px;">Opening Greeting</label>
+              <textarea id="cs101-admin-greeting" class="field" rows="4" maxlength="1200" placeholder="আমি কীভাবে আপনাকে সাহায্য করতে পারি?"></textarea>
+              <label class="field-label" style="margin-top:10px;">AI Room Administrator Name</label>
+              <input id="cs101-admin-room-admin" class="field" maxlength="80" placeholder="Robin">
+              <div style="margin-top:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                <div id="cs101-admin-room-bg-preview" style="width:180px;height:70px;border-radius:12px;background-size:cover;background-position:center;border:1px solid var(--line);background-color:#17120d;"></div>
+                <div><label class="field-label">Official Room 101 image</label><input id="cs101-admin-room-bg" type="file" accept="image/*" class="field"><button id="cs101-admin-room-bg-upload" class="btn btn-primary" style="margin-top:8px;">Upload Room Image</button></div>
+              </div>
+              <label class="field-label" style="margin-top:10px;">AI Instructions / Commands</label>
+              <textarea id="cs101-admin-instruction" class="field" rows="7" maxlength="6000" placeholder="Give Robin additional instructions for handling customers..."></textarea>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
+                <div><label class="field-label">Initially open customer seats</label><input id="cs101-admin-open-seats" class="field" type="number" min="1" max="8" value="1"></div>
+                <div><label class="field-label">Official user IDs (one per line)</label><textarea id="cs101-admin-official-ids" class="field" rows="2" placeholder="User IDs that should receive special respect"></textarea></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px;">
+                <div><label class="field-label">Official Labib</label><input id="cs101-admin-labib" class="field" value="Official Labib"></div>
+                <div><label class="field-label">Official Rakesh</label><input id="cs101-admin-rakesh" class="field" value="Official Rakesh"></div>
+                <div><label class="field-label">Official contact number</label><input id="cs101-admin-phone" class="field" value="8101221193"></div>
+              </div>
+              <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:10px;">
+                <label><input id="cs101-admin-enabled" type="checkbox"> AI enabled</label>
+                <label><input id="cs101-admin-voice" type="checkbox"> Female voice enabled</label>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
+                <div><label class="field-label">Voice rate</label><input id="cs101-admin-rate" class="field" type="number" step="0.01" min="0.7" max="1.2"></div>
+                <div><label class="field-label">Voice pitch</label><input id="cs101-admin-pitch" class="field" type="number" step="0.01" min="0.7" max="1.4"></div>
+              </div>
+              <div class="panel" style="margin-top:16px;border:1px solid var(--line);">
+                <h3 class="sub-head" style="margin-top:0;">Robin Vapi Voice Control</h3>
+                <p class="hint">The Vapi Public Key and Assistant ID are deployment credentials. They are shown here read-only; private Vapi API keys are never sent to the browser.</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                  <div><label class="field-label">Vapi Public Key</label><input id="cs101-vapi-public-key" class="field" readonly></div>
+                  <div><label class="field-label">Vapi Assistant ID</label><input id="cs101-vapi-assistant-id" class="field" readonly></div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:10px;align-items:end;">
+                  <div><label class="field-label">Vapi Demo/Test Link</label><input id="cs101-vapi-demo-url" class="field" type="url" placeholder="https://vapi.ai/?demo=true&amp;..."></div>
+                  <button id="cs101-vapi-demo-open" class="btn btn-ghost btn-sm" type="button">Open Demo Test</button>
+                </div>
+                <div class="hint" style="margin-top:6px;">The Demo Link is for manual testing only. Seat auto-start uses the Assistant ID through the Vapi Web SDK; add the Public Key later in deployment configuration.</div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;align-items:center;">
+                  <span id="cs101-vapi-status" class="badge badge-warn">Checking…</span>
+                  <button id="cs101-vapi-check" class="btn btn-ghost btn-sm">Check Vapi Configuration</button>
+                  <button id="cs101-vapi-mic-check" class="btn btn-ghost btn-sm">Check Browser Microphone</button>
+                </div>
+                <div id="cs101-vapi-help" class="hint" style="margin-top:8px;"></div>
+              </div>
+              <div class="panel" style="margin-top:16px;border:1px solid var(--line);">
+                <h3 class="sub-head" style="margin-top:0;">Robin Live Voice Health</h3>
+                <p class="hint">Real customer-facing failures Robin's voice call reported, most recent first. Empty and green means no customer has had a voice failure in the last 15 minutes.</p>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+                  <span id="cs101-voice-health-badge" class="badge badge-ok">Checking…</span>
+                  <button id="cs101-voice-health-refresh" class="btn btn-ghost btn-sm">Refresh</button>
+                </div>
+                <div id="cs101-voice-error-list" class="hint" style="margin-top:10px;max-height:220px;overflow-y:auto;"></div>
+              </div>
+              <button id="cs101-admin-save" class="btn btn-primary" style="margin-top:14px;">Save &amp; Apply Live</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ECONOMY -->
+      <section id="sec-economy" class="sec">
+        <h2>Economy</h2>
+
+        <h3 class="sub-head">Exchange Requests (Diamond → Coin)</h3>
+        <table class="data-table">
+          <thead><tr><th>User</th><th>Diamonds</th><th>Note</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="exchanges-tbody"></tbody>
+        </table>
+
+        <h3 class="sub-head">Gift Activity <span class="hint">(sitewide, most recent first)</span></h3>
+        <div id="gift-log-list" class="data-list"></div>
+      </section>
+
+      <!-- COIN CENTER -->
+      <section id="sec-coin-center" class="sec">
+        <h2>Coin Center</h2>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">System Coin Balance</h3>
+          <div class="form-row">
+            <div id="cc-balance" style="font-size:22px;font-weight:700;">—</div>
+            <input id="cc-balance-input" type="number" min="0" placeholder="New System Balance" class="field">
+            <button id="btn-cc-set-balance" class="btn btn-ghost">Set</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Find a User and Send Coins</h3>
+          <div class="form-row">
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-dim);">
+              <input type="checkbox" id="cc-multi-toggle"> Send to multiple users at once
+            </label>
+          </div>
+          <div class="form-row" style="margin-top:8px;">
+            <input id="cc-search" type="text" placeholder="User ID or Mobile Number" class="field">
+            <button id="btn-cc-search" class="btn btn-ghost">Search</button>
+          </div>
+          <div id="cc-user-card" class="data-row" style="display:none;margin-top:10px;"></div>
+          <div id="cc-recipients-list" style="display:none;margin-top:10px;flex-wrap:wrap;gap:8px;" class="form-row"></div>
+          <div class="form-row" style="margin-top:10px;">
+            <input id="cc-amount" type="number" min="1" step="1" placeholder="Coin amount (per user)" class="field">
+            <input id="cc-reason" type="text" placeholder="Reason / Note (optional)" maxlength="200" class="field">
+            <button id="btn-cc-send" class="btn btn-primary" disabled>Send from Coin Center</button>
+          </div>
+          <p class="hint" style="margin-top:8px;">Sent coins will always show as "Coin Center" in the user's Wallet History instead of the sender's name, and the user will get an instant balance update and a notification (no refresh needed). In multi-user mode, everyone receives the same amount.</p>
+        </div>
+
+        <h3 class="sub-head">Recent Coin Center Transactions</h3>
+        <div id="cc-log-list" class="data-list"></div>
+
+        <h2 style="margin-top:26px;">Coin Center Accounts <span class="hint">(like an Agency)</span></h2>
+        <p class="hint">Create any User ID as a Coin Center. That user can send coins to specific users from their own panel — from here you can top up balance, Enable/Disable, or Remove.</p>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Create a New Coin Center</h3>
+          <div class="form-row">
+            <input id="cca-userid" type="text" placeholder="User ID" class="field">
+            <button id="btn-cca-create" class="btn btn-primary">Create</button>
+          </div>
+        </div>
+
+        <h3 class="sub-head">All Coin Center Accounts</h3>
+        <div id="cca-list" class="data-list"></div>
+      </section>
+
+      <!-- FRAMES -->
+      <section id="sec-frames" class="sec">
+        <h2>Frames</h2>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Upload a New Frame PNG</h3>
+          <div class="form-row">
+            <input id="frame-upload-name" type="text" placeholder="Frame Name" class="field">
+            <input id="frame-upload-file" type="file" accept="image/png,image/webp,image/gif" class="field">
+            <label style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--text-soft);">
+              <input id="frame-upload-vip" type="checkbox"> VIP only
+            </label>
+            <button id="btn-upload-frame" class="btn btn-primary">Upload</button>
+          </div>
+          <p class="hint" style="margin-top:8px;">Once a PNG is uploaded, it automatically becomes a glow-animated frame around the avatar (via CSS glow animation in the mobile app); the original image design stays unchanged.</p>
+        </div>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Send Frame to a Specific User</h3>
+          <div class="form-row">
+            <input id="frame-target" type="text" placeholder="Target User ID" class="field">
+            <select id="frame-select" class="field"></select>
+            <input id="frame-days" type="number" placeholder="Duration (days, blank=permanent)" class="field">
+            <button id="btn-send-frame" class="btn btn-primary">Send</button>
+          </div>
+        </div>
+        <h3 class="sub-head">Catalog</h3>
+        <div id="frame-catalog-list" class="data-list"></div>
+      </section>
+
+      <!-- PROFILE NAME COLOR -->
+      <section id="sec-name-effects" class="sec">
+        <h2>Profile Name Color</h2>
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Apply VIP Name Style to a Specific User</h3>
+          <div class="form-row">
+            <input id="namefx-target" type="text" placeholder="Target User ID" class="field">
+            <select id="namefx-style" class="field">
+              <option value="gold_glow">Gold Glow</option>
+              <option value="rainbow">Rainbow</option>
+              <option value="diamond">Diamond</option>
+              <option value="neon">Neon</option>
+              <option value="fire">Fire</option>
+              <option value="ice">Ice</option>
+              <option value="purple_vip">Purple VIP</option>
+              <option value="animated_gradient">Animated Gradient</option>
+            </select>
+            <button id="btn-namefx-apply" class="btn btn-primary">Apply</button>
+            <button id="btn-namefx-remove" class="btn btn-ghost">Remove</button>
+          </div>
+          <p class="hint" style="margin-top:8px;">Once applied, the Glow/Animation will only show on that user's name in the Room Seat — no change to chat or profile. Takes effect in real time, no refresh needed.</p>
+        </div>
+      </section>
+
+      <!-- TAGS -->
+      <section id="sec-tags" class="sec">
+        <h2>Tags</h2>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Send Colour Tag to a Specific User</h3>
+          <div class="form-row">
+            <input id="tag-target" type="text" placeholder="Target User ID" class="field">
+            <input id="tag-text" type="text" placeholder="Tag Text (e.g. VIP)" maxlength="12" class="field">
+            <input id="tag-color" type="color" value="#F7CE7E" class="field" style="padding:2px; height:38px;">
+            <button id="btn-send-tag" class="btn btn-primary">Send</button>
+            <button id="btn-remove-tag" class="btn btn-ghost">Remove</button>
+          </div>
+          <p class="hint" style="margin-top:8px;">This tag will instantly appear as a small colored badge next to the user's name in chat, seat, and profile — and their name will now also glow in that color (chat + seat), for everyone in real time. Pressing "Remove" will clear both the current tag and glow for that user.</p>
+          <div id="tag-preview" class="tag-preview-box"></div>
+        </div>
+      </section>
+
+      <!-- SVIP TAGS -->
+      <section id="sec-svip-tags" class="sec">
+        <h2>SVIP Tag Management</h2>
+        <p class="hint">Upload a transparent PNG for each SVIP Level (1–8). Auto-resize (max 256px, aspect ratio preserved) and transparency are handled automatically. Uploading again will replace the previous one.</p>
+        <div id="svip-tags-list" class="data-list"></div>
+
+        <h3 class="sub-head">Assign an SVIP Tag to a Specific User</h3>
+        <p class="hint">Any of the tags uploaded above can be sent directly to any User ID — regardless of that user's actual SVIP Level/spend. Once assigned, it will show on the profile in real time.</p>
+        <div class="form-row">
+          <input id="svip-assign-target" type="text" placeholder="Target User ID" class="field">
+          <select id="svip-assign-level" class="field"></select>
+          <button id="btn-svip-assign" class="btn btn-primary">Assign</button>
+          <button id="btn-svip-unassign" class="btn btn-ghost">Remove</button>
+        </div>
+      </section>
+
+      <!-- GIFT MANAGER -->
+      <section id="sec-gift-manager" class="sec">
+        <h2>Gift Manager</h2>
+        <p class="hint">Adding/editing/deleting here instantly updates every online user's Gift Box (Normal/VIP/Legend tabs) — no one needs to refresh.</p>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Add a New Gift</h3>
+          <div class="form-row">
+            <input id="gift-name" type="text" placeholder="Gift Name" class="field">
+            <input id="gift-price" type="number" placeholder="Coin Price" min="1" step="1" class="field">
+          </div>
+          <div class="form-row">
+            <select id="gift-effect-type" class="field">
+              <option value="small">Small Effect (around host only)</option>
+              <option value="full_screen">Full Screen Effect (whole room)</option>
+            </select>
+            <select id="gift-tier" class="field">
+              <option value="normal">Normal</option>
+              <option value="vip">VIP</option>
+              <option value="legend">Legend</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--text-soft);">
+              Gift Image (PNG)
+              <input id="gift-image-file" type="file" accept="image/png" class="field">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--text-soft);">
+              Gift Sound (MP3)
+              <input id="gift-sound-file" type="file" accept="audio/mpeg" class="field">
+            </label>
+            <button id="btn-upload-gift" class="btn btn-primary">Add</button>
+          </div>
+        </div>
+
+        <h3 class="sub-head">Catalog</h3>
+        <div id="gift-catalog-list" class="data-list"></div>
+      </section>
+
+      <!-- VIDEO GIFTS -->
+      <section id="sec-video-gifts" class="sec">
+        <h2>Video Gifts</h2>
+        <p class="hint">Adding it instantly appears in every online user's Gift Box Custom tab — no one needs to refresh.</p>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Upload a New Video Gift</h3>
+          <div class="form-row">
+            <input id="vgift-name" type="text" placeholder="Gift Name" class="field">
+            <input id="vgift-price" type="number" placeholder="Coin Price (min 100000)" min="100000" step="1000" class="field">
+            <input id="vgift-duration" type="number" placeholder="Duration in seconds (6-8)" min="6" max="8" class="field">
+          </div>
+          <div class="form-row">
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--text-soft);">
+              Video (MP4)
+              <input id="vgift-video-file" type="file" accept="video/mp4" class="field">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--text-soft);">
+              Thumbnail (image)
+              <input id="vgift-thumb-file" type="file" accept="image/*" class="field">
+            </label>
+            <button id="btn-upload-vgift" class="btn btn-primary">Upload</button>
+          </div>
+          <p class="hint" style="margin-top:8px;">The video's own audio will play during the Full Screen animation. Keep Duration between 6-8 seconds.</p>
+        </div>
+
+        <h3 class="sub-head">Catalog</h3>
+        <div id="vgift-catalog-list" class="data-list"></div>
+      </section>
+
+      <!-- VEHICLE MANAGEMENT (Add-on) -->
+      <section id="sec-vehicles" class="sec">
+        <h2>Vehicle Management</h2>
+        <p class="hint">Add-on Vehicle Entry System — fully independent of Frames/Gifts. A user's Active Vehicle plays a full-screen entry video to everyone in the room the moment they join.</p>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Add New Vehicle</h3>
+          <div class="form-row">
+            <input id="veh-name" type="text" placeholder="Vehicle Name" class="field">
+            <input id="veh-desc" type="text" placeholder="Description" class="field">
+            <input id="veh-duration" type="number" placeholder="Animation Duration (sec)" min="1" class="field">
+            <input id="veh-order" type="number" placeholder="Display Order" class="field">
+          </div>
+          <div class="form-row">
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--text-soft);">
+              Thumbnail (image)
+              <input id="veh-thumb-file" type="file" accept="image/*" class="field">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--text-soft);">
+              Entry Video (MP4/WebM)
+              <input id="veh-video-file" type="file" accept="video/mp4,video/webm" class="field">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--text-soft);">
+              Background Music (optional)
+              <input id="veh-music-file" type="file" accept="audio/*" class="field">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--text-soft);">
+              Entry Sound Effect (optional)
+              <input id="veh-sound-file" type="file" accept="audio/*" class="field">
+            </label>
+          </div>
+          <div class="form-row">
+            <label style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--text-soft);">
+              <input id="veh-premium" type="checkbox"> Premium Tag
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--text-soft);">
+              <input id="veh-limited" type="checkbox"> Limited Edition
+            </label>
+            <input id="veh-expiry" type="date" title="Expiry Date (optional)" class="field">
+            <button id="btn-upload-vehicle" class="btn btn-primary">Add Vehicle</button>
+          </div>
+        </div>
+
+        <h3 class="sub-head">Catalog</h3>
+        <div id="vehicle-catalog-list" class="data-list"></div>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Assign Vehicle to a User</h3>
+          <p class="hint" style="margin-top:0;">Search by User ID or Username. This does not depend on any purchase system — the vehicle lands directly in that user's inventory.</p>
+          <div class="form-row">
+            <input id="veh-assign-target" type="text" placeholder="Target User ID or Username" class="field">
+            <select id="veh-assign-select" class="field"></select>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--text-soft);">
+              <input id="veh-assign-permanent" type="checkbox" checked> Permanent
+            </label>
+            <input id="veh-assign-days" type="number" placeholder="Days (if not permanent)" min="1" class="field">
+            <button id="btn-assign-vehicle" class="btn btn-primary">Assign</button>
+          </div>
+        </div>
+
+        <h3 class="sub-head">Assignment History</h3>
+        <div id="vehicle-history-list" class="data-list"></div>
+      </section>
+
+      <!-- AGENCIES -->
+      <section id="sec-agencies" class="sec">
+        <h2>Agencies</h2>
+        <div class="panel">
+          <h3 class="sub-head">Create a New Agency</h3>
+          <div class="form-row">
+            <input id="agency-name" type="text" placeholder="Agency Name" class="field">
+            <input id="agency-owner" type="text" placeholder="Owner User ID" class="field">
+            <input id="agency-rate" type="number" step="0.01" placeholder="Commission rate (e.g. 0.3)" class="field">
+            <button id="btn-create-agency" class="btn btn-primary">Create</button>
+          </div>
+        </div>
+        <div class="panel">
+          <h3 class="sub-head">Assign Host</h3>
+          <div class="form-row">
+            <input id="assign-agency-id" type="text" placeholder="Agency ID" class="field">
+            <input id="assign-host-id" type="text" placeholder="Host User ID" class="field">
+            <button id="btn-assign-host" class="btn btn-primary">Assign</button>
+          </div>
+        </div>
+        <h3 class="sub-head">All Agencies</h3>
+        <div id="agencies-list" class="data-list"></div>
+      </section>
+
+      <!-- MERCHANTS -->
+      <section id="sec-merchants" class="sec">
+        <h2>Merchants</h2>
+        <div class="panel">
+          <h3 class="sub-head">Create a New Merchant</h3>
+          <div class="form-row">
+            <input id="merchant-name" type="text" placeholder="Merchant Name" class="field">
+            <input id="merchant-country" type="text" placeholder="Country ID (e.g. IN)" class="field">
+            <input id="merchant-contact" type="text" placeholder="Contact (optional)" class="field">
+            <button id="btn-create-merchant" class="btn btn-primary">Create</button>
+          </div>
+        </div>
+        <h3 class="sub-head">All Merchants</h3>
+        <div id="merchants-list" class="data-list"></div>
+      </section>
+
+      <!-- MANAGE COIN SELLERS (Wallet page "Coin Seller List") -->
+      <section id="sec-coin-sellers" class="sec">
+        <h2>Manage Coin Sellers</h2>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Seller Add</h3>
+          <p class="hint">Just provide a User ID — Avatar, Username, Country, and User ID will be pulled automatically from the user's profile. If the user's profile has no WhatsApp Number, provide one here.</p>
+          <div class="form-row">
+            <input id="cs-add-userid" type="text" placeholder="Seller User ID" class="field">
+            <input id="cs-add-whatsapp" type="text" placeholder="WhatsApp Number (if not on profile)" class="field">
+            <button id="btn-cs-add" class="btn btn-primary">Add Seller</button>
+          </div>
+        </div>
+
+        <h3 class="sub-head">Coin Seller List (order shown on the Wallet page)</h3>
+        <div id="cs-list" class="data-list"></div>
+      </section>
+
+      <!-- PAYMENT / RECHARGE -->
+      <section id="sec-payment-recharge" class="sec">
+        <h2>Payment / Recharge</h2>
+
+        <div class="panel" id="pr-settings-panel">
+          <h3 class="sub-head" style="margin-top:0;">Payment / Recharge Settings</h3>
+          <p class="hint">There is no payment gateway API integrated — PhonePe/Google Pay/UPI in the user app are three ways to pay this same UPI ID. Every recharge is manually verified below before Coins are credited.</p>
+          <div class="form-row">
+            <label class="pr-toggle"><input type="checkbox" id="pr-set-enabled"> Recharge Enabled</label>
+          </div>
+          <div class="form-row">
+            <input id="pr-set-upiid" type="text" placeholder="UPI ID (e.g. owner@upi)" class="field">
+            <input id="pr-set-receiver" type="text" placeholder="Receiver Name" class="field">
+          </div>
+          <div class="form-row">
+            <input id="pr-set-qr" type="text" placeholder="QR Image URL (optional)" class="field" style="flex:1;">
+          </div>
+          <div class="form-row">
+            <input id="pr-set-min" type="number" placeholder="Min Amount (INR)" class="field">
+            <input id="pr-set-max" type="number" placeholder="Max Amount (INR)" class="field">
+          </div>
+          <div class="form-row">
+            <label class="pr-toggle"><input type="checkbox" id="pr-set-method-upi"> UPI</label>
+            <label class="pr-toggle"><input type="checkbox" id="pr-set-method-phonepe"> PhonePe</label>
+            <label class="pr-toggle"><input type="checkbox" id="pr-set-method-gpay"> Google Pay</label>
+          </div>
+          <div class="form-row">
+            <textarea id="pr-set-instructions" placeholder="Payment instructions shown to the user" class="field" style="flex:1;min-height:60px;"></textarea>
+          </div>
+          <button id="btn-pr-save-settings" class="btn btn-primary">Save Settings</button>
+          <span id="pr-settings-saved" class="hint hidden">Saved ✓</span>
+        </div>
+
+        <div class="panel" id="pr-packages-panel">
+          <h3 class="sub-head" style="margin-top:0;">Recharge Packages</h3>
+          <div class="form-row">
+            <input id="pr-pkg-price" type="number" placeholder="Price (INR)" class="field">
+            <input id="pr-pkg-coins" type="number" placeholder="Coins" class="field">
+            <input id="pr-pkg-bonus" type="number" placeholder="Bonus Coins" class="field">
+            <input id="pr-pkg-label" type="text" placeholder="Label (optional, e.g. Popular)" class="field">
+            <button id="btn-pr-add-package" class="btn btn-primary">Add Package</button>
+          </div>
+          <table class="data-table">
+            <thead><tr><th>Price</th><th>Coins</th><th>Bonus</th><th>Total</th><th>Label</th><th>Active</th><th>Actions</th></tr></thead>
+            <tbody id="pr-package-rows"></tbody>
+          </table>
+          <div id="pr-package-empty" class="empty-note hidden">No packages yet — add one above.</div>
+        </div>
+
+        <div class="panel" id="pr-records-panel">
+          <h3 class="sub-head" style="margin-top:0;">Recharge Records</h3>
+          <div class="ac-filter-row">
+            <div>
+              <label class="field-label">Search (User ID / Txn ID / UTR)</label>
+              <input id="pr-f-q" type="text" class="field" placeholder="Search...">
+            </div>
+            <div>
+              <label class="field-label">Status</label>
+              <select id="pr-f-status" class="field">
+                <option value="">All</option>
+                <option value="PENDING">Pending</option>
+                <option value="PAID">Paid</option>
+                <option value="FAILED">Failed</option>
+                <option value="CANCELLED">Cancelled</option>
+                <option value="REJECTED">Rejected</option>
+                <option value="REFUNDED">Refunded</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label">Method</label>
+              <select id="pr-f-method" class="field">
+                <option value="">All</option>
+                <option value="upi">UPI</option>
+                <option value="phonepe">PhonePe</option>
+                <option value="gpay">Google Pay</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label">Min Amount (INR)</label>
+              <input id="pr-f-minamt" type="number" class="field">
+            </div>
+            <div>
+              <label class="field-label">Max Amount (INR)</label>
+              <input id="pr-f-maxamt" type="number" class="field">
+            </div>
+            <div class="ac-filter-actions">
+              <button id="btn-pr-filter-apply" class="btn btn-primary btn-sm">Apply Filter</button>
+              <button id="btn-pr-filter-clear" class="btn btn-ghost btn-sm">Clear</button>
+            </div>
+          </div>
+
+          <div class="ac-table-wrap">
+            <table class="data-table ac-table">
+              <thead>
+                <tr>
+                  <th>Txn ID</th><th>UTR</th><th>User ID</th><th>Package</th><th>Amount</th>
+                  <th>Coins</th><th>Method</th><th>Status</th><th>Created</th><th>Decided By</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="pr-records-rows"></tbody>
+            </table>
+            <div id="pr-records-empty" class="empty-note hidden">No recharge records found.</div>
+          </div>
+
+          <div class="ac-pagination">
+            <span id="pr-page-info" class="hint"></span>
+            <div class="ac-page-controls">
+              <select id="pr-page-size" class="field field-inline">
+                <option value="20" selected>20 / page</option>
+                <option value="50">50 / page</option>
+                <option value="100">100 / page</option>
+              </select>
+              <button id="btn-pr-prev" class="btn btn-ghost btn-sm">‹ Prev</button>
+              <button id="btn-pr-next" class="btn btn-ghost btn-sm">Next ›</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ANNOUNCEMENTS -->
+      <section id="sec-announce" class="sec">
+        <h2>Announcements</h2>
+        <div class="panel">
+          <div class="form-row">
+            <input id="announce-text" type="text" placeholder="Will be sent to all users..." class="field" style="flex:1;">
+            <button id="btn-send-announce" class="btn btn-primary">Broadcast</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- TREASURE CHEST -->
+      <section id="sec-chest" class="sec">
+        <h2>Treasure Chest</h2>
+        <p class="hint" style="margin-bottom:16px;">Every room's chest uses this same level target. Resets daily.</p>
+        <div id="chest-levels-form"></div>
+        <button id="btn-add-chest-level" class="btn btn-ghost" style="margin-top:10px;">+ Add Another Level</button>
+        <div style="margin-top:16px;">
+          <button id="btn-save-chest-levels" class="btn btn-primary">Save</button>
+        </div>
+      </section>
+
+      <!-- THEME LIBRARY -->
+      <section id="sec-theme-library" class="sec">
+        <h2>Theme Library</h2>
+        <p class="hint" style="margin-bottom:16px;">Any images uploaded here can be selected directly by all users from their Room Settings → Room Theme (as an option alongside uploading their own).</p>
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Add a New Theme</h3>
+          <div class="form-row">
+            <input id="theme-lib-name" type="text" placeholder="Theme Name (e.g. Neon City)" maxlength="40" class="field">
+            <input id="theme-lib-file" type="file" accept="image/*" class="field">
+            <button id="btn-theme-lib-upload" class="btn btn-primary">Upload</button>
+          </div>
+        </div>
+        <h3 class="sub-head">All Themes <span id="theme-lib-count" class="hint"></span></h3>
+        <div id="theme-lib-grid" class="theme-lib-admin-grid"></div>
+        <div id="theme-lib-empty" class="empty-note hidden">No Themes added yet.</div>
+      </section>
+
+      <!-- BANNER MANAGEMENT -->
+      <section id="sec-banner-management" class="sec">
+        <h2>Banner Management</h2>
+        <p class="hint" style="margin-bottom:16px;">Live Banner shown on the Home page, right above Live Rooms. Drag a card to reorder; the change goes live immediately, no restart needed.</p>
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Upload a New Banner</h3>
+          <div class="form-row">
+            <input id="banner-link-url" type="text" placeholder="Link URL (optional — where tapping the banner goes)" class="field">
+            <input id="banner-file" type="file" accept="image/png, image/jpeg, image/webp" class="field">
+            <button id="btn-banner-upload" class="btn btn-primary">Upload</button>
+          </div>
+          <p class="hint" style="margin-top:6px;">JPG, PNG or WEBP — max 5MB.</p>
+        </div>
+        <h3 class="sub-head">All Banners <span id="banner-count" class="hint"></span></h3>
+        <div id="banner-grid" class="theme-lib-admin-grid"></div>
+        <div id="banner-empty" class="empty-note hidden">No banners added yet.</div>
+      </section>
+
+      <!-- LEVEL MANAGEMENT (ID Level System Upgrade, 2026-08-04) -->
+      <section id="sec-level-management" class="sec">
+        <h2>Level Management</h2>
+        <p class="hint" style="margin-bottom:16px;">Controls the app's ONE ID Level System — level only ever increases when a user sends a Gift inside a room. Changing the formula below never lowers anyone's already-reached level; it only affects future progress.</p>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Progression Formula</h3>
+          <div class="form-row">
+            <label class="field-label">Starting Coin Value (Level 1 requirement)
+              <input id="level-cfg-starting" type="number" min="1" class="field" placeholder="10000">
+            </label>
+            <label class="field-label">Growth Multiplier (×)
+              <input id="level-cfg-multiplier" type="number" min="1.01" step="0.1" class="field" placeholder="5">
+            </label>
+            <label class="field-label">Maximum Level
+              <input id="level-cfg-max" type="number" min="1" max="1000" class="field" placeholder="100">
+            </label>
+          </div>
+          <p class="hint" id="level-cfg-preview" style="margin-top:8px;"></p>
+          <button id="btn-level-cfg-save" class="btn btn-primary" style="margin-top:8px;">Save Formula</button>
+        </div>
+
+        <h3 class="sub-head">Level Groups &amp; Themes <span id="level-theme-count" class="hint"></span></h3>
+        <p class="hint" style="margin-bottom:12px;">Every 10 levels share one theme (badge, icon, border, background, colors, glow). Saving a group here updates it live for every online user already in that group — no restart, no per-user edit.</p>
+        <div id="level-theme-grid" class="theme-lib-admin-grid"></div>
+      </section>
+
+      <!-- BADGE MANAGEMENT (Premium Badges, e.g. Blue Diamond V) -->
+      <section id="sec-badge-management" class="sec">
+        <h2>Badge Management</h2>
+        <p class="hint" style="margin-bottom:12px;">Admin-only badges. Not public — only the exact PingPong ID a badge is sent to will ever see it. Shows as a small badge on their Room Seat, and a larger animated badge on their Profile.</p>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Send / Remove Badge</h3>
+          <div class="form-row">
+            <input id="badge-target" type="text" placeholder="PingPong ID" class="field">
+            <select id="badge-select" class="field"></select>
+            <button id="btn-send-badge" class="btn btn-primary">Send</button>
+            <button id="btn-remove-badge" class="btn btn-ghost">Remove</button>
+          </div>
+          <p class="hint" style="margin-top:8px;">Sending a badge the user already has does nothing (no duplicate). Removing it makes it disappear immediately on their next refresh / badge_update event — no app restart needed.</p>
+          <div id="badge-preview" class="tag-preview-box"></div>
+        </div>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Badge Size</h3>
+          <p class="hint" style="margin-bottom:10px;">Controls how big this badge renders — separately for the small Room Seat version and the larger Profile version. Applies live to everyone, no restart.</p>
+          <div class="form-row">
+            <label class="field-label">Room Seat (8–40px)
+              <input id="badge-size-seat" type="number" min="8" max="40" class="field" style="width:100px;">
+            </label>
+            <label class="field-label">Profile (24–160px)
+              <input id="badge-size-profile" type="number" min="24" max="160" class="field" style="width:100px;">
+            </label>
+            <button id="btn-save-badge-size" class="btn btn-primary">Save Size</button>
+          </div>
+        </div>
+
+        <h3 class="sub-head">Recent Badge Activity</h3>
+        <div id="badge-history-list" class="data-list"></div>
+      </section>
+
+      <!-- CALL HOSTING SYSTEM -->
+      <section id="sec-call-hosting" class="sec">
+        <h2>Call Hosting</h2>
+        <p class="hint" style="margin-bottom:12px;">Paid Voice/Video calls. Only Admin-approved hosts show a Call button on their profile; the caller pays coins per minute, the host receives no automatic coins — reports below are for manual payout.</p>
+
+        <div class="form-row" style="margin-bottom:14px;">
+          <button class="btn btn-ghost ch-tab active" data-ch-tab="hosts">Hosts</button>
+          <button class="btn btn-ghost ch-tab" data-ch-tab="active-calls">Active Calls</button>
+          <button class="btn btn-ghost ch-tab" data-ch-tab="history">Call History</button>
+          <button class="btn btn-ghost ch-tab" data-ch-tab="reports">Host Reports</button>
+          <button class="btn btn-ghost ch-tab" data-ch-tab="revenue">Company Revenue</button>
+          <button class="btn btn-ghost ch-tab" data-ch-tab="rates">Call Rate Settings</button>
+        </div>
+
+        <div id="ch-panel-hosts" class="ch-panel">
+          <div class="panel">
+            <h3 class="sub-head" style="margin-top:0;">Assign / Manage Host</h3>
+            <div class="form-row">
+              <input id="ch-host-userid" type="text" placeholder="Existing User ID" class="field">
+              <button id="ch-btn-approve" class="btn btn-primary">Approve</button>
+              <button id="ch-btn-reject" class="btn btn-ghost">Reject</button>
+              <button id="ch-btn-suspend" class="btn btn-ghost">Suspend</button>
+              <button id="ch-btn-disable" class="btn btn-ghost">Disable</button>
+              <button id="ch-btn-remove" class="btn btn-danger">Remove</button>
+            </div>
+            <p class="hint" style="margin-top:8px;">Uses the user's existing User ID — no separate host account is created. The Call button disappears from their profile immediately on Reject/Suspend/Disable/Remove.</p>
+          </div>
+          <div class="form-row" style="margin:10px 0;">
+            <select id="ch-hosts-filter" class="field">
+              <option value="">All Statuses</option>
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="suspended">Suspended</option>
+              <option value="disabled">Disabled</option>
+              <option value="removed">Removed</option>
+            </select>
+            <input id="ch-hosts-search" type="text" placeholder="Search User ID / name" class="field">
+          </div>
+          <div id="ch-hosts-list" class="data-list"></div>
+        </div>
+
+        <div id="ch-panel-active-calls" class="ch-panel" style="display:none;">
+          <div id="ch-active-calls-list" class="data-list"></div>
+        </div>
+
+        <div id="ch-panel-history" class="ch-panel" style="display:none;">
+          <div class="form-row" style="margin-bottom:10px;">
+            <input id="ch-history-host" type="text" placeholder="Host User ID" class="field">
+            <input id="ch-history-caller" type="text" placeholder="Caller User ID" class="field">
+            <button id="ch-btn-history-filter" class="btn btn-primary">Filter</button>
+          </div>
+          <div id="ch-history-list" class="data-list"></div>
+        </div>
+
+        <div id="ch-panel-reports" class="ch-panel" style="display:none;">
+          <div id="ch-reports-list" class="data-list"></div>
+        </div>
+
+        <div id="ch-panel-revenue" class="ch-panel" style="display:none;">
+          <div class="panel">
+            <h3 class="sub-head" style="margin-top:0;">Total Company Revenue: <span id="ch-revenue-total">0</span> coins</h3>
+            <div id="ch-revenue-byday" class="data-list"></div>
+          </div>
+        </div>
+
+        <div id="ch-panel-rates" class="ch-panel" style="display:none;">
+          <div class="panel">
+            <h3 class="sub-head" style="margin-top:0;">Call Rate Settings</h3>
+            <div class="form-row">
+              <label class="field-label">Coins / Minute
+                <input id="ch-rate-coins" type="number" min="1" class="field" style="width:120px;">
+              </label>
+              <label class="field-label">Minimum Balance
+                <input id="ch-rate-minbal" type="number" min="0" class="field" style="width:120px;">
+              </label>
+              <label class="field-label">Max Duration (sec)
+                <input id="ch-rate-maxdur" type="number" min="1" class="field" style="width:120px;">
+              </label>
+              <label class="field-label">Max Daily Minutes (blank = no cap)
+                <input id="ch-rate-maxdaily" type="number" min="0" class="field" style="width:160px;">
+              </label>
+              <label class="field-label"><input id="ch-rate-enabled" type="checkbox"> Call Hosting Enabled</label>
+            </div>
+            <button id="ch-btn-save-rates" class="btn btn-primary" style="margin-top:10px;">Save Rates</button>
+          </div>
+          <div class="panel">
+            <h3 class="sub-head" style="margin-top:0;">Set Host Target (7-day, editable period)</h3>
+            <div class="form-row">
+              <input id="ch-target-userid" type="text" placeholder="Host User ID" class="field">
+              <input id="ch-target-coins" type="number" min="0" placeholder="Target coins" class="field">
+              <input id="ch-target-days" type="number" min="1" placeholder="Period days (default 7)" class="field">
+              <button id="ch-btn-set-target" class="btn btn-primary">Set Target</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VOICE SFU (Phase 3, Step 3.6) — read-only production dashboard.
+           Reuses GET /api/admin/voice-sfu/health and
+           GET /api/admin/voice-sfu/readiness (both existed since Step 3.2/
+           3.5) — no new admin API route is added for this section. -->
+      <section id="sec-voice-sfu" class="sec">
+        <h2>Voice SFU</h2>
+        <p class="hint" style="margin-bottom:12px;">Production status for the LiveKit SFU voice provider (parallel to the default mesh voice path — see voice_sfu/). This panel is read-only telemetry; VOICE_MODE and the staged-rollout knobs are still set via server environment variables, not here (see LIVEKIT_PRODUCTION.md).</p>
+
+        <div class="form-row" style="margin-bottom:14px;">
+          <button id="vsfu-btn-refresh" class="btn btn-primary">Refresh</button>
+          <label class="field-label"><input id="vsfu-auto-refresh" type="checkbox"> Auto-refresh (10s)</label>
+          <span id="vsfu-last-updated" class="hint"></span>
+        </div>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Readiness</h3>
+          <div id="vsfu-readiness" class="data-list"><div class="hint">Loading…</div></div>
+        </div>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Rollout</h3>
+          <div id="vsfu-rollout" class="data-list"><div class="hint">Loading…</div></div>
+        </div>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">SFU Health</h3>
+          <div id="vsfu-health-summary" class="stat-grid"></div>
+        </div>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Latency (ms, rolling average)</h3>
+          <div id="vsfu-latency" class="stat-grid"></div>
+        </div>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Active Local Rooms</h3>
+          <div id="vsfu-rooms-list" class="data-list"><div class="hint">No SFU-active rooms on this instance right now.</div></div>
+          <p class="hint" style="margin-top:8px;">Per-instance counts only (best-effort bookkeeping, not authoritative — see voice_sfu/roomManager.js). In a multi-instance deployment, totals above are this instance's share, not cluster-wide.</p>
+        </div>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Recent Events</h3>
+          <div id="vsfu-events-list" class="data-list"></div>
+        </div>
+      </section>
+
+      <!-- RELATIONSHIP SETTINGS (CP / Friendship visual controls) -->
+      <section id="sec-relationship-settings" class="sec">
+        <h2>Relationship Settings</h2>
+        <p class="hint" style="margin-bottom:16px;">Controls the CP and Friendship heart shown between two adjacent seated users. Size/opacity/animation/position are never hardcoded in CSS — everything here is saved and pushed to every connected room live, no restart needed.</p>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">💛 CP</h3>
+          <div class="form-row">
+            <label class="hint" style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="rel-cp-asset-enabled"> Use custom CP asset</label>
+          </div>
+          <div class="form-row">
+            <img id="rel-cp-preview" src="/images/relationships/cp-heart.png" alt="CP preview" style="width:64px;height:64px;object-fit:contain;background:var(--bg-panel-2);border-radius:12px;border:1px solid var(--line);">
+            <input id="rel-cp-file" type="file" accept="image/png" class="field">
+            <button id="btn-rel-cp-upload" class="btn btn-primary">Upload PNG</button>
+            <button id="btn-rel-cp-restore" class="btn">Restore Default</button>
+          </div>
+          <p class="hint" style="margin:2px 0 12px;">PNG only, max 5MB. Uploading does not enable it by itself — check "Use custom CP asset" and Save.</p>
+          <div class="form-row">
+            <label class="hint">Width (px)<input id="rel-cp-width" type="number" min="8" max="400" class="field"></label>
+            <label class="hint">Height (px)<input id="rel-cp-height" type="number" min="8" max="400" class="field"></label>
+            <label class="hint">Scale<input id="rel-cp-scale" type="number" step="0.05" min="0.1" max="5" class="field"></label>
+            <label class="hint">Opacity (0-1)<input id="rel-cp-opacity" type="number" step="0.05" min="0" max="1" class="field"></label>
+          </div>
+          <div class="form-row">
+            <label class="hint" style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="rel-cp-anim-enabled"> Animation enabled</label>
+            <label class="hint">Animation speed (sec)<input id="rel-cp-anim-speed" type="number" step="0.1" min="0.2" max="20" class="field"></label>
+            <label class="hint">X Offset (px)<input id="rel-cp-offset-x" type="number" class="field"></label>
+            <label class="hint">Y Offset (px)<input id="rel-cp-offset-y" type="number" class="field"></label>
+          </div>
+          <div class="form-row">
+            <button id="btn-rel-cp-save" class="btn btn-primary">Save</button>
+            <button id="btn-rel-cp-reset" class="btn">Reset to Default</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">💗 Friendship</h3>
+          <div class="form-row">
+            <label class="hint" style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="rel-friendship-asset-enabled"> Use custom Friendship asset</label>
+          </div>
+          <div class="form-row">
+            <img id="rel-friendship-preview" src="/images/relationships/friendship-heart.png" alt="Friendship preview" style="width:64px;height:64px;object-fit:contain;background:var(--bg-panel-2);border-radius:12px;border:1px solid var(--line);">
+            <input id="rel-friendship-file" type="file" accept="image/png" class="field">
+            <button id="btn-rel-friendship-upload" class="btn btn-primary">Upload PNG</button>
+            <button id="btn-rel-friendship-restore" class="btn">Restore Default</button>
+          </div>
+          <p class="hint" style="margin:2px 0 12px;">PNG only, max 5MB. Uploading does not enable it by itself — check "Use custom Friendship asset" and Save.</p>
+          <div class="form-row">
+            <label class="hint">Width (px)<input id="rel-friendship-width" type="number" min="8" max="400" class="field"></label>
+            <label class="hint">Height (px)<input id="rel-friendship-height" type="number" min="8" max="400" class="field"></label>
+            <label class="hint">Scale<input id="rel-friendship-scale" type="number" step="0.05" min="0.1" max="5" class="field"></label>
+            <label class="hint">Opacity (0-1)<input id="rel-friendship-opacity" type="number" step="0.05" min="0" max="1" class="field"></label>
+          </div>
+          <div class="form-row">
+            <label class="hint" style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="rel-friendship-anim-enabled"> Animation enabled</label>
+            <label class="hint">Animation speed (sec)<input id="rel-friendship-anim-speed" type="number" step="0.1" min="0.2" max="20" class="field"></label>
+            <label class="hint">X Offset (px)<input id="rel-friendship-offset-x" type="number" class="field"></label>
+            <label class="hint">Y Offset (px)<input id="rel-friendship-offset-y" type="number" class="field"></label>
+          </div>
+          <div class="form-row">
+            <button id="btn-rel-friendship-save" class="btn btn-primary">Save</button>
+            <button id="btn-rel-friendship-reset" class="btn">Reset to Default</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SUPER ADMIN (God Power) -->
+      <section id="sec-super-admin" class="sec">
+        <h2>Super Admin <span class="hint">— God Power</span></h2>
+        <p class="hint" style="margin-bottom:16px;">This section still runs on the same Admin login — there's no separate Super Admin account, this is just a specially privileged section. Maximum <b id="godpower-max">10</b> God Power Holders allowed.</p>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Search by User ID</h3>
+          <div class="form-row">
+            <input id="godpower-search" type="text" placeholder="Provide a User ID" class="field">
+            <button id="btn-godpower-search" class="btn btn-ghost">Search</button>
+          </div>
+          <div id="godpower-user-card" class="data-row" style="display:none;margin-top:10px;"></div>
+        </div>
+
+        <h3 class="sub-head">Current God Power Holders <span id="godpower-count-badge" class="hint"></span></h3>
+        <div id="godpower-list" class="data-list"></div>
+        <div id="godpower-empty" class="empty-note hidden">No one is a God Power Holder yet.</div>
+      </section>
+
+      <!-- AI CORE -->
+      <section id="sec-ai-core" class="sec">
+        <h2>PingPong AI Core <span id="ai-status-badge" class="badge badge-ok">Healthy</span></h2>
+        <p class="hint" style="margin-bottom:16px;">
+          PingPong Help (support chat), server monitoring, security, moderation, and analytics — all visible from here together. Auto-refreshes every 30 seconds.
+        </p>
+
+        <div class="stat-grid">
+          <div class="stat-card"><span class="stat-num" id="ai-provider">–</span><span class="stat-lbl">AI Provider</span></div>
+          <div class="stat-card"><span class="stat-num" id="ai-conversations">0</span><span class="stat-lbl">AI Conversations</span></div>
+          <div class="stat-card"><span class="stat-num" id="ai-replies">0</span><span class="stat-lbl">AI Replies Sent</span></div>
+          <div class="stat-card warn"><span class="stat-num" id="ai-flags">0</span><span class="stat-lbl">Moderation Flags</span></div>
+        </div>
+
+        <div class="panel" style="margin-top:16px;">
+          <h3 class="sub-head" style="margin-top:0;">Server Health <span class="hint">(live)</span></h3>
+          <div class="stat-grid">
+            <div class="stat-card"><span class="stat-num" id="ai-mem">–</span><span class="stat-lbl">Memory (MB)</span></div>
+            <div class="stat-card"><span class="stat-num" id="ai-lag">–</span><span class="stat-lbl">Event Loop Lag (ms)</span></div>
+            <div class="stat-card"><span class="stat-num" id="ai-online">–</span><span class="stat-lbl">Online Users</span></div>
+            <div class="stat-card"><span class="stat-num" id="ai-uptime">–</span><span class="stat-lbl">Uptime</span></div>
+          </div>
+          <p id="ai-key-warning" class="hint hidden" style="color:var(--red); margin-top:10px;">⚠️ GEMINI_API_KEY is not set in the .env file — PingPong Help will not work right now.</p>
+        </div>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Recent AI Activity Log</h3>
+          <table class="data-table">
+            <thead><tr><th>Time</th><th>Module</th><th>Action</th><th>Result</th></tr></thead>
+            <tbody id="ai-log-rows"></tbody>
+          </table>
+          <div id="ai-log-empty" class="empty-note hidden">No AI activity logged yet.</div>
+        </div>
+      </section>
+
+      <!-- ROLE & COUNTRY MANAGEMENT -->
+      <section id="sec-role-management" class="sec">
+        <h2>Role &amp; Country Management</h2>
+        <p class="hint" style="margin-bottom:16px;">Create and manage Owner / Global Super Admin / Country Super Admin accounts. Every action goes into the Audit Log.</p>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Create a New Admin Account</h3>
+          <div class="form-grid">
+            <input type="text" id="ram-username" placeholder="Username">
+            <input type="password" id="ram-password" placeholder="Password">
+            <input type="text" id="ram-fullname" placeholder="Full Name">
+            <select id="ram-role">
+              <option value="global_super_admin">Global Super Admin</option>
+              <option value="country_super_admin">Country Super Admin</option>
+              <option value="country_manager">Country Manager</option>
+              <option value="admin">Admin</option>
+              <option value="moderator">Moderator</option>
+            </select>
+            <select id="ram-country">
+              <option value="">(country not applicable)</option>
+              <option value="IN">India</option>
+              <option value="BD">Bangladesh</option>
+              <option value="PK">Pakistan</option>
+              <option value="AR">Arabic Countries</option>
+              <option value="OTHERS">Other Countries</option>
+            </select>
+            <button class="btn-primary" id="ram-create-btn">Create</button>
+          </div>
+          <label id="ram-room101-wrap" class="hidden" style="display:flex;align-items:center;gap:8px;margin-top:10px;">
+            <input type="checkbox" id="ram-room101-cs">
+            <span>Assign as Room 101 (Customer Service / Robin room) Support Admin — this account will only be able to manage seats, mute and kick inside Room 101. No other room or setting is accessible to it.</span>
+          </label>
+          <p id="ram-create-error" class="hint hidden" style="color:var(--red);"></p>
+        </div>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">All Admin Accounts</h3>
+          <table class="data-table">
+            <thead><tr><th>Username</th><th>Full Name</th><th>Role</th><th>Country</th><th>Scope</th><th>Status</th><th>Last Login</th><th>Action</th></tr></thead>
+            <tbody id="ram-accounts-rows"></tbody>
+          </table>
+          <div id="ram-accounts-empty" class="empty-note hidden">No Admin Accounts.</div>
+        </div>
+
+        <div class="panel">
+          <h3 class="sub-head" style="margin-top:0;">Audit Log <span class="hint">(last 200)</span></h3>
+          <table class="data-table">
+            <thead><tr><th>Time</th><th>Admin</th><th>Action</th><th>Target</th><th>Result</th></tr></thead>
+            <tbody id="ram-logs-rows"></tbody>
+          </table>
+          <div id="ram-logs-empty" class="empty-note hidden">No logs.</div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ============ APPROVAL CENTER — REQUEST DETAILS DRAWER ============ -->
+<div id="ac-drawer-overlay" class="ac-drawer-overlay hidden">
+  <div id="ac-drawer" class="ac-drawer" role="dialog" aria-label="Request Details">
+    <div class="ac-drawer-head">
+      <div>
+        <span id="ac-drawer-title" class="ac-drawer-title">—</span>
+        <span id="ac-drawer-badge" class="badge">—</span>
+      </div>
+      <button id="ac-drawer-close" class="btn btn-ghost btn-sm">✕ Close</button>
+    </div>
+    <div class="ac-drawer-actions" id="ac-drawer-actionbar"></div>
+    <div class="ac-drawer-body">
+      <div class="ac-drawer-section">
+        <h4>User &amp; Country Info</h4>
+        <div id="ac-drawer-userinfo" class="ac-kv"></div>
+      </div>
+      <div class="ac-drawer-section">
+        <h4>Current / Previous State</h4>
+        <div id="ac-drawer-state" class="ac-kv"></div>
+      </div>
+      <div class="ac-drawer-section" id="ac-drawer-related-wrap">
+        <h4>Related Objects</h4>
+        <div id="ac-drawer-related" class="ac-kv"></div>
+      </div>
+      <div class="ac-drawer-section" id="ac-drawer-attach-wrap">
+        <h4>Attachments</h4>
+        <div id="ac-drawer-attachments" class="ac-attachments"></div>
+      </div>
+      <div class="ac-drawer-section">
+        <h4>Timeline / Audit History</h4>
+        <div id="ac-drawer-timeline" class="ac-timeline"></div>
+      </div>
+      <div class="ac-drawer-section" id="ac-drawer-comment-wrap">
+        <h4>Comment Add</h4>
+        <div class="form-row">
+          <input id="ac-comment-input" type="text" class="field" placeholder="Write a note...">
+          <button id="ac-comment-send" class="btn btn-primary btn-sm">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ BAN MANAGEMENT — DETAILS DRAWER (Phase 8) ============ -->
+<div id="bm-drawer-overlay" class="ac-drawer-overlay hidden">
+  <div id="bm-drawer" class="ac-drawer" role="dialog" aria-label="Ban Details">
+    <div class="ac-drawer-head">
+      <div>
+        <span id="bm-drawer-title" class="ac-drawer-title">—</span>
+        <span id="bm-drawer-badge" class="badge">—</span>
+      </div>
+      <button id="bm-drawer-close" class="btn btn-ghost btn-sm">✕ Close</button>
+    </div>
+    <div class="ac-drawer-actions" id="bm-drawer-actionbar"></div>
+    <div class="ac-drawer-body">
+      <div class="ac-drawer-section">
+        <h4>User Information</h4>
+        <div id="bm-drawer-userinfo" class="ac-kv"></div>
+      </div>
+      <div class="ac-drawer-section">
+        <h4>Ban Details / Before-After State</h4>
+        <div id="bm-drawer-details" class="ac-kv"></div>
+      </div>
+      <div class="ac-drawer-section" id="bm-drawer-appeal-wrap">
+        <h4>Appeal History &amp; Review</h4>
+        <div id="bm-drawer-appeal" class="ac-kv"></div>
+        <div id="bm-drawer-appeal-timeline" class="ac-timeline"></div>
+      </div>
+      <div class="ac-drawer-section">
+        <h4>Timeline / Audit History</h4>
+        <div id="bm-drawer-timeline" class="ac-timeline"></div>
+      </div>
+      <div class="ac-drawer-section">
+        <h4>Comment Add</h4>
+        <div class="form-row">
+          <input id="bm-comment-input" type="text" class="field" placeholder="Write a note...">
+          <button id="bm-comment-send" class="btn btn-primary btn-sm">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ BAN MANAGEMENT — NEW BAN MODAL (Phase 8) ============ -->
+<div id="bm-new-overlay" class="ac-drawer-overlay hidden">
+  <div class="ac-drawer" role="dialog" aria-label="New Ban Request" style="width:460px;">
+    <div class="ac-drawer-head">
+      <div><span class="ac-drawer-title">New Ban Request Submit</span></div>
+      <button id="bm-new-close" class="btn btn-ghost btn-sm">✕ Close</button>
+    </div>
+    <div class="ac-drawer-body">
+      <div class="ac-drawer-section">
+        <div class="form-grid">
+          <input type="text" id="bm-new-userid" placeholder="Target User ID">
+          <select id="bm-new-type">
+            <option value="temporary">Temporary Ban</option>
+            <option value="permanent">Permanent Ban</option>
+            <option value="device">Device Ban</option>
+            <option value="ip">IP Ban</option>
+          </select>
+          <input type="number" id="bm-new-duration" placeholder="Duration (days)" min="1" max="3650">
+          <input type="text" id="bm-new-device" placeholder="Device ID (Device Ban only)" class="hidden">
+          <input type="text" id="bm-new-ip" placeholder="IP Address (IP Ban only)" class="hidden">
+          <textarea id="bm-new-reason" placeholder="Ban Reason" style="grid-column:1/-1;"></textarea>
+        </div>
+        <button id="bm-new-submit" class="btn btn-primary" style="margin-top:10px;">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js?v=20260804-level1"></script>
+</body>
+</html>
