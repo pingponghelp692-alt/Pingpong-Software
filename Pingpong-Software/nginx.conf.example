@@ -1,0 +1,113 @@
+# Example Nginx reverse-proxy config for PingPong.
+#
+# Copy to /etc/nginx/sites-available/pingpong, edit the two placeholders
+# below (YOUR_DOMAIN, and the SSL cert paths), then:
+#   sudo ln -s /etc/nginx/sites-available/pingpong /etc/nginx/sites-enabled/
+#   sudo nginx -t
+#   sudo systemctl reload nginx
+#
+# SSL certificates: the simplest production path is Let's Encrypt via
+# certbot —
+#   sudo apt install certbot python3-certbot-nginx
+#   sudo certbot --nginx -d YOUR_DOMAIN
+# certbot will edit this file in place to add the ssl_certificate lines
+# and the port-80-to-443 redirect for you, and sets up auto-renewal
+# (systemctl status certbot.timer). The manual ssl_certificate lines
+# below are included in case you're using a certificate from elsewhere
+# (e.g. a purchased cert, or a wildcard cert issued another way).
+
+# ---------- HTTP: redirect to HTTPS ----------
+server {
+    listen 80;
+    listen [::]:80;
+    server_name YOUR_DOMAIN;
+    return 301 https://$host$request_uri;
+}
+
+# ---------- HTTPS: reverse proxy to the Node process ----------
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name YOUR_DOMAIN;
+
+    # --- SSL certificate (fill in if not using certbot's auto-config) ---
+    ssl_certificate     /etc/letsencrypt/live/YOUR_DOMAIN/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/YOUR_DOMAIN/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
+
+    # Upload size: matches the largest single multer limit in server.js
+    # (15MB, for music uploads). Keep this in sync if that limit changes.
+    client_max_body_size 20M;
+
+    # --- Gzip ---
+    # server.js already gzips its own responses (Phase 11, perf/compression.js
+    # via the `compression` npm package), so this is a harmless second layer
+    # (Nginx will not double-compress an already Content-Encoding: gzip
+    # response) rather than the primary compression path. Left on mainly so
+    # Nginx also compresses its own directly-served content (error pages,
+    # anything served via a future `alias`/static block added later).
+    gzip on;
+    gzip_comp_level 5;
+    gzip_min_length 512;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript image/svg+xml;
+    gzip_vary on;
+
+    # --- Static asset caching at the edge ---
+    # server.js already sets Cache-Control per-file-type (no-cache for
+    # index.html/admin/index.html so a deploy is picked up immediately;
+    # normal caching for app.js/style.css, which are cache-busted via the
+    # ?v= query param on every deploy — see server.js's staticNoCacheHtml
+    # comment). This block adds a long edge cache specifically for
+    # immutable, content-hashed-by-convention upload paths, so repeat asset
+    # requests (gift PNGs, frame PNGs, music, SVIP tags) don't round-trip to
+    # Node at all once cached. It does NOT override index.html's headers —
+    # the more specific /uploads/ location below only matches upload
+    # sub-paths, so the app's own header logic for HTML/JS/CSS still wins.
+    location ~ ^/(music|photos|backgrounds|logos|frames|group-icons)/ {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host $host;
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000, immutable";
+    }
+
+    # --- Socket.IO (WebSocket upgrade) ---
+    # Voice-room signaling, chat, gifts, wallet updates, etc. all go over
+    # this. Must explicitly forward the Upgrade/Connection headers or
+    # Socket.IO silently falls back to (much slower, less reliable)
+    # long-polling instead of a real WebSocket.
+    location /socket.io/ {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        # Voice/chat sockets are long-lived; don't let Nginx's default
+        # 60s idle timeout drop a quiet-but-still-connected room member.
+        proxy_read_timeout 3600s;
+        proxy_send_timeout 3600s;
+    }
+
+    # --- Everything else: the app itself ---
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        # Needed so rate limiting / bruteForce / audit-log IP fields
+        # (security/rateLimiter.js, security/bruteForce.js, req.ip in
+        # server.js's rbac.logAction calls) see the real client IP instead
+        # of 127.0.0.1 for every request once Nginx is in front of Node.
+        # If you add this, also set Express's `trust proxy` — see
+        # README.md "Deployment steps" for the one-line change and why it
+        # isn't already on by default (it must NOT be on if the app is
+        # ever exposed directly, without Nginx, or X-Forwarded-For
+        # becomes spoofable by any client).
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}

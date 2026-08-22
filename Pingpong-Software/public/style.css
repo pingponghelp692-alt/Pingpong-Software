@@ -1,0 +1,3408 @@
+/* ===================================================================
+   PingPong — PREMIUM GOLD/BLACK/ROYAL THEME
+   Drop-in replacement. Every class name and structural selector from
+   the original stylesheet is preserved so app.js requires zero
+   changes and no existing feature is removed or broken.
+   =================================================================== */
+:root{
+  --bg-deep:      #0B0810;
+  --bg-panel:     #16101F;
+  --bg-panel-2:   #1E1628;
+  --bg-raised:    #261C33;
+  --line:         rgba(255,215,140,0.12);
+
+  --accent-gold:  #F7CE7E;
+  --accent-gold-2:#E5B968;
+  --accent-gold-dim: rgba(247,206,126,0.16);
+  --accent-rose:  #EE7C90;
+  --accent-rose-dim: rgba(238,124,144,0.18);
+  --royal-purple: #9D7BF7;
+
+  --text-bright:  #FBF6EA;
+  --text-soft:    #CBB98F;
+  --text-dim:     #8E7A63;
+
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Manrope', sans-serif;
+
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --radius-round: 999px;
+
+  --shadow-card: 0 10px 30px rgba(0,0,0,0.55);
+  --glow-gold: 0 0 18px rgba(247,206,126,0.35);
+}
+
+*{ box-sizing: border-box; }
+/* Fix (pinch/double-tap zoom bug): the viewport meta tag alone doesn't
+   stop zoom gestures on every browser/WebView. touch-action: manipulation
+   explicitly tells the browser not to handle pinch-zoom or double-tap-zoom
+   itself, while still allowing normal scrolling/tapping everywhere. */
+html,body{ height:100%; overflow-x:hidden; touch-action: manipulation; }
+body{
+  margin:0;
+  width:100%;
+  background:
+    radial-gradient(120% 60% at 50% -10%, rgba(157,123,247,0.18) 0%, transparent 55%),
+    radial-gradient(100% 80% at 50% 110%, rgba(247,206,126,0.08) 0%, transparent 60%),
+    var(--bg-deep);
+  color: var(--text-bright);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+  touch-action: pan-y;
+}
+/* Bug fix: while the room game (Food Wheel / Teen Patti) overlay is open,
+   the page behind it must not pinch-zoom or horizontal-scroll. Applied to
+   <body> for the duration the overlay is open (see app.js openRoomGame /
+   closeRoomGame). This is what was causing the zoomed-in / shifted / cut-off
+   game view — the background page was zooming and panning underneath it. */
+body.game-locked{
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  touch-action: none;
+  width: 100vw;
+}
+/* Bug fix: the chat log and treasure chest float above the seats with their
+   own z-index/backdrop-filter, and on some devices that let them render on
+   top of the full-screen room game overlay instead of behind it, blocking
+   the wheel/cards. Belt-and-braces fix alongside the game overlay's own
+   z-index: while a game is open (body.game-locked), force both fully out
+   of the way so nothing from the room can ever cover the game view. */
+body.game-locked .chat-panel,
+body.game-locked .chest-wrap{
+  visibility: hidden;
+  pointer-events: none;
+}
+/* Full-screen game mode: hide the room header (room name/ID, ranking,
+   settings, online-count) and the bottom voice bar (mic/gift/music/menu/
+   game icons + chat input) while a game overlay is open, so only the game
+   itself is on screen. Both are visibility:hidden (not display:none) so
+   layout doesn't jump, and pointer-events:none so nothing behind the game
+   can catch a stray tap. Restored automatically the moment .game-locked is
+   removed on close (see closeRoomGame in app.js) — no separate "restore"
+   step needed since this is a pure CSS state tied to that one class. */
+body.game-locked .room-topbar,
+body.game-locked .room-toolbar{
+  visibility: hidden;
+  pointer-events: none;
+}
+/* The back button is the one exception: it must stay visible and tappable
+   above the full-screen game at all times. Pulled out of the (now hidden)
+   header via its own fixed position + visibility/pointer-events reset, and
+   given a z-index above the game overlay (900) and its own close button
+   (905) so no game UI can ever layer on top of it. */
+body.game-locked #btn-leave-room{
+  visibility: visible;
+  pointer-events: auto;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 950;
+  /* Bug fix (unwanted blur around the game close button): the room-header
+     glass-icon style (#btn-leave-room, #btn-room-mod{backdrop-filter:blur(8px)})
+     is correct for the normal in-room header, but once this button is pulled
+     out to sit on top of the full-screen game overlay it keeps blurring
+     whatever game content is behind it, showing as a soft blur halo around
+     an otherwise sharp button. Only during game-locked mode, disable the
+     backdrop blur so the button stays a clean, sharp circle over the game;
+     its normal frosted look in the room header is untouched. */
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+h1,h2,h3{ font-family: var(--font-display); font-weight:600; margin:0; letter-spacing:-0.01em; }
+p{ margin:0; }
+button{ font-family: var(--font-body); cursor:pointer; }
+input, textarea, select{ font-family: var(--font-body); }
+.hidden{ display:none !important; }
+
+/* ---------- View routing ---------- */
+/* Fix (whole-screen shake/jump on mobile): min-height:100vh alone
+   recalculates every time the mobile browser's address bar shows or
+   hides while scrolling, which visibly shifts the whole page up and
+   down. 100dvh (dynamic viewport height) tracks the *actual* visible
+   area instead, so the page height stays stable. The plain 100vh stays
+   first as a fallback for older browsers that don't support dvh. */
+.view{ display:none; min-height:100vh; min-height:100dvh; max-width: 560px; margin: 0 auto; position: relative; flex-direction: column; }
+.view.active{ display:flex; }
+
+/* ---------- Toast ---------- */
+.toast{
+  position: fixed; top: 16px; left: 50%;
+  transform: translateX(-50%) translateY(-140%);
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-2));
+  color: #241305; font-weight: 800; padding: 12px 20px;
+  border-radius: var(--radius-round); z-index: 999;
+  transition: transform .3s ease; box-shadow: var(--shadow-card), var(--glow-gold);
+  max-width: 90vw; text-align:center;
+}
+.toast.show{ transform: translateX(-50%) translateY(0); }
+
+/* ---------- Auth ---------- */
+.auth-wrap{ flex:1; display:flex; flex-direction:column; justify-content:center; padding: 32px 24px; gap: 28px; }
+.brand{ text-align:center; }
+.brand-mark{
+  width:68px; height:68px; margin:0 auto 14px; border-radius: var(--radius-md);
+  background: linear-gradient(145deg, var(--accent-gold), var(--royal-purple));
+  display:flex; align-items:center; justify-content:center;
+  font-family: var(--font-display); font-weight:700; font-size:22px; color:#1a0f08;
+  box-shadow: var(--glow-gold);
+}
+.brand h1{ font-size: 32px; color: var(--text-bright); text-shadow: 0 0 22px rgba(247,206,126,0.25); }
+.brand-sub{ color: var(--accent-gold); opacity:0.85; margin-top:6px; font-size:14px; }
+
+.auth-card{
+  background: linear-gradient(165deg, var(--bg-panel), var(--bg-panel-2));
+  border: 1px solid var(--line); border-radius: var(--radius-lg);
+  padding: 22px; display:flex; flex-direction:column; gap:12px; box-shadow: var(--shadow-card);
+}
+.field-label{ font-size:13px; color:var(--text-dim); font-weight:700; }
+.field-row{
+  display:flex; align-items:center; gap:8px; background: var(--bg-raised);
+  border-radius: var(--radius-sm); padding: 4px 4px 4px 14px; border:1px solid var(--line);
+}
+.field-row .prefix{ color:var(--accent-gold); font-weight:800; }
+.field-row input{ flex:1; background:transparent; border:none; outline:none; color:var(--text-bright); font-size:16px; padding:12px 10px; }
+.field-solo{ width:100%; background: var(--bg-raised); border:1px solid var(--line); border-radius: var(--radius-sm); color:var(--text-bright); padding:13px 14px; font-size:15px; outline:none; }
+.field-solo:focus, .field-row:focus-within{ border-color: var(--accent-gold); box-shadow: 0 0 0 3px var(--accent-gold-dim); }
+textarea.field-solo{ resize:vertical; min-height:70px; }
+.hint{ color:var(--text-dim); font-size:13px; }
+.auth-switch-row{ display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-top:2px; }
+.auth-divider{ display:flex; align-items:center; gap:10px; margin:14px 0; color:var(--text-dim); font-size:12.5px; }
+.auth-divider::before, .auth-divider::after{ content:""; flex:1; height:1px; background:var(--line); }
+.auth-google-btn{ display:flex; align-items:center; justify-content:center; gap:10px; }
+.auth-google-btn .google-icon{ width:18px; height:18px; }
+#recaptcha-container{ position:absolute; width:0; height:0; overflow:hidden; }
+
+/* ---------- Buttons ---------- */
+.btn{ border:none; border-radius: var(--radius-round); padding: 13px 20px; font-weight:800; font-size:15px; transition: transform .15s ease, opacity .15s ease, box-shadow .15s ease; }
+.btn:active{ transform: scale(0.97); }
+.btn-block{ width:100%; }
+.btn-sm{ padding:9px 16px; font-size:13px; }
+.btn-primary{ background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-2)); color:#241305; box-shadow: var(--glow-gold); }
+.btn-accent{ background: linear-gradient(135deg, var(--accent-rose), var(--royal-purple)); color:#fdf3f5; }
+.btn-ghost{ background: transparent; color: var(--text-soft); border:1px solid var(--line); }
+.icon-btn{ background: var(--bg-panel-2); border:1px solid var(--line); color:var(--accent-gold); width:38px; height:38px; border-radius: var(--radius-round); font-size:16px; }
+
+/* ---------- Top bar / layout shell ---------- */
+.topbar{ display:flex; align-items:center; gap:10px; padding: 18px 18px 12px; }
+.topbar h2{ flex:1; font-size:20px; }
+.logout-lock-row{
+  display:flex; align-items:center; gap:6px; font-size:12px; font-weight:700;
+  color: var(--text-soft); background: var(--bg-panel-2); border:1px solid var(--line);
+  padding:6px 10px; border-radius: var(--radius-round); flex-shrink:0;
+}
+.logout-lock-row input{ accent-color: var(--accent-gold); width:16px; height:16px; }
+.page-body{ flex:1; padding: 6px 18px 100px; overflow-y:auto; }
+
+.profile-chip{ display:flex; align-items:center; gap:10px; flex:1; min-width:0; }
+.profile-chip-info{ display:flex; flex-direction:column; min-width:0; }
+.profile-chip .name{ font-weight:800; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.profile-chip .sub{ font-size:11px; color:var(--text-dim); }
+
+.stat-pill{ background: linear-gradient(135deg, var(--bg-panel-2), var(--bg-raised)); border:1px solid var(--line); padding:7px 12px; border-radius: var(--radius-round); font-size:13px; font-weight:800; white-space:nowrap; color: var(--accent-gold); }
+.stat-pill-btn{ cursor:pointer; font-family: inherit; }
+.room-lock-badge{ font-size:14px; margin-left:4px; vertical-align:middle; }
+#mod-room-lock-section .logout-lock-row{ justify-content:space-between; width:100%; margin-bottom:8px; }
+#mod-room-lock-section #mod-room-lock-password{ margin-bottom:8px; }
+.room-card-lock{ font-size:13px; margin-left:6px; }
+
+.avatar{ border-radius:50%; object-fit:cover; background: var(--bg-raised); display:block; }
+.avatar-sm{ width:38px; height:38px; }
+.avatar-lg{ width:96px; height:96px; margin:0 auto; border:3px solid var(--accent-gold); box-shadow: var(--glow-gold); }
+
+/* ---------- Home / room list ---------- */
+.section-head{ display:flex; align-items:center; justify-content:space-between; margin: 18px 0 12px; }
+.section-head h2{ font-size:19px; }
+
+.room-grid{ display:flex; flex-direction:column; gap:12px; }
+.room-card{
+  background: linear-gradient(160deg, var(--bg-panel), var(--bg-panel-2));
+  border:1px solid var(--line); border-radius: var(--radius-lg);
+  padding:16px; display:flex; align-items:center; gap:14px;
+  box-shadow: var(--shadow-card); transition: box-shadow .2s ease, transform .15s ease;
+}
+.room-card:active{ transform: scale(0.99); }
+.room-card-icon{
+  width:50px; height:50px; border-radius:16px; flex-shrink:0;
+  background: linear-gradient(145deg, var(--accent-gold-dim), rgba(157,123,247,0.22));
+  border: 1px solid var(--line);
+  display:flex; align-items:center; justify-content:center; font-size:22px;
+  overflow:hidden;
+}
+.room-card-icon img{ width:100%; height:100%; object-fit:cover; }
+.room-card-body{ flex:1; min-width:0; }
+.room-card-body h3{ font-size:16px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.room-card-body .sub{ color:var(--text-dim); font-size:12.5px; margin-top:2px; display:block; }
+.room-card .join-btn{ flex-shrink:0; }
+
+/* ---------- Home Screen Social Tabs (Recently / Following / Groups) ---------- */
+.social-tabs{ display:flex; gap:8px; margin: 4px 0 14px; }
+.social-tab{
+  flex:1; padding:10px 0; text-align:center; font-size:13.5px; font-weight:800;
+  background: var(--bg-panel); border:1px solid var(--line); border-radius: var(--radius-round);
+  color: var(--text-dim); transition: all .15s ease;
+}
+.social-tab.active{
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-2));
+  color:#241305; box-shadow: var(--glow-gold); border-color: transparent;
+}
+.social-panel{ margin-bottom: 6px; }
+.social-panel-head{ margin: 0 0 10px; }
+.social-list{ display:flex; flex-direction:column; gap:12px; }
+.social-item{
+  background: linear-gradient(160deg, var(--bg-panel), var(--bg-panel-2));
+  border:1px solid var(--line); border-radius: var(--radius-lg);
+  padding:14px 16px; display:flex; align-items:center; gap:14px;
+  box-shadow: var(--shadow-card);
+}
+.social-item-icon{
+  width:46px; height:46px; border-radius:50%; flex-shrink:0; position:relative;
+  background: linear-gradient(145deg, var(--accent-gold-dim), rgba(157,123,247,0.22));
+  border: 1px solid var(--line);
+  display:flex; align-items:center; justify-content:center; font-size:20px; overflow:hidden;
+}
+.social-item-icon img{ width:100%; height:100%; object-fit:cover; }
+.social-item-body{ flex:1; min-width:0; }
+.social-item-body h3{ font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.social-item-body .sub{ color:var(--text-dim); font-size:12px; margin-top:2px; display:block; }
+.social-item .join-btn{ flex-shrink:0; }
+.status-dot{
+  position:absolute; bottom:-1px; right:-1px; width:12px; height:12px; border-radius:50%;
+  border:2px solid var(--bg-panel);
+}
+.status-dot.online{ background:#4ADE80; }
+.status-dot.offline{ background:#5B5468; }
+.live-badge{
+  display:inline-block; font-size:10px; font-weight:800; letter-spacing:.02em;
+  padding:2px 8px; border-radius: var(--radius-round); color:#fff;
+  background: linear-gradient(135deg, var(--accent-rose), var(--royal-purple)); margin-left:6px;
+}
+.btn-danger{ background: linear-gradient(135deg, #E5555F, #B93A44); color:#fff; }
+
+.empty-state{ text-align:center; padding: 40px 20px; color:var(--text-dim); }
+.empty-state p{ margin-bottom:4px; }
+.empty-sub{ font-size:13px; }
+
+/* ---------- Bottom nav ---------- */
+.bottom-nav{
+  position: sticky; bottom:0; left:0; right:0; display:flex;
+  background: rgba(11,8,16,0.92); backdrop-filter: blur(14px);
+  border-top:1px solid var(--line); padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
+}
+.nav-btn{ flex:1; background:none; border:none; color:var(--text-dim); display:flex; flex-direction:column; align-items:center; gap:3px; font-size:18px; padding:6px 0; border-radius: var(--radius-sm); }
+.nav-btn span{ font-size:10.5px; font-weight:800; }
+.nav-btn.active{ color: var(--accent-gold); text-shadow: 0 0 12px rgba(247,206,126,0.4); }
+
+/* ---------- Modals ---------- */
+.modal-overlay{ position: fixed; inset:0; background: rgba(4,2,8,0.78); display:flex; align-items:flex-end; justify-content:center; z-index:500; backdrop-filter: blur(4px); }
+/* Room-context modals (Gift / Music / YouTube Playlist / Chest info) must
+   sit above the fixed room toolbar (800) and the full-screen game panel
+   (900) so that once one of them is open, nothing else from the room —
+   toolbar, chest, seats — is visible or tappable underneath it. */
+#modal-gift, #modal-music, #modal-yt-playlist, #modal-chest-info, #room-more-menu, #modal-room-mod, #modal-room-theme, #modal-online-members, #modal-room-password{ z-index: 950; }
+/* BUG FIX (settings-icon-does-nothing, 2026-07-29 continued): #modal-room-mod
+   (the Room Settings panel — background photo upload, room icon/logo
+   change, Room Lock, kick/admin/mute) was missing from the list above and
+   was sitting at the base .modal-overlay z-index (500). That's BELOW the
+   fixed room toolbar (800), so tapping the gear icon DID open the panel —
+   it just rendered underneath the toolbar, covering most of its buttons
+   and making taps on them land on the toolbar instead. This is very likely
+   the actual cause of "Settings does nothing" — the click handler itself
+   was already working correctly (see the try/catch there). Now it sits at
+   950, the same elevated layer as every other room-context modal, so it's
+   always fully visible and tappable above the toolbar.
+   Same root cause, same fix, also applied to #modal-room-theme (the actual
+   "background photo upload / preview / save" dialog — reported broken by
+   name), #modal-online-members (online-users list, opened from the room
+   toolbar), and #modal-room-password (locked-room password prompt) — all
+   three were also left at the base 500 with no room-specific override. */
+/* Bug fix: the chest reward popup ("Chest Opened — Level X!") was left at
+   the base .modal-overlay z-index (500), which sits BELOW the full-screen
+   room game overlay (.room-tv-screen, z-index:900). If the popup fired
+   while a game was open it rendered behind the game and looked "stuck" /
+   unclosable. Give it the same elevated z-index as the other exclusive
+   panels, and higher still than the game overlay, so it's always reachable
+   and always on top. */
+#modal-chest-reward{ z-index: 960; }
+/* Room Ranking — feature request: full-screen popup (not the usual bottom
+   sheet) so the complete gift-sender leaderboard has room to scroll instead
+   of being squeezed into the shared .modal-card's 82vh cap. Scoped to this
+   modal's id only — every other .modal-card (gift, music, chest, etc.)
+   keeps its normal bottom-sheet sizing untouched. Header (title + period
+   tabs + close button) stays pinned; only #ranking-list scrolls. */
+#modal-room-ranking{ align-items:stretch; justify-content:stretch; z-index:950; }
+#modal-room-ranking .modal-card{
+  width:100%; max-width:none; height:100%; max-height:none;
+  border-radius:0; padding: calc(16px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));
+  overflow:hidden;
+}
+#modal-room-ranking #ranking-list{ flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+#modal-room-ranking h3, #modal-room-ranking #ranking-tabs{ flex-shrink:0; }
+
+/* ---- Gift Box / Level Information popup ---- */
+#modal-level-info{ z-index:950; }
+.level-info-current{ display:flex; align-items:center; gap:14px; padding:6px 0 4px; }
+.level-info-current #level-info-badge-wrap{
+  width:52px; height:52px; font-size:20px; flex-shrink:0; position:relative;
+  overflow:hidden;
+}
+/* UPGRADE (2026-08-04, Level Management): badge PNG (if the admin uploaded
+   one for this level's group) sits behind the level number, filling the
+   circle. The circle's own background/box-shadow (set inline via JS from
+   the theme's gradientFrom/gradientTo/glowColor) still shows through when
+   no badge PNG has been uploaded yet, so this never looks broken/empty. */
+.level-info-badge-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; }
+.level-info-badge-wrap span{ position:relative; z-index:1; }
+.level-info-badge-img-sm{ width:22px; height:22px; object-fit:contain; border-radius:50%; }
+.level-info-next-badge-preview{ display:flex; align-items:center; gap:8px; margin-top:8px; }
+.level-info-current-label{ color:var(--text-dim); font-size:12px; }
+.level-info-current-value{ color:#fff; font-weight:800; font-size:18px; }
+.level-info-row{
+  display:flex; align-items:center; justify-content:space-between;
+  background: var(--bg-panel); border:1px solid var(--line); border-radius: var(--radius-md);
+  padding:12px 14px; font-size:13px; color: var(--text-soft);
+}
+.level-info-row span:last-child{ font-weight:800; color:#fff; }
+.level-info-progress-track{
+  width:100%; height:10px; border-radius:6px; background: var(--bg-raised);
+  border:1px solid var(--line); overflow:hidden; margin-top:10px;
+}
+.level-info-progress-fill{
+  height:100%; border-radius:6px; background: linear-gradient(90deg, #FFD86B, #F0A868);
+  transition: width .4s ease;
+}
+#level-info-remaining{ margin-top:8px; }
+@keyframes level-up-pulse{
+  0%{ transform:scale(1); }
+  30%{ transform:scale(1.35); box-shadow: var(--glow-gold); }
+  60%{ transform:scale(0.95); }
+  100%{ transform:scale(1); }
+}
+.level-up-pulse{ animation: level-up-pulse .7s ease-out; }
+.modal-card{
+  position: relative;
+  background: linear-gradient(180deg, var(--bg-panel), var(--bg-panel-2));
+  border:1px solid var(--line); border-top: 1px solid rgba(247,206,126,0.3);
+  width:100%; max-width:560px; border-radius: 26px 26px 0 0;
+  padding: 24px 20px calc(20px + env(safe-area-inset-bottom));
+  display:flex; flex-direction:column; gap:12px;
+  box-shadow: 0 -10px 40px rgba(0,0,0,0.6); max-height: 82vh; overflow-y:auto;
+}
+.modal-actions{ display:flex; gap:10px; margin-top:6px; }
+.modal-actions .btn{ flex:1; }
+
+/* ---- Room "More" bottom sheet (Music/TV/Playlist/Game/Shop) ---- */
+.room-more-head{ display:flex; align-items:center; justify-content:space-between; }
+.room-more-head h3{ color:#fff; }
+.room-more-grid{
+  display:grid; grid-template-columns: repeat(3, 1fr); gap:12px;
+  padding-top:4px;
+}
+.room-more-item{
+  position:relative;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+  background: var(--bg-raised); border:1px solid var(--line); border-radius: var(--radius-md);
+  padding:16px 6px; color: var(--text-soft);
+}
+.room-more-item .tool-icon-img{ width:26px; height:26px; }
+.room-more-item .room-more-label{ font-size:11px; font-weight:700; }
+.room-more-item.hidden{ display:none !important; }
+
+/* ---- Shop hub ---- */
+.shop-hub-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; }
+.shop-hub-tile{
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+  background: var(--bg-raised); border:1px solid var(--line); border-radius: var(--radius-md);
+  padding:18px 6px; color: var(--text-soft); text-align:center;
+}
+.shop-hub-tile:disabled{ opacity:0.5; }
+.shop-hub-icon, .room-more-shop-icon{ font-size:26px; }
+
+/* Explicit ✕ close button for modals that need one up top (Room Settings).
+   30x30 target inside a bit of padding, positioned so it never overlaps
+   the title text. */
+.modal-x-close{
+  position:absolute; top:14px; right:14px; z-index:5;
+  width:32px; height:32px; border-radius:50%;
+  background: rgba(0,0,0,0.35); color: var(--text-bright);
+  border:1px solid var(--line); font-size:16px; line-height:1;
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+}
+
+/* ---------- Voice room / stage ---------- */
+.room-topbar{ display:flex; align-items:center; gap:12px; padding:16px 16px 4px; flex-shrink:0; }
+.room-logo-display{
+  width:36px; height:36px; border-radius:10px; object-fit:cover; flex-shrink:0;
+  border:1px solid var(--line);
+}
+.room-title-block{ flex:1; min-width:0; }
+.room-title-block h2{ font-size:18px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+/* ---------- 3D Animated Room Header ----------
+   Adds: (1) a one-shot 3D "drop-in" entrance the instant a room opens,
+   (2) an always-on ambient glow + slow-shimmer accent line so the bar reads
+   as premium even at rest, (3) a live pulsing ring on the viewer-count pill
+   that reacts whenever the count changes, (4) per-button 3D press feedback.
+   Everything here is additive/opt-in via classes toggled from app.js — the
+   header keeps working exactly as before if JS never adds the classes. */
+.room-topbar{
+  position:relative; z-index:5; perspective:900px;
+  background:linear-gradient(180deg, rgba(20,10,36,.55), rgba(20,10,36,.15));
+  border-bottom:1px solid rgba(247,206,126,0.14);
+  isolation:isolate;
+}
+/* Ambient glow blobs drifting slowly behind the header — pure decoration,
+   pointer-events:none so they never intercept taps on the real controls. */
+.room-topbar::before{
+  content:""; position:absolute; inset:-40px -10% auto -10%; height:120px;
+  background:
+    radial-gradient(120px 60px at 15% 30%, rgba(153,102,255,0.20), transparent 70%),
+    radial-gradient(140px 70px at 85% 60%, rgba(247,206,126,0.16), transparent 70%);
+  filter:blur(6px); pointer-events:none; z-index:-1;
+  animation: header-glow-drift 9s ease-in-out infinite alternate;
+}
+@keyframes header-glow-drift{
+  0%{ transform: translateX(-4%) scale(1); opacity:.85; }
+  100%{ transform: translateX(4%) scale(1.08); opacity:1; }
+}
+/* Slim animated shimmer line under the header — reads as a premium
+   "active room" indicator, always running at low intensity. */
+.room-topbar::after{
+  content:""; position:absolute; left:0; right:0; bottom:-1px; height:2px;
+  background: linear-gradient(90deg, transparent, rgba(247,206,126,.75), rgba(153,102,255,.75), transparent);
+  background-size:200% 100%; opacity:.55;
+  animation: header-shimmer-slide 3.6s linear infinite;
+  pointer-events:none;
+}
+@keyframes header-shimmer-slide{
+  0%{ background-position:200% 0; } 100%{ background-position:-200% 0; }
+}
+/* One-shot 3D entrance — toggled by app.js the instant #view-room becomes
+   active (class "header-enter-3d" added then auto-removed after it plays).
+   Drops/rotates in from above like a physical panel swinging down. */
+.room-topbar.header-enter-3d{
+  animation: header-3d-drop .7s cubic-bezier(.2,.8,.25,1) both;
+  transform-style:preserve-3d;
+}
+@keyframes header-3d-drop{
+  0%{ opacity:0; transform: perspective(900px) rotateX(-55deg) translateY(-18px) scale(.94); }
+  55%{ opacity:1; }
+  100%{ opacity:1; transform: perspective(900px) rotateX(0deg) translateY(0) scale(1); }
+}
+.room-topbar > *{ transform-style:preserve-3d; }
+/* Logo gets its own slight lift + depth shadow so it feels like it's sitting
+   above the bar rather than flat on it. */
+.room-logo-display{ box-shadow:0 4px 10px rgba(0,0,0,.35); transition: transform .18s ease; }
+.room-title-block h2{ text-shadow:0 2px 10px rgba(0,0,0,.4); }
+/* 3D tactile press feedback for every pill/icon button in the header. */
+.room-topbar .stat-pill-btn,
+.room-topbar .icon-btn{
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.room-topbar .stat-pill-btn:active,
+.room-topbar .icon-btn:active{
+  transform: translateY(1px) scale(.94);
+}
+/* Live pulsing ring on the online-count pill — "count-bump" class is
+   toggled briefly by app.js each time the number actually changes, so the
+   ring only fires on real updates instead of animating constantly. */
+#room-online-count{ position:relative; }
+#room-online-count.count-bump{ animation: header-count-bump .5s ease; }
+@keyframes header-count-bump{
+  0%{ box-shadow:0 0 0 0 rgba(247,206,126,.65); }
+  70%{ box-shadow:0 0 0 10px rgba(247,206,126,0); }
+  100%{ box-shadow:0 0 0 0 rgba(247,206,126,0); }
+}
+@media (prefers-reduced-motion: reduce){
+  .room-topbar::before, .room-topbar::after, .room-topbar.header-enter-3d,
+  #room-online-count.count-bump{ animation:none; }
+}
+
+/* Fix (chat/gift causing whole screen to slide down): #view-room previously
+   only had min-height:100vh, so as chat-log's content grew it kept stretching
+   the whole section taller than the viewport, and the *page* (body) scrolled
+   along with it instead of just the message list. Pinning the room view to
+   exactly one viewport tall and clipping overflow here forces .chat-log's own
+   overflow-y:auto (already set above) to be the only thing that scrolls —
+   the phone's screen/frame itself never moves now, only the messages inside
+   .chat-log scroll upward as new ones arrive. Nothing else about the layout
+   changes. */
+#view-room{
+  background-size: cover; background-position: center top; background-repeat: no-repeat;
+  height: 100vh; height: 100dvh; max-height: 100vh; max-height: 100dvh; overflow: hidden;
+}
+/* Layout budget fix: video mode used to be able to push/clip the bottom
+   toolbar off-screen on short phones, because every section in this flex
+   column could shrink by default. Now only .chat-panel (the message
+   transcript) is allowed to give up space — everything else the user must
+   always be able to reach (header, gift banner, stage/video/seats,
+   treasure chest, toolbar) is pinned to its natural size. */
+.stage-wrap{ position:relative; padding: 20px 20px 6px; flex-shrink:0; display:flex; flex-direction:column; }
+.stage-glow{
+  position:absolute; top:0; left:50%; transform:translateX(-50%);
+  width:300px; height:210px;
+  background: radial-gradient(ellipse at center, rgba(247,206,126,0.20) 0%, transparent 70%);
+  filter: blur(10px); pointer-events:none;
+}
+/* ---------- YouTube Room Player (2026-07-27 layout update) ----------
+   Its own full-width block in normal document flow, placed between the
+   header and the seat grid (see index.html) — NOT inside the header, so
+   it can actually be large. Locked to a 16:9 aspect-ratio box at 100%
+   width, which lands it at roughly the top quarter of the screen on a
+   typical phone without any JS-driven sizing. Because it's a normal block
+   (not absolutely positioned over other content), the seat grid below it
+   is automatically pushed down whenever this is visible, and pops back up
+   the instant it's hidden — nothing else needs to move manually. Hidden
+   entirely while Video Mode is off, so the room looks/behaves exactly as
+   before in that case. */
+.yt-player-wrap{
+  position:relative; width:100%; aspect-ratio:16/9;
+  background:#000; flex-shrink:0; overflow:hidden;
+}
+.yt-player-frame{ position:absolute; inset:0; background:#000; overflow:hidden; }
+/* object-fit:contain — the frame is already a true 16:9 box, matching the
+   vast majority of YouTube uploads, so the video fills it edge-to-edge
+   with no letterboxing in the common case; contain (not cover) guarantees
+   we never crop or stretch a source with a different ratio, per spec. */
+.yt-player-frame iframe, .yt-player-frame > div:first-child{
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:100%; height:100%; object-fit:contain; border:none;
+}
+.yt-player-poster{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:contain;
+  z-index:1; background: var(--bg-panel-2);
+}
+.yt-player-loading, .yt-player-empty{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  color:rgba(255,255,255,0.75); font-size:10.5px; text-align:center; padding:0 10px;
+  background:#000; z-index:1;
+}
+.yt-player-wrap, .yt-player-poster{ transition: opacity .15s ease; }
+
+/* The one permanent control allowed by spec: small, circular, low-opacity,
+   top-right, always tappable — everything else below is tap-to-reveal. */
+.yt-mini-close{
+  position:absolute; top:6px; right:6px; z-index:6;
+  width:22px; height:22px; border-radius:50%; border:none;
+  background: rgba(0,0,0,0.35); color:#fff; font-size:11px; line-height:1;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; opacity:0.55; transition: opacity .15s ease;
+}
+.yt-mini-close:active{ opacity:0.9; }
+
+/* Tap-to-reveal layer: title/info + prev/play/next/more. Transparent by
+   default (per spec — "play overlay should remain transparent"), a subtle
+   gradient scrim only fades in together with the controls so text/icons
+   stay legible without permanently darkening the video. Auto-hidden again
+   a few seconds after the last tap (see app.js). */
+.yt-overlay-controls{
+  position:absolute; inset:0; z-index:4;
+  display:flex; flex-direction:column; justify-content:space-between;
+  opacity:0; pointer-events:none; transition: opacity .2s ease;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 35%, transparent 65%, rgba(0,0,0,0.55) 100%);
+}
+.yt-player-wrap.yt-controls-visible .yt-overlay-controls{ opacity:1; pointer-events:auto; }
+
+.yt-player-info{ display:flex; align-items:center; gap:6px; padding:4px 26px 0 6px; }
+.yt-player-thumb{ width:20px; height:20px; border-radius:4px; object-fit:cover; background: var(--bg-raised); flex-shrink:0; }
+.yt-player-titlewrap{ flex:1; min-width:0; }
+.yt-player-title{ font-size:10.5px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.yt-player-sub{ font-size:9px; color:rgba(255,255,255,0.75); margin-top:1px; }
+.yt-badge{ font-size:8.5px; color:#fff; background:#e02424; border-radius: var(--radius-round); padding:2px 6px; flex-shrink:0; font-weight:700; }
+
+.yt-player-controls{ display:flex; align-items:center; justify-content:center; gap:10px; padding:2px 0 5px; }
+.yt-ctrl-btn{
+  width:22px; height:22px; border-radius:50%; border:1px solid rgba(255,255,255,0.4);
+  background: rgba(0,0,0,0.4); color:#fff; font-size:10px;
+  display:flex; align-items:center; justify-content:center;
+}
+.yt-ctrl-btn-main{ width:26px; height:26px; font-size:11px; background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-2)); color:#241305; border:none; }
+
+/* ---------- YouTube Player — compact ⋮ menu ----------
+   Purely additive on top of the structure above: a single dropdown for the
+   less-frequent actions (Playlist / Share / Refresh / Voice / Close) so
+   the tiny header video stays clean instead of ringed with buttons. */
+.yt-more-wrap{ position:relative; }
+.yt-more-menu{
+  position:absolute; top:calc(100% + 8px); right:0; z-index:8;
+  background: var(--bg-raised); border:1px solid var(--line); border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-card); overflow:hidden; min-width:170px;
+}
+.yt-more-item{
+  display:block; width:100%; text-align:left; padding:11px 14px; font-size:13px;
+  color: var(--text-bright); background:none; border:none; border-bottom:1px solid var(--line);
+  white-space:nowrap;
+}
+.yt-more-item:last-child{ border-bottom:none; }
+.yt-more-item:active{ background: var(--bg-panel-2); }
+.yt-more-item-danger{ color: var(--accent-rose); }
+
+/* Short landscape phones: a full-width 16:9 block would eat most of the
+   viewport height there, so cap it and let it letterbox (object-fit:contain
+   already prevents cropping/stretching) rather than crowd out the seats. */
+@media (orientation: landscape) and (max-height: 420px){
+  .yt-player-wrap{ max-height: 40vh; aspect-ratio: unset; }
+}
+
+/* ---------- Room Theme (background) modal — Upload/Preview/Save/Cancel ---------- */
+.theme-preview-wrap{
+  position:relative; width:100%; aspect-ratio:16/10; border-radius: var(--radius-md);
+  overflow:hidden; background: var(--bg-panel-2); border:1px dashed var(--line);
+  margin-bottom:10px; display:flex; align-items:center; justify-content:center;
+}
+.theme-preview-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:none; }
+.theme-preview-empty{ color: var(--text-dim); font-size:12.5px; text-align:center; padding:0 16px; }
+
+.yt-add-row{ display:flex; gap:8px; margin-bottom:10px; }
+.yt-add-row .field-solo{ flex:1; }
+.yt-playlist-list{ display:flex; flex-direction:column; gap:8px; max-height:52vh; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; }
+.yt-playlist-row{
+  display:flex; align-items:center; gap:10px; padding:8px; border-radius: var(--radius-md);
+  background: var(--bg-raised); border:1px solid var(--line);
+}
+.yt-playlist-row.playing{ border-color: var(--accent-gold); box-shadow: var(--glow-gold); }
+.yt-playlist-thumb{ width:76px; height:52px; border-radius:8px; object-fit:cover; flex-shrink:0; background: var(--bg-panel-2); }
+.yt-playlist-meta{ flex:1; min-width:0; }
+.yt-playlist-meta .yt-pl-title{ font-size:13.5px; color: var(--text-bright); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.yt-playlist-meta .yt-pl-sub{ font-size:11px; color: var(--text-dim); margin-top:2px; }
+.yt-playlist-actions{ display:flex; align-items:center; gap:6px; flex-shrink:0; }
+.yt-pl-play-btn, .yt-pl-del-btn{
+  width:32px; height:32px; border-radius:50%; border:1px solid var(--line);
+  background: var(--bg-panel-2); color: var(--text-bright); font-size:13px; flex-shrink:0;
+}
+.yt-pl-play-btn.playing{ background: var(--accent-gold-dim); border-color: var(--accent-gold); color: var(--accent-gold); }
+.yt-pl-del-btn{ color: var(--accent-rose); }
+
+/* Seats: fixed-size grid — gifts/animations must never change these dimensions */
+.seat-grid{ position:relative; display:grid; grid-template-columns: repeat(4, 1fr); gap:16px 10px; flex-shrink:0; }
+.seat{ display:flex; flex-direction:column; align-items:center; gap:6px; }
+.seat-circle{
+  width:88%; margin:0 auto; aspect-ratio:1/1; border-radius:50%;
+  background: var(--bg-panel-2); border: 2px dashed var(--line);
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; color: var(--text-dim);
+  position:relative; /* overflow intentionally NOT hidden here — a VIP ring or
+  admin PNG frame is allowed to extend past the circle; only the photo itself
+  (in .seat-avatar-photo below) is clipped to a circle. */
+}
+.seat.occupied .seat-circle{ border: 2px solid var(--accent-gold-dim); background: var(--bg-raised); }
+.seat-avatar-photo{ position:absolute; inset:0; border-radius:50%; overflow:hidden; }
+.seat-avatar-photo img{ width:100%; height:100%; object-fit:cover; display:block; }
+/* VIP ring on a seat — same palette as .avatar-frame-wrap, applied only when
+   the seated user actually has a VIP level (see app.js). */
+.seat-circle.vip-1{ box-shadow: 0 0 0 2px var(--vip1); }
+.seat-circle.vip-2{ box-shadow: 0 0 0 2px var(--vip2); }
+.seat-circle.vip-3{ box-shadow: 0 0 0 3px var(--accent-gold), var(--glow-gold); }
+.seat-circle.vip-4{ box-shadow: 0 0 0 3px var(--royal-purple); }
+.seat-circle.vip-5{
+  box-shadow: 0 0 0 3px var(--accent-gold), 0 0 16px rgba(247,206,126,0.55);
+  animation: frame-spin-glow 4s linear infinite;
+}
+@keyframes frame-spin-glow{
+  0%,100%{ filter: drop-shadow(0 0 3px rgba(247,206,126,0.35)); }
+  50%{ filter: drop-shadow(0 0 9px rgba(247,206,126,0.7)); }
+}
+/* Admin-issued animated PNG frame for a seat — its own layer, allowed to
+   extend past the seat circle so the artwork is never cropped. */
+.seat-circle .custom-frame-img{
+  position:absolute; inset:-18%; width:136%; height:136%;
+  pointer-events:none; z-index:2;
+  animation: custom-frame-glow 2.4s ease-in-out infinite;
+}
+.seat.speaking .seat-circle{
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 4px var(--accent-gold-dim), 0 0 24px rgba(247,206,126,0.45);
+  animation: pulse-ring 1.3s ease-in-out infinite;
+}
+@keyframes pulse-ring{
+  0%,100%{ box-shadow: 0 0 0 4px var(--accent-gold-dim), 0 0 18px rgba(247,206,126,0.35); }
+  50%{ box-shadow: 0 0 0 7px var(--accent-gold-dim), 0 0 30px rgba(247,206,126,0.5); }
+}
+.seat-name{ font-size:11px; color:var(--text-soft); max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+/* ---- VIP Name Effects Library — admin-assigned Profile Name Color styles.
+   Applied ONLY to the seat-name element in the room (see renderSeats in
+   app.js); never touches chat, profile, or anywhere else. Each style is a
+   simple color + glow, or a moving/animated gradient for the fancier ones,
+   kept lightweight (no per-frame JS, pure CSS animation) so it doesn't hurt
+   room performance even with several VIP names on screen at once. ---- */
+.seat-name.name-fx-gold_glow{
+  color:#F7CE7E; font-weight:700;
+  text-shadow: 0 0 6px rgba(247,206,126,0.9), 0 0 14px rgba(247,206,126,0.6);
+  animation: namefx-pulse 1.8s ease-in-out infinite;
+}
+.seat-name.name-fx-rainbow{
+  font-weight:700;
+  background: linear-gradient(90deg,#ff5e5e,#ffd15e,#7dff7d,#5ecbff,#b57dff,#ff5e5e);
+  background-size: 300% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: namefx-gradient-shift 3.5s linear infinite;
+}
+.seat-name.name-fx-diamond{
+  font-weight:700;
+  background: linear-gradient(100deg,#e8f6ff,#9fd8ff,#e8f6ff,#c9ecff);
+  background-size: 220% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  text-shadow: 0 0 8px rgba(159,216,255,0.7);
+  animation: namefx-gradient-shift 2.6s ease-in-out infinite;
+}
+.seat-name.name-fx-neon{
+  color:#7CFDEA; font-weight:700;
+  text-shadow: 0 0 4px #7CFDEA, 0 0 10px #7CFDEA, 0 0 18px rgba(124,253,234,0.7);
+  animation: namefx-flicker 2.2s ease-in-out infinite;
+}
+.seat-name.name-fx-fire{
+  font-weight:700;
+  background: linear-gradient(180deg,#ffe08a,#ff8a3d,#ff3d3d);
+  background-size: 100% 220%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  text-shadow: 0 0 10px rgba(255,90,20,0.55);
+  animation: namefx-flame 1.6s ease-in-out infinite;
+}
+.seat-name.name-fx-ice{
+  color:#BFEFFF; font-weight:700;
+  text-shadow: 0 0 6px rgba(191,239,255,0.85), 0 0 14px rgba(120,200,255,0.55);
+  animation: namefx-pulse 2.4s ease-in-out infinite;
+}
+.seat-name.name-fx-purple_vip{
+  color:#C79BFF; font-weight:700;
+  text-shadow: 0 0 6px rgba(199,155,255,0.9), 0 0 16px rgba(153,102,255,0.6);
+  animation: namefx-pulse 2s ease-in-out infinite;
+}
+.seat-name.name-fx-animated_gradient{
+  font-weight:700;
+  background: linear-gradient(90deg,#ff6ec4,#7873f5,#4adede,#f7ce7e,#ff6ec4);
+  background-size: 300% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: namefx-gradient-shift 4s linear infinite;
+}
+@keyframes namefx-pulse{
+  0%,100%{ opacity:1; filter:brightness(1); }
+  50%{ opacity:0.82; filter:brightness(1.25); }
+}
+@keyframes namefx-gradient-shift{
+  0%{ background-position: 0% 50%; }
+  100%{ background-position: 100% 50%; }
+}
+@keyframes namefx-flicker{
+  0%,19%,21%,23%,54%,56%,100%{ opacity:1; }
+  20%,22%,55%{ opacity:0.55; }
+}
+@keyframes namefx-flame{
+  0%,100%{ background-position: 0% 0%; }
+  50%{ background-position: 0% 100%; }
+}
+@media (prefers-reduced-motion: reduce){
+  .seat-name[class*="name-fx-"]{ animation-duration:.01ms !important; }
+}
+.seat-num{ font-size:10px; color:var(--text-dim); }
+
+/* Real-time voice signal ring — purely decorative overlay, does not
+   participate in layout sizing (absolute, inset:0) so seat size is
+   never affected regardless of animation state. */
+.seat-circle::after{
+  content:""; position:absolute; inset:0; border-radius:50%;
+  border: 2px solid transparent; pointer-events:none;
+}
+.seat.speaking .seat-circle::after{
+  border-color: rgba(247,206,126,0.55);
+  animation: voice-ring-expand 1.2s ease-out infinite;
+}
+@keyframes voice-ring-expand{
+  0%{ transform: scale(1); opacity:0.9; }
+  100%{ transform: scale(1.35); opacity:0; }
+}
+
+/* ---------- Chat panel ---------- */
+.chat-panel{ flex:1; min-height:0; padding: 6px 18px; overflow:hidden; display:flex; }
+.chat-log{ flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px; padding: 10px 2px; min-height:0; }
+.chat-msg{ font-size:13.5px; line-height:1.4; }
+.chat-msg .who{ color: var(--accent-gold); font-weight:800; margin-right:6px; }
+.chat-msg .when{ color: var(--text-dim); font-size:10.5px; margin-left:6px; }
+.chat-msg.system{ color: var(--text-dim); font-style:italic; }
+
+.room-toolbar{
+  display:flex; align-items:center; gap:8px; padding: 10px 14px calc(12px + env(safe-area-inset-bottom));
+  border-top:1px solid var(--line); background: rgba(11,8,16,0.92); backdrop-filter: blur(14px);
+  flex-shrink:0;
+}
+.tool-btn{ width:42px; height:42px; border-radius:50%; border:1px solid var(--line); background: var(--bg-panel-2); color:var(--accent-gold); font-size:17px; flex-shrink:0; display:flex; align-items:center; justify-content:center; padding:0; }
+.tool-icon-img{ width:26px; height:26px; object-fit:contain; pointer-events:none; display:block; }
+
+/* Coin / Diamond currency icons (2026-08-04): replaces the 🪙/💎 emoji
+   inline wherever a currency amount is shown, everywhere they appear on
+   both the user app and the admin panel. Sized/aligned to sit inline with
+   surrounding text at any font size, same as the emoji it replaces. */
+.currency-icon{ width:1em; height:1em; object-fit:contain; vertical-align:-0.15em; display:inline-block; pointer-events:none; }
+.tool-btn.active{ background: var(--accent-gold-dim); border-color: var(--accent-gold); box-shadow: var(--glow-gold); }
+
+/* ---- Mic toggle: live voice-signal animation (2026-08-18) ----
+   Driven by app.js's real mic-level analysis (tickVoiceActivity), the
+   exact same detector that powers the seat "speaking" ring — so the
+   toolbar mic icon only comes alive while the person is actually
+   talking, not just whenever the mic is switched on. `mic-live` is
+   added/removed in real time; nothing here runs on a timer of its own. */
+#btn-mic-toggle{ position:relative; overflow:visible; transition: transform .15s ease; }
+#btn-mic-toggle.mic-live{ animation: mic-live-pulse 0.9s ease-in-out infinite; }
+#btn-mic-toggle.mic-live::before,
+#btn-mic-toggle.mic-live::after{
+  content:""; position:absolute; inset:0; border-radius:50%;
+  border: 2px solid var(--accent-gold);
+  pointer-events:none;
+  animation: mic-signal-ring 1.15s ease-out infinite;
+}
+#btn-mic-toggle.mic-live::after{ animation-delay: 0.4s; }
+@keyframes mic-live-pulse{
+  0%,100%{ transform: scale(1); box-shadow: var(--glow-gold); }
+  50%{ transform: scale(1.08); box-shadow: 0 0 0 6px var(--accent-gold-dim), 0 0 22px rgba(247,206,126,0.6); }
+}
+@keyframes mic-signal-ring{
+  0%{ transform: scale(1); opacity: 0.85; }
+  100%{ transform: scale(1.7); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce){
+  #btn-mic-toggle.mic-live,
+  #btn-mic-toggle.mic-live::before,
+  #btn-mic-toggle.mic-live::after{ animation: none; }
+}
+.tool-btn-accent{ background: linear-gradient(135deg, var(--accent-rose), var(--royal-purple)); border:none; color:#fff; }
+.chat-input{ flex:1; background: var(--bg-raised); border:1px solid var(--line); border-radius: var(--radius-round); padding:11px 16px; color:var(--text-bright); outline:none; min-width:0; }
+.chat-input:focus{ border-color: var(--accent-gold); }
+
+/* ---------- Gift ---------- */
+.gift-modal-head{ display:flex; align-items:center; justify-content:space-between; }
+.gift-wallet-pill{ background: var(--accent-gold-dim); color:var(--accent-gold); font-weight:800; font-size:13px; padding:6px 12px; border-radius: var(--radius-round); border:1px solid rgba(247,206,126,0.3); }
+
+/* ---------- Gift Level Progress card (top of Gift Panel) ----------
+   Pure UI/display addition: reads the same me.level / me.coins that
+   already power the "Lv." chip everywhere else in the app (see
+   applyWalletUpdate + renderGiftLevelCard in app.js). No new currency,
+   no new server field — the 💎 icon here is a label only. */
+.gift-level-card{
+  display:flex; align-items:center; gap:12px;
+  background: linear-gradient(160deg, var(--bg-panel), var(--bg-panel-2));
+  border:1px solid var(--line); border-radius: var(--radius-md);
+  padding:10px 14px; margin-bottom:12px;
+}
+.gift-level-badge{
+  flex-shrink:0; display:flex; align-items:center; gap:4px;
+  font-family: var(--font-display); font-weight:800; font-size:13px;
+  color:#12200f; padding:5px 12px; border-radius: var(--radius-round);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+}
+.gift-level-badge-icon{ font-size:12px; }
+.gift-level-progress-wrap{ flex:1; min-width:0; }
+.gift-level-progress-track{ background: var(--bg-raised); border-radius: var(--radius-round); height:7px; overflow:hidden; border:1px solid var(--line); }
+.gift-level-progress-fill{ height:100%; border-radius: var(--radius-round); background: linear-gradient(90deg, var(--accent-gold), var(--accent-gold-2)); transition: width .4s ease; }
+.gift-level-remaining{ font-size:11px; color:var(--text-dim); margin-top:5px; }
+
+/* Ten light/premium tier colours, cycling every 10 levels — mirrors the
+   reference badge sheet's colour progression (green → teal → blue →
+   violet → pink → coral → gold → amber → purple → shimmer). */
+.level-badge.lvl-tier-1{ background: linear-gradient(135deg, #8CF0C4, #3FCE97); }
+.level-badge.lvl-tier-2{ background: linear-gradient(135deg, #7FE8DC, #2FBEC0); color:#0d2422; }
+.level-badge.lvl-tier-3{ background: linear-gradient(135deg, #8FC4F7, #4E93EF); color:#0e1f36; }
+.level-badge.lvl-tier-4{ background: linear-gradient(135deg, #C4B5FD, #9D7BF7); color:#20163f; }
+.level-badge.lvl-tier-5{ background: linear-gradient(135deg, #F5A0CB, #EE7C90); color:#3a0f1f; }
+.level-badge.lvl-tier-6{ background: linear-gradient(135deg, #FCAE85, #F5815F); color:#3a1508; }
+.level-badge.lvl-tier-7{ background: linear-gradient(135deg, #FCE29B, #F7CE7E); color:#3a2a08; }
+.level-badge.lvl-tier-8{ background: linear-gradient(135deg, #F8E3A8, #E5B968); color:#332508; }
+.level-badge.lvl-tier-9{ background: linear-gradient(135deg, #D6C4FB, #B291F9); color:#241640; }
+.level-badge.lvl-tier-10{
+  background: linear-gradient(90deg, #F7CE7E, #EE7C90, #9D7BF7, #7FE8DC, #F7CE7E);
+  background-size: 300% 100%; color:#1c1424;
+  animation: giftLevelShimmer 4s linear infinite;
+}
+@keyframes giftLevelShimmer{ 0%{ background-position: 0% 50%; } 100%{ background-position: 300% 50%; } }
+
+/* ---------- Compact multi-select target toggle (Gift Panel) ----------
+   Replaces the always-visible target list with a small corner button;
+   tapping it opens/closes a compact panel with the same select-all +
+   checkbox list underneath (renderGiftTargetList logic unchanged). */
+.gift-head-right{ display:flex; align-items:center; gap:8px; }
+.gift-target-toggle-btn{
+  position:relative; width:34px; height:34px; border-radius:50%;
+  background:var(--bg-raised); border:1px solid var(--line); color:var(--text-bright);
+  font-size:15px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.gift-target-toggle-btn.active{ background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-2)); color:#22140a; border-color:transparent; }
+.gift-target-count-badge{
+  position:absolute; top:-4px; right:-4px; background:var(--accent-rose); color:#fff;
+  font-size:9px; font-weight:800; min-width:15px; height:15px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center; padding:0 3px; line-height:1;
+}
+.gift-target-panel{ margin-bottom:8px; }
+.gift-target-panel.hidden{ display:none; }
+.gift-target-head{ display:flex; justify-content:flex-end; margin-bottom:6px; }
+.gift-select-all{ display:flex; align-items:center; gap:6px; font-size:12.5px; font-weight:700; color:var(--text-dim); cursor:pointer; user-select:none; }
+.gift-select-all input{ accent-color: var(--accent-gold); width:15px; height:15px; }
+.gift-target-list{ display:flex; flex-direction:column; gap:6px; max-height:140px; overflow-y:auto; background:var(--bg-raised); border:1px solid var(--line); border-radius: var(--radius-md); padding:8px; margin-bottom:4px; }
+.gift-target-row{ display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-bright); padding:4px 2px; border-radius:6px; }
+.gift-target-row input{ accent-color: var(--accent-gold); width:15px; height:15px; flex-shrink:0; }
+.gift-target-empty{ font-size:12.5px; color:var(--text-dim); padding:4px 2px; }
+.gift-qty-row{ display:flex; gap:8px; margin-bottom:10px; }
+.gift-qty-btn{ flex:1; padding:7px 0; border-radius: var(--radius-round); border:1px solid var(--line); background:var(--bg-raised); color:var(--text-dim); font-weight:800; font-size:12.5px; transition: background .15s ease, color .15s ease; }
+.gift-qty-btn.active{ background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-2)); color:#22140a; border-color:transparent; }
+.mod-bulk-row{ display:flex; gap:8px; margin-top:8px; align-items:center; }
+.mod-bulk-row .field-solo{ flex:1; }
+.mod-bulk-row .btn{ flex-shrink:0; }
+.gift-tabs{ display:flex; gap:8px; }
+.gift-tab{ flex:1; padding:8px 0; border-radius: var(--radius-round); border:1px solid var(--line); background:var(--bg-raised); color:var(--text-dim); font-weight:700; font-size:12.5px; transition: background .15s ease, color .15s ease; }
+.gift-tab.active{ background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-2)); color:#22140a; border-color:transparent; }
+.gift-preview{ display:flex; align-items:center; gap:10px; background:var(--bg-raised); border:1px solid var(--line); border-radius: var(--radius-md); padding:8px 12px; }
+.gift-preview-emoji{ font-size:30px; }
+.gift-preview-info{ display:flex; flex-direction:column; font-size:12px; }
+.gift-preview-info span:first-child{ font-weight:800; color:var(--text-bright); }
+.gift-preview-info span:last-child{ color:var(--accent-gold); font-size:11px; }
+
+.gift-modal-card{ transform: translateY(30px); opacity:0; transition: transform .28s ease, opacity .28s ease; }
+.gift-modal-card.gift-modal-open{ transform: translateY(0); opacity:1; }
+
+.gift-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; }
+.gift-item{
+  background: linear-gradient(160deg, var(--bg-raised), var(--bg-panel-2)); border:1px solid var(--line);
+  border-radius: var(--radius-md); padding:14px 8px; text-align:center; color:var(--text-bright);
+  cursor:pointer; transition: transform .15s ease, box-shadow .15s ease;
+}
+.gift-item:hover{ transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,0.35); }
+.gift-item .emoji{ font-size:28px; display:block; margin-bottom:4px; filter: drop-shadow(0 0 6px rgba(247,206,126,0.35)); }
+.gift-item .gift-name{ display:block; font-size:10.5px; color:var(--text-soft); margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.gift-item .price{ font-size:11px; color: var(--accent-gold); font-weight:800; }
+.gift-item:active, .gift-item-pressed{ transform: scale(0.9); }
+.gift-item.tier-vip{ border-color: rgba(153,102,255,0.45); }
+.gift-item.tier-vip .emoji{ filter: drop-shadow(0 0 8px rgba(153,102,255,0.55)); }
+.gift-item.tier-legend{ border-color: rgba(247,206,126,0.55); background: linear-gradient(160deg, rgba(247,206,126,0.14), var(--bg-panel-2)); }
+.gift-item.tier-legend .emoji{ filter: drop-shadow(0 0 10px rgba(247,206,126,0.75)); animation: legend-item-glow 1.8s ease-in-out infinite; }
+@keyframes legend-item-glow{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.1); } }
+
+/* ---- Premium Gift Box visual upgrade ----
+   Restyles the same #modal-gift markup above only. No new ids, no new
+   data source — every value on screen still comes from the existing
+   renderGiftGrid/renderGiftLevelCard/renderGiftTargetList calls in app.js. */
+.gift-modal-card-premium{
+  border-radius: 28px 28px 0 0;
+  background: linear-gradient(180deg, #1f1b30 0%, #19162a 55%, #131022 100%);
+  border: 1px solid rgba(232,200,122,0.18);
+  box-shadow: 0 -12px 60px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.08);
+  padding-top: 10px;
+}
+.gift-sheet-handle{ width:36px; height:4px; border-radius:999px; background:rgba(255,255,255,0.15); margin:0 auto 10px; flex-shrink:0; }
+.gift-modal-card-premium .gift-modal-head h3{ font-family: var(--font-display); letter-spacing:-0.01em; color:#fff; }
+.gift-close-btn{
+  width:28px; height:28px; border-radius:999px; border:1px solid var(--line);
+  background: var(--bg-raised); color: var(--text-soft); font-size:13px; line-height:1;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.gift-close-btn:active{ transform: scale(0.92); }
+.gift-modal-card-premium .gift-wallet-pill{
+  display:flex; align-items:center; gap:6px;
+  background: rgba(42,35,64,0.9); border:1px solid rgba(232,200,122,0.3);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 0 16px rgba(232,200,122,0.12);
+}
+.gift-modal-card-premium .gift-level-card{ background: rgba(29,43,29,0.35); border-radius: var(--radius-round); padding:6px 10px; }
+.gift-modal-card-premium .gift-tabs{ border-bottom:1px solid var(--line); gap:0; background:transparent; }
+.gift-modal-card-premium .gift-tab{ background:transparent; border:none; border-radius:0; position:relative; color: var(--text-dim); }
+.gift-modal-card-premium .gift-tab.active{ background:transparent; color:#fff; }
+.gift-modal-card-premium .gift-tab.active::after{
+  content:""; position:absolute; left:14px; right:14px; bottom:-1px; height:2px;
+  background:#FFC400; border-radius:999px; box-shadow:0 0 10px rgba(255,196,0,0.7);
+}
+.gift-modal-card-premium .gift-grid{ padding-top:6px; }
+/* Sticky footer bleeds to the sheet's full width via negative margins
+   matching .modal-card's own 20px side / safe-area bottom padding. */
+.gift-modal-footer{
+  position: sticky; bottom:0; margin: 4px -20px calc(-1 * (20px + env(safe-area-inset-bottom))) -20px;
+  padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, rgba(30,26,50,0.95), rgba(21,18,41,0.98));
+  border-top: 1px solid rgba(232,200,122,0.12);
+  display:flex; align-items:center; gap:10px;
+}
+.gift-modal-footer .gift-qty-row{ flex:1; margin:0; }
+.btn-gift-recharge{
+  height:34px; padding:0 16px; border-radius:999px; white-space:nowrap; flex-shrink:0;
+  background: var(--bg-raised); border:1px solid rgba(232,200,122,0.35);
+  color: var(--accent-gold); font-weight:800; font-size:12.5px;
+}
+.btn-gift-recharge:active{ transform: scale(0.96); }
+
+/* Gift-send flight animation — floats above the seat grid on its own
+   absolutely-positioned layer, never touches seat/grid dimensions. Path is
+   driven by --start-x/--start-y/--end-x/--end-y (% of the layer), computed
+   from the sender/receiver seat positions in app.js. */
+@keyframes gift-fly-path{
+  0%{ left: var(--start-x); top: var(--start-y); opacity:0; transform: translate(-50%,-50%) scale(0.6) rotate(0deg); }
+  15%{ opacity:1; transform: translate(-50%,-50%) scale(1.05) rotate(-8deg); }
+  /* Mid-flight arc: rides above the straight line via calc() against the
+     midpoint of start/end, then rotates through for a lively, non-linear
+     path instead of a flat straight-line slide. */
+  55%{
+    left: calc((var(--start-x) + var(--end-x)) / 2);
+    top: calc((var(--start-y) + var(--end-y)) / 2 - 14%);
+    transform: translate(-50%,-50%) scale(1.2) rotate(6deg);
+    opacity:1;
+  }
+  100%{ left: var(--end-x); top: var(--end-y); opacity:0; transform: translate(-50%,-50%) scale(1.15) rotate(0deg); }
+}
+.gift-fly-layer{ position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:40; }
+
+/* Combo badge — "x2", "x3"... pops next to a landing gift when the same
+   sender fires the same gift at the same target again inside the combo
+   window (tracked in app.js). Purely additive: no combo, no badge. */
+.gift-combo-badge{
+  position:absolute; z-index:41; pointer-events:none;
+  font-size:22px; font-weight:900; color:#fff;
+  text-shadow: 0 0 10px rgba(247,206,126,.9), 0 2px 4px rgba(0,0,0,.6);
+  transform: translate(-50%,-50%);
+  animation: gift-combo-pop .7s cubic-bezier(.2,.9,.3,1.3) forwards;
+}
+@keyframes gift-combo-pop{
+  0%{ opacity:0; transform: translate(-50%,-50%) scale(0.4) rotate(-6deg); }
+  35%{ opacity:1; transform: translate(-50%,-50%) scale(1.35) rotate(4deg); }
+  60%{ transform: translate(-50%,-50%) scale(1.05) rotate(0deg); }
+  100%{ opacity:0; transform: translate(-50%,-50%) scale(1) translateY(-18px); }
+}
+
+/* Video Gift — true full-screen overlay (fixed = covers the whole viewport,
+   not just the stage), sits above every modal so it can't be missed, and
+   auto-clears itself when the clip ends (see JS). */
+.video-gift-overlay{ position:fixed; inset:0; z-index:9999; background:#000; display:flex; align-items:center; justify-content:center; }
+.video-gift-overlay.hidden{ display:none; }
+.video-gift-overlay video{ width:100%; height:100%; object-fit:contain; }
+.gift-fly-item{
+  position:absolute; font-size:34px;
+  animation-name: gift-fly-path; animation-timing-function: ease-out; animation-fill-mode: forwards;
+  filter: drop-shadow(0 0 10px rgba(247,206,126,0.5));
+}
+.gift-fly-item img{ width:1em; height:1em; object-fit:contain; vertical-align:middle; }
+.gift-fly-item.tier-vip{ font-size:40px; filter: drop-shadow(0 0 14px rgba(153,102,255,0.6)); }
+.gift-fly-item.tier-legend{ font-size:48px; filter: drop-shadow(0 0 20px rgba(247,206,126,0.85)); }
+.gift-fly-item.gift-fly-trail{ font-size:26px; }
+
+/* Brief glow pulse on the receiver's seat the instant a gift lands. */
+.seat-circle.gift-hit{ animation: gift-hit-pulse .9s ease-out; }
+@keyframes gift-hit-pulse{
+  0%{ box-shadow: 0 0 0 0 rgba(247,206,126,0.8); }
+  60%{ box-shadow: 0 0 0 14px rgba(247,206,126,0); }
+  100%{ box-shadow: 0 0 0 0 rgba(247,206,126,0); }
+}
+
+/* Full-screen celebration for the top gift tier — fixed overlay, entirely
+   separate from room/seat layout so nothing else ever resizes because of it. */
+.legend-gift-overlay{
+  position:fixed; inset:0; z-index:900; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; pointer-events:none;
+  opacity:0; transition: opacity .3s ease;
+  background: radial-gradient(circle at center, rgba(247,206,126,0.22), rgba(4,2,8,0.5) 70%);
+}
+.legend-gift-overlay.show{ opacity:1; }
+/* Tier-themed background — legend stays gold, vip (also full-screen
+   eligible) gets its own violet theme so the two tiers read as visually
+   distinct instead of sharing one look. Falls back to the gold default
+   above when no tier class is present. */
+.legend-gift-overlay.overlay-tier-vip{
+  background: radial-gradient(circle at center, rgba(153,102,255,0.24), rgba(6,2,14,0.5) 70%);
+}
+.legend-gift-overlay.overlay-tier-vip .legend-gift-text{
+  color:#c9a6ff; text-shadow:0 0 12px rgba(153,102,255,.65);
+}
+.legend-gift-overlay.overlay-tier-vip .legend-particle{ background:#b98bff; box-shadow:0 0 8px 2px rgba(185,139,255,.85); }
+.legend-gift-overlay.overlay-tier-vip .legend-burst-rays{
+  background: conic-gradient(from 0deg, rgba(153,102,255,0) 0%, rgba(153,102,255,0.35) 15%, rgba(153,102,255,0) 30%);
+}
+/* Shockwave ring — a single expanding ring right as the gift lands, on top
+   of the existing flash/particles, for extra weight on legend/vip hits. */
+.legend-shockwave{
+  position:absolute; left:50%; top:50%; width:40px; height:40px; border-radius:50%;
+  border:3px solid rgba(247,206,126,.85); transform: translate(-50%,-50%) scale(0);
+  animation: legend-shockwave-expand .7s ease-out forwards;
+}
+.legend-gift-overlay.overlay-tier-vip .legend-shockwave{ border-color: rgba(153,102,255,.85); }
+@keyframes legend-shockwave-expand{
+  0%{ transform: translate(-50%,-50%) scale(0); opacity:.9; }
+  100%{ transform: translate(-50%,-50%) scale(9); opacity:0; }
+}
+/* Camera shake (light) — applied only for Full Screen effect gifts. */
+.legend-gift-overlay.gift-shake{ animation: legend-shake .5s ease-in-out; }
+@keyframes legend-shake{
+  0%,100%{ transform: translate(0,0); }
+  20%{ transform: translate(-6px,3px); }
+  40%{ transform: translate(5px,-4px); }
+  60%{ transform: translate(-4px,-3px); }
+  80%{ transform: translate(6px,2px); }
+}
+/* Flash — a quick bright pulse the instant a Full Screen gift lands. */
+.legend-flash{
+  position:absolute; inset:0; background:#fff; opacity:0;
+  animation: legend-flash-pulse .5s ease-out; mix-blend-mode: overlay;
+}
+@keyframes legend-flash-pulse{
+  0%{ opacity:0.85; } 100%{ opacity:0; }
+}
+/* Particles — small golden sparks drifting upward/outward from center,
+   spawned dynamically in JS (one .legend-particle div per particle),
+   removed automatically once their animation ends. */
+.legend-particle{
+  position:absolute; left:50%; top:50%; width:6px; height:6px; border-radius:50%;
+  background: var(--accent-gold); box-shadow: 0 0 8px 2px rgba(247,206,126,0.8);
+  animation: legend-particle-fly 1.4s ease-out forwards;
+}
+@keyframes legend-particle-fly{
+  0%{ transform: translate(-50%,-50%) translate(0,0) scale(1); opacity:1; }
+  100%{ transform: translate(-50%,-50%) translate(var(--px), var(--py)) scale(0.2); opacity:0; }
+}
+.legend-gift-emoji img{ width:96px; height:96px; object-fit:contain; filter: drop-shadow(0 0 30px rgba(247,206,126,0.8)); }
+.legend-burst-rays{
+  position:absolute; inset:0;
+  background: conic-gradient(from 0deg, rgba(247,206,126,0) 0%, rgba(247,206,126,0.35) 15%, rgba(247,206,126,0) 30%);
+  animation: legend-rays-spin 2.4s linear;
+  mix-blend-mode: screen;
+}
+.legend-gift-emoji{ font-size:96px; animation: legend-pop 2.4s ease-out; filter: drop-shadow(0 0 30px rgba(247,206,126,0.8)); }
+.legend-gift-text{
+  margin-top:10px; font-size:22px; font-weight:800; color:var(--accent-gold);
+  text-shadow: 0 0 12px rgba(247,206,126,0.6); animation: legend-text-in .4s ease;
+}
+@keyframes legend-pop{
+  0%{ transform:scale(0.3); opacity:0; }
+  20%{ transform:scale(1.2); opacity:1; }
+  35%{ transform:scale(1); }
+  85%{ opacity:1; }
+  100%{ opacity:0; transform:scale(1.05); }
+}
+@keyframes legend-rays-spin{ 0%{ transform:rotate(0deg); } 100%{ transform:rotate(360deg); } }
+@keyframes legend-text-in{ 0%{ opacity:0; transform:translateY(8px); } 100%{ opacity:1; transform:translateY(0); } }
+
+/* ---------- Profile ---------- */
+.profile-hero{ text-align:center; padding: 14px 0 8px; display:flex; flex-direction:column; gap:10px; align-items:center; }
+.avatar-upload-wrap{ position:relative; width:96px; margin:0 auto; }
+.avatar-edit-btn{
+  position:absolute; bottom:-2px; right:-2px; width:28px; height:28px; border-radius:50%;
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-2)); color:#22140a;
+  display:flex; align-items:center; justify-content:center; font-size:13px; border:2px solid var(--bg-deep); cursor:pointer;
+}
+.id-tag{ color:var(--text-dim); font-size:12px; }
+/* Custom ID Number — "Golden Light" premium look, used wherever a user's ID
+   is shown (own profile, other user's profile) when Admin has assigned one. */
+.custom-id-golden{
+  color:#3a2405;
+  font-weight:800;
+  letter-spacing:.3px;
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-2));
+  padding:2px 10px;
+  border-radius: var(--radius-round);
+  box-shadow: var(--glow-gold);
+  display:inline-block;
+  animation: customIdShimmer 2.4s ease-in-out infinite;
+}
+@keyframes customIdShimmer{
+  0%,100%{ box-shadow: 0 0 8px rgba(247,206,126,0.45); }
+  50%{ box-shadow: 0 0 18px rgba(247,206,126,0.85); }
+}
+
+.stat-row{ display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-top:16px; }
+.stat-row-4{ grid-template-columns: repeat(4,1fr); }
+.stat-box{ background: linear-gradient(160deg, var(--bg-panel), var(--bg-panel-2)); border:1px solid var(--line); border-radius: var(--radius-md); padding:14px 6px; text-align:center; display:flex; flex-direction:column; gap:2px; color: var(--text-bright); }
+.stat-box-btn{ cursor:pointer; }
+.stat-num{ font-family: var(--font-display); font-size:19px; font-weight:800; color: var(--accent-gold); }
+.stat-label{ font-size:10.5px; color:var(--text-dim); }
+
+.profile-card-row{ display:flex; align-items:center; gap:14px; padding: 8px 0 4px; }
+.profile-display-name{ font-weight:800; font-size:18px; display:block; }
+.profile-edit-hint{ color:var(--text-dim); font-size:12px; }
+.id-row{ display:flex; align-items:center; gap:8px; color:var(--text-dim); font-size:12.5px; margin: 10px 0; }
+.copy-btn{ background:none; border:none; color:var(--accent-gold); font-size:14px; }
+.badge-row{ display:flex; gap:8px; align-items:center; margin-bottom:14px; }
+.chip-badge{ font-size:11px; font-weight:800; padding:4px 10px; border-radius: var(--radius-round); }
+.chip-level{ background: var(--accent-gold-dim); color: var(--accent-gold); border: 1px solid rgba(247,206,126,0.3); }
+.stats-plain-row{ display:flex; justify-content:space-around; padding: 6px 0 16px; }
+.stats-plain-col{ display:flex; flex-direction:column; align-items:center; gap:2px; }
+.stats-plain-num{ font-family: var(--font-display); font-weight:800; font-size:17px; }
+.stats-plain-label{ font-size:10.5px; color:var(--text-dim); }
+.follow-tap-row{ display:flex; gap:14px; justify-content:center; margin-bottom:18px; }
+.link-btn{ background:none; border:none; color:var(--accent-gold); font-size:12.5px; font-weight:700; }
+
+.menu-list{ display:flex; flex-direction:column; gap:8px; }
+.menu-row{
+  display:flex; align-items:center; gap:12px; width:100%;
+  background: linear-gradient(160deg, var(--bg-panel), var(--bg-panel-2));
+  border:1px solid var(--line); border-radius: var(--radius-md);
+  padding:14px; color: var(--text-bright); text-align:left;
+}
+.menu-row-icon{ font-size:18px; width:24px; text-align:center; }
+.menu-row-label{ flex:1; font-weight:700; font-size:14px; }
+.menu-row-value{ font-size:12px; color: var(--accent-gold); font-weight:700; }
+.menu-row-arrow{ color: var(--text-dim); }
+
+/* ---------- User lists (followers/inbox) ---------- */
+.user-list{ display:flex; flex-direction:column; gap:10px; }
+/* Phase 3 — Agency & Host System */
+.stat-grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; margin-bottom:6px; }
+.stat-box{ display:flex; flex-direction:column; gap:4px; background: var(--bg-panel); border:1px solid var(--line); border-radius: var(--radius-md); padding:12px; }
+.stat-box .stat-label{ font-size:11.5px; color:var(--text-dim); }
+.stat-box .stat-value{ font-size:18px; font-weight:800; color: var(--accent-gold); }
+.invite-card{ background: var(--bg-panel-2); border:1px solid var(--line); border-radius: var(--radius-md); padding:12px; min-width:220px; }
+.invite-card-head{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.invite-card-logo{ width:40px; height:40px; border-radius:10px; object-fit:cover; background: var(--bg-panel); flex-shrink:0; }
+.invite-card-logo.placeholder{ display:flex; align-items:center; justify-content:center; font-size:18px; }
+.invite-card-name{ font-weight:800; font-size:14px; }
+.invite-card-id{ font-size:11px; color:var(--text-dim); }
+.invite-card-actions{ display:flex; gap:8px; margin-top:4px; }
+.invite-card-actions .btn{ flex:1; }
+.invite-card-status{ font-size:12px; color:var(--text-dim); text-align:center; padding:4px 0; }
+.user-row{ display:flex; align-items:center; gap:12px; background: var(--bg-panel); border:1px solid var(--line); border-radius: var(--radius-md); padding:12px; }
+.user-row-body{ flex:1; min-width:0; }
+.user-row-body .name{ font-weight:800; font-size:14px; display:block; }
+.user-row-body .sub{ color:var(--text-dim); font-size:12px; display:block; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+/* Room Ranking */
+.rank-badge{ flex-shrink:0; width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; background: var(--bg-raised); color: var(--text-dim); }
+.rank-badge.rank-top1{ background: linear-gradient(135deg, #FFD86B, #F0A868); color:#2A1B00; box-shadow: var(--glow-gold); }
+.rank-badge.rank-top2{ background: linear-gradient(135deg, #E4E4E4, #B7B7B7); color:#2A2A2A; }
+.rank-badge.rank-top3{ background: linear-gradient(135deg, #E3A26B, #B9743A); color:#2A1B00; }
+.ranking-diamonds{ flex-shrink:0; font-weight:800; font-size:13px; color: var(--accent-gold); white-space:nowrap; }
+
+.thread-log{ padding: 12px 18px; }
+.thread-msg{ max-width:75%; padding:9px 13px; border-radius:16px; font-size:14px; margin-bottom:8px; }
+.thread-msg.out{ align-self:flex-end; background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-2)); color:#241305; margin-left:auto; font-weight:600; }
+.thread-msg.in{ background: var(--bg-panel-2); }
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar{ width:6px; }
+::-webkit-scrollbar-thumb{ background: var(--accent-gold-dim); border-radius:3px; }
+
+@media (prefers-reduced-motion: reduce){
+  .seat.speaking .seat-circle, .seat.speaking .seat-circle::after{ animation: none; }
+  .btn, .toast{ transition: none; }
+  .gift-fly-item{ animation-duration: .01ms; }
+}
+
+/* ===================================================================
+   V2 — VIP tiers, frames, wallet, treasure, agency, moderation
+   =================================================================== */
+:root{
+  --vip0: #8D8398;
+  --vip1: #D6A06E;
+  --vip2: #D2DAE4;
+  --vip3: var(--accent-gold);
+  --vip4: var(--royal-purple);
+  --vip5-a: var(--accent-gold); --vip5-b: var(--accent-rose); --vip5-c: var(--royal-purple);
+}
+
+.vip-badge{ display:inline-block; font-size:10.5px; font-weight:800; letter-spacing:.02em; padding:3px 10px; border-radius: var(--radius-round); color:#1c1424; }
+.vip-badge.vip-0{ background: var(--vip0); color:#efeaf7; }
+.vip-badge.vip-1{ background: var(--vip1); }
+.vip-badge.vip-2{ background: var(--vip2); }
+.vip-badge.vip-3{ background: var(--vip3); box-shadow: var(--glow-gold); }
+.vip-badge.vip-4{ background: var(--vip4); color:#f4eeff; }
+.vip-badge.vip-5{ background: linear-gradient(90deg, var(--vip5-a), var(--vip5-b), var(--vip5-c)); color:#170F21; box-shadow: 0 0 16px rgba(247,206,126,0.5); }
+
+/* Admin-assigned coloured tag (e.g. "VIP") — background colour is set inline
+   per-user from the admin panel via applyCustomTag(); everything else about
+   the shape/size matches .vip-badge so it sits naturally next to it. */
+.tag-badge{
+  display:inline-block; font-size:10.5px; font-weight:800; letter-spacing:.02em;
+  padding:3px 10px; border-radius: var(--radius-round);
+  box-shadow: 0 0 8px rgba(0,0,0,0.25);
+  /* background + text colour are set inline per-user in JS (applyCustomTag),
+     since the admin can pick any colour and text needs to stay readable on it */
+}
+/* Small inline variant used right next to a username in chat / on a seat,
+   where a full pill would be too heavy. */
+.tag-badge.tag-badge-sm{ font-size:9px; padding:1px 7px; margin:0 4px; vertical-align:1px; }
+
+/* Admin-uploaded SVIP level PNG tag (SVIP1-8) — shown in exactly the same
+   spot as .vip-badge, right next to it, using whichever PNG Admin uploaded
+   for the user's current level. Height-matched to .vip-badge, width auto
+   so non-square tag art doesn't get squashed. */
+.svip-tag-img{ display:inline-block; height:18px; width:auto; max-width:64px; object-fit:contain; vertical-align:middle; margin-left:4px; }
+
+.avatar-frame-wrap{ position:relative; display:inline-block; border-radius:50%; }
+.avatar-frame-sm{ padding:2px; }
+.avatar-frame-lg{ padding:3px; }
+.avatar-frame-wrap.vip-0{ background: var(--vip0); }
+.avatar-frame-wrap.vip-1{ background: linear-gradient(135deg, var(--vip1), #A97A4E); }
+.avatar-frame-wrap.vip-2{ background: linear-gradient(135deg, var(--vip2), #A7B0BC); }
+.avatar-frame-wrap.vip-3{ background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-2)); box-shadow: var(--glow-gold); }
+.avatar-frame-wrap.vip-4{ background: linear-gradient(135deg, var(--royal-purple), #7654D9); }
+.avatar-frame-wrap.vip-5{
+  background: linear-gradient(135deg, var(--vip5-a), var(--vip5-b), var(--vip5-c));
+  animation: frame-spin 4s linear infinite; background-size: 300% 300%;
+  box-shadow: 0 0 20px rgba(247,206,126,0.55);
+}
+@keyframes frame-spin{ 0%{ background-position: 0% 50%; } 50%{ background-position: 100% 50%; } 100%{ background-position: 0% 50%; } }
+.avatar-frame-wrap img{ display:block; border-radius:50%; }
+
+/* Admin-issued animated PNG frame overlays sit in their own absolutely
+   positioned layer around the avatar — they decorate, they never resize
+   the avatar or its container. */
+.avatar-frame-wrap.has-custom-frame{ background: transparent; }
+.avatar-frame-wrap .custom-frame-img{
+  position:absolute; inset:-18%; width:136%; height:136%;
+  pointer-events:none; animation: custom-frame-glow 2.4s ease-in-out infinite;
+}
+@keyframes custom-frame-glow{
+  0%,100%{ filter: drop-shadow(0 0 4px rgba(247,206,126,0.35)); }
+  50%{ filter: drop-shadow(0 0 12px rgba(247,206,126,0.65)); }
+}
+
+/* ---------- Announcement banner ---------- */
+.announce-banner{
+  position: fixed; top:0; left:0; right:0; z-index:600;
+  background: linear-gradient(90deg, var(--royal-purple), var(--accent-rose), var(--accent-gold));
+  color:#1a0f08; font-weight:800; font-size:13px; padding: 10px 18px; text-align:center;
+}
+.mini-announce{ background: var(--bg-panel-2); border:1px solid var(--accent-gold); border-radius: var(--radius-md); padding:10px 14px; font-size:13px; color: var(--accent-gold); margin-bottom:12px; }
+
+.menu-grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; margin-top:10px; }
+.menu-tile{ background: var(--bg-panel); border:1px solid var(--line); border-radius: var(--radius-lg); padding:18px 10px; display:flex; flex-direction:column; align-items:center; gap:8px; font-size:24px; color: var(--text-bright); }
+.menu-tile span{ font-size:12px; font-weight:700; color: var(--text-soft); }
+
+.treasure-card{ background: linear-gradient(160deg, var(--bg-panel), var(--bg-panel-2)); border:1px solid var(--line); border-radius: var(--radius-lg); padding:22px; text-align:center; margin-bottom:14px; position:relative; overflow:hidden; }
+.treasure-card::before{ content:""; position:absolute; top:-40%; left:-20%; width:140%; height:140%; background: radial-gradient(circle, rgba(247,206,126,0.15), transparent 60%); pointer-events:none; }
+.treasure-icon{ font-size:40px; margin-bottom:8px; filter: drop-shadow(0 0 10px rgba(247,206,126,0.4)); }
+.treasure-card h3{ font-size:17px; margin-bottom:4px; }
+.treasure-card .hint{ margin-bottom:12px; }
+
+/* ---------- Gift banner ticker (room) ---------- */
+.gift-banner{ display:flex; flex-direction:column; gap:4px; padding: 0 18px; min-height:0; max-height:56px; overflow:hidden; flex-shrink:0; }
+.gift-banner-item{ font-size:12px; color: var(--accent-gold); background: var(--accent-gold-dim); border: 1px solid rgba(247,206,126,0.25); padding:5px 12px; border-radius: var(--radius-round); align-self:flex-start; animation: banner-in .3s ease; }
+@keyframes banner-in{ from{ opacity:0; transform: translateY(-6px); } to{ opacity:1; transform:none; } }
+
+/* ---------- Dice game / seat-lock pick rows ---------- */
+.dice-pick-row{ display:grid; grid-template-columns: repeat(6, 1fr); gap:8px; margin: 10px 0; }
+.dice-pick-row .pick-btn{ aspect-ratio:1/1; border-radius: var(--radius-sm); border:1px solid var(--line); background: var(--bg-raised); color:var(--text-bright); font-weight:800; font-size:15px; }
+.dice-pick-row .pick-btn.selected{ background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-2)); color:#241305; border-color: var(--accent-gold); box-shadow: var(--glow-gold); }
+.dice-pick-row .pick-btn.locked{ background: var(--accent-rose-dim); border-color: var(--accent-rose); color: var(--accent-rose); }
+.dice-result{ background: var(--bg-raised); border-radius: var(--radius-md); padding:12px; text-align:center; font-weight:800; font-size:15px; }
+.dice-result.win{ color: var(--accent-gold); text-shadow: 0 0 12px rgba(247,206,126,0.4); }
+.dice-result.lose{ color: var(--accent-rose); }
+
+.mod-section{ border-top:1px solid var(--line); padding-top:12px; margin-top:4px; display:flex; flex-direction:column; gap:8px; }
+.mod-section:first-of-type{ border-top:none; padding-top:0; margin-top:0; }
+
+.seat-role{ position:absolute; bottom:-2px; right:-2px; font-size:12px; background: var(--bg-deep); border-radius:50%; padding:2px; box-shadow: 0 0 6px rgba(247,206,126,0.4); }
+.seat-mic-muted{ position:absolute; bottom:-2px; left:-2px; font-size:11px; background: var(--bg-deep); border-radius:50%; padding:2px; box-shadow: 0 0 6px rgba(0,0,0,0.4); }
+
+/* Premium Badge System — Blue Diamond V (admin-granted only, see badges.js).
+   Room Seat: small 16px overlay, top-right, above the avatar circle — does
+   not touch seat layout/size, purely an absolutely-positioned extra like
+   .seat-role/.seat-mic-muted above. */
+.seat-blue-badge{
+  position:absolute; top:-4px; right:-4px; width:16px; height:16px;
+  object-fit:contain; pointer-events:none; z-index:2;
+  filter: drop-shadow(0 0 3px rgba(90,160,255,0.85));
+}
+
+/* Profile bottom sheet / visitor card: larger (72px), floats above the
+   avatar frame, centered, doesn't push or overlap name/tag/VIP badge below
+   it since those stay in normal flow beneath — this is absolutely
+   positioned relative to .avatar-frame-wrap (already position:relative)
+   and offset upward so it sits like a crown above the avatar, not on it. */
+.profile-blue-badge{
+  position:absolute; top:-34px; left:50%; transform:translateX(-50%);
+  width:72px; height:72px; object-fit:contain; z-index:5; pointer-events:none;
+  animation: blue-badge-glow 2.4s ease-in-out infinite;
+}
+.profile-blue-badge.hidden{ display:none; }
+@keyframes blue-badge-glow{
+  0%,100%{ filter: drop-shadow(0 0 6px rgba(90,160,255,0.55)); transform:translateX(-50%) scale(1); }
+  50%{ filter: drop-shadow(0 0 16px rgba(90,160,255,0.95)); transform:translateX(-50%) scale(1.06); }
+}
+@media (prefers-reduced-motion: reduce){
+  .profile-blue-badge{ animation:none; }
+}
+
+.seat.locked .seat-circle{ opacity:0.45; border-style:solid; border-color: var(--accent-rose-dim); }
+
+/* ---------- Treasure Chest ---------- */
+.chest-wrap{ position:relative; margin: 4px 20px 10px; padding: 14px 16px; text-align:center; flex-shrink:0; }
+.chest-info-btn{ position:absolute; top:6px; right:16px; background: var(--bg-panel-2); border:1px solid var(--line); color:var(--accent-gold); width:26px; height:26px; border-radius:50%; font-size:12px; }
+.chest-box{ position:relative; width:84px; height:76px; margin: 0 auto 8px; }
+.chest-glow-ring{ position:absolute; inset:-14px; border-radius:50%; background: radial-gradient(circle, rgba(247,206,126,0.28), transparent 65%); animation: chest-pulse 2.2s ease-in-out infinite; }
+@keyframes chest-pulse{ 0%,100%{ opacity:0.6; transform:scale(1);} 50%{ opacity:1; transform:scale(1.08);} }
+.chest-body{ position:relative; width:100%; height:100%; }
+.chest-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.35)) var(--glow-gold); transform-origin:50% 65%; transition: transform .15s ease; }
+.chest-flash{ position:absolute; inset:0; border-radius:12px; background: radial-gradient(circle, rgba(255,255,255,0.9), rgba(247,206,126,0) 70%); opacity:0; pointer-events:none; }
+.chest-box.opening .chest-img{ animation: chest-shake .28s ease-in-out 4; }
+.chest-box.opened .chest-img{ animation: chest-pop .5s ease; }
+.chest-box.opened .chest-flash{ animation: chest-flash-burst .6s ease-out; }
+@keyframes chest-shake{ 0%,100%{ transform: rotate(0deg) scale(1);} 25%{ transform: rotate(-6deg) scale(1.03);} 75%{ transform: rotate(6deg) scale(1.03);} }
+@keyframes chest-pop{ 0%{ transform: scale(1);} 40%{ transform: scale(1.28);} 100%{ transform: scale(1);} }
+@keyframes chest-flash-burst{ 0%{ opacity:0;} 30%{ opacity:1;} 100%{ opacity:0;} }
+.chest-sparkle{ position:absolute; width:5px; height:5px; border-radius:50%; background: var(--accent-gold); box-shadow: 0 0 8px 2px rgba(247,206,126,0.7); animation: sparkle-float 2.6s ease-in-out infinite; }
+.chest-sparkle.s1{ top:0; left:10%; animation-delay:0s; }
+.chest-sparkle.s2{ top:20%; right:5%; animation-delay:.7s; }
+.chest-sparkle.s3{ bottom:10%; left:45%; animation-delay:1.4s; }
+@keyframes sparkle-float{ 0%,100%{ opacity:0.3; transform:translateY(0);} 50%{ opacity:1; transform:translateY(-8px);} }
+.chest-level-tag{ font-family: var(--font-display); font-weight:800; color: var(--accent-gold); font-size:13px; margin-bottom:6px; }
+.chest-progress-track{ background: var(--bg-raised); border-radius: var(--radius-round); height:8px; overflow:hidden; border: 1px solid var(--line); }
+.chest-progress-fill{ height:100%; background: linear-gradient(90deg, var(--accent-gold), var(--royal-purple)); transition: width .4s ease; }
+.chest-progress-label{ font-size:11px; color: var(--text-dim); margin-top:6px; }
+.chest-countdown{ font-size:10.5px; color: var(--text-dim); margin-top:2px; font-family: var(--font-display); }
+
+.chest-reward-card{ text-align:center; position:relative; overflow:hidden; }
+.chest-reward-burst{ position:absolute; inset:-30%; background: radial-gradient(circle, rgba(247,206,126,0.3), transparent 60%); pointer-events:none; animation: chest-pulse 1.8s ease-in-out infinite; }
+.chest-reward-visual-wrap{ position:relative; width:110px; height:96px; margin:10px auto; }
+.chest-reward-mystery-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; filter: drop-shadow(0 0 14px rgba(247,206,126,0.5)); animation: chest-mystery-bob 1s ease-in-out infinite; transition: opacity .3s ease, transform .3s ease; }
+.chest-reward-mystery-img.reveal-out{ opacity:0; transform: scale(0.6) rotate(12deg); }
+@keyframes chest-mystery-bob{ 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-5px);} }
+.chest-reward-visual{ position:absolute; inset:0; font-size:52px; display:flex; align-items:center; justify-content:center; filter: drop-shadow(0 0 14px rgba(247,206,126,0.5)); opacity:0; transform: scale(0.5); transition: opacity .3s ease, transform .3s ease; }
+.chest-reward-visual.reveal-in{ opacity:1; transform: scale(1); }
+.chest-reward-amount{ font-family: var(--font-display); font-weight:800; font-size:22px; color: var(--accent-gold); margin-bottom:10px; }
+.chest-reward-amount.counting{ color: var(--text-primary); }
+.chest-reward-top{ display:flex; flex-direction:column; gap:6px; margin-bottom:6px; }
+.chest-reward-top-row{ display:flex; justify-content:space-between; background: var(--bg-raised); border-radius: var(--radius-sm); padding:8px 12px; font-size:12.5px; }
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce){
+  .chest-glow-ring, .chest-sparkle, .chest-reward-burst, .avatar-frame-wrap.vip-5, .avatar-frame-wrap .custom-frame-img, .seat-circle.vip-5, .seat-circle .custom-frame-img{ animation:none; }
+}
+
+/* ---------- Seat-8 Room TV Screen (Food Wheel / Teen Patti, always visible & synced) ---------- */
+/* ---------- Room Game Overlay (Food Wheel / Teen Patti) ----------
+   Fix: this used to be a normal in-flow block under the seats, forced
+   visible on every renderSeats() call. A 9:12-aspect block appearing/
+   disappearing in-flow made the whole room page jump every time seats
+   re-rendered (very frequently — every seat change, gift, etc). Now it's
+   a position:fixed bottom sheet, off-flow entirely, so it can never shift
+   any other element. It's hidden by being translated fully off-screen by
+   default, and only ever shown via the explicit toggle button — never
+   forced on. Leaves the header + top seat row visible above it. */
+/* Fix (screen-lock bug): the overlay used to run all the way to bottom:0,
+   which meant it physically covered the bottom toolbar (Mic/Gift/Music/
+   Dice/Chat) sitting at the same fixed viewport position — that's why the
+   toolbar "disappeared" once a game was open. It now stops above the
+   toolbar's real height (+ safe-area for notched phones) so the toolbar
+   stays visible and tappable the whole time the game is open, exactly like
+   the reference screenshot. */
+/* Full-screen Game panel (Fruit Wheel / Teen Patti). Hidden by default —
+   opacity + visibility + pointer-events all off, not just transform — so it
+   can never be accidentally visible or intercept taps behind the scenes.
+   Opens ONLY via #btn-toggle-game (openRoomGame) and closes ONLY via the
+   ✕ / #btn-room-tv-close (closeRoomGame); when open it always covers the
+   entire viewport (inset:0), never a partial strip. */
+.room-tv-screen{
+  position: fixed; inset:0; margin:0;
+  border-radius:0; border:none;
+  overflow: hidden;
+  background: var(--bg-panel-2);
+  box-shadow: 0 -12px 40px rgba(0,0,0,0.55);
+  z-index: 900;
+  display: flex; flex-direction: column;
+  opacity:0; visibility:hidden; pointer-events:none;
+  transform: translateY(4%);
+  transition: opacity .25s ease, transform .3s ease, visibility 0s linear .25s;
+  touch-action: none;
+}
+.room-tv-screen.tv-open{
+  opacity:1; visibility:visible; pointer-events:auto; transform:translateY(0);
+  transition: opacity .25s ease, transform .3s ease;
+}
+.room-tv-close{
+  position:absolute; top:8px; right:10px; z-index:5;
+  width:30px; height:30px; border-radius:50%;
+  background: rgba(0,0,0,0.55); color:#fff; border:1px solid var(--line);
+  font-size:15px; display:flex; align-items:center; justify-content:center;
+}
+.room-tv-tabs{ display:flex; gap:6px; padding:12px 12px 0; }
+.room-tv-tab{
+  flex:1; background: var(--bg-raised); color: var(--text-soft);
+  border:1px solid var(--line); border-bottom:none;
+  border-radius: 10px 10px 0 0; padding:7px 4px; font-size:11.5px; font-weight:700;
+  cursor:pointer;
+}
+.room-tv-tab.active{ background: var(--bg-panel-2); color: var(--accent-gold); }
+/* Fix (letterbox / black-bars bug): the frame used to be pinned at a fixed
+   400x700 design size and scaled down with a transform to fit inside the
+   wrap, which is what produced the black bars on the sides (the scaled box
+   never matched the wrap's real aspect ratio, so the leftover space showed
+   the wrap's own black background). The iframe now simply fills the wrap
+   at 100% width/height and the game inside (which is already a responsive
+   Tailwind layout — min-h-screen/w-full) reflows to fit that box itself,
+   so there is no leftover space and nothing to letterbox. */
+.room-tv-frame-wrap{ position:relative; width:100%; flex:1; background:transparent; overflow:hidden; touch-action: pan-x pan-y; }
+.room-tv-frame{
+  position:absolute; inset:0;
+  width:100% !important; height:100% !important;
+  border:0;
+  /* Removed the old fixed width/height/transform inline styles that JS used
+     to set — those forced a reflow (and the visible flicker) on every
+     resize/orientation change. */
+  transform:none !important;
+  will-change: transform;
+}
+
+/* Bottom toolbar must always render above the game overlay's z-index (700)
+   so Mic/Gift/Music/Dice/Chat/Send are never hidden behind it. */
+/* Bottom toolbar: truly fixed to the viewport bottom (not a flex-flow
+   item) so it can never be pushed, shifted, or hidden by anything above
+   it — chat growing, a panel opening, a short/tall screen, etc. Centered
+   to the same max-width:560px the rest of the room UI uses so it lines
+   up identically on phones and wide screens. */
+.room-toolbar{
+  position: fixed; left:50%; transform: translateX(-50%);
+  bottom:0; width:100%; max-width:560px; z-index: 800;
+}
+
+.game-tool-btn{ position:relative; }
+.new-badge{
+  position:absolute; top:-6px; right:-8px; background: var(--accent-rose); color:#2c0710;
+  font-size:8px; font-weight:800; padding:1px 5px; border-radius:999px; letter-spacing:.02em;
+  box-shadow: 0 0 6px rgba(238,124,144,0.6);
+}
+
+/* ===========================================================================
+   USER PROFILE BOTTOM SHEET (room seat / online-member tap)
+   =========================================================================== */
+.avatar-md{ width:64px; height:64px; }
+.avatar-frame-md{ padding:2px; }
+
+.sheet-overlay{
+  position: fixed; inset:0; z-index: 900;
+  display:flex; align-items:flex-end; justify-content:center;
+}
+.sheet-overlay.hidden{ display:none; }
+.sheet-backdrop{
+  position:absolute; inset:0; background: rgba(4,2,8,0.72); backdrop-filter: blur(3px);
+}
+.sheet-card{
+  position:relative; width:100%; max-width: 480px;
+  background: linear-gradient(180deg, var(--bg-panel), var(--bg-panel-2));
+  border:1px solid var(--line); border-top: 1px solid rgba(247,206,126,0.3);
+  border-radius: 20px 20px 0 0;
+  padding: 10px 18px calc(18px + env(safe-area-inset-bottom));
+  max-height: 82vh; overflow-y:auto;
+  transform: translateY(100%);
+  transition: transform .28s cubic-bezier(.32,.72,0,1);
+}
+.sheet-overlay.sheet-open .sheet-card{ transform: translateY(0); }
+.sheet-handle{
+  width:38px; height:4px; border-radius:999px; background: var(--line);
+  margin: 4px auto 14px;
+}
+.sheet-profile-header{ display:flex; gap:12px; align-items:flex-start; }
+.sheet-profile-info{ flex:1; min-width:0; }
+.sheet-name-row h3{ margin:0; font-size:17px; color: var(--text-bright); overflow-wrap:anywhere; }
+.sheet-badge-row{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:4px; }
+.sheet-sub-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:6px; font-size:12px; color: var(--text-dim); }
+.sheet-bio{ margin:8px 0 0; font-size:13px; color: var(--text-soft); line-height:1.4; }
+
+.sheet-actions-row{ display:flex; gap:8px; margin-top:16px; }
+.sheet-actions-row .btn{ flex:1; padding:10px 8px; font-size:13px; }
+
+.sheet-section{ margin-top:16px; padding-top:14px; border-top:1px solid var(--line); }
+.sheet-admin-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:8px; }
+.sheet-admin-grid .btn{ font-size:12.5px; padding:10px 8px; }
+.sheet-admin-grid .btn.active{ background: var(--accent-gold-dim); border-color: var(--accent-gold); color: var(--accent-gold); }
+
+.sheet-bottom-actions{ display:flex; gap:8px; margin-top:16px; }
+.sheet-bottom-actions .btn{ flex:1; }
+
+/* ===========================================================================
+   ROOM VISUAL REDESIGN — "ultra clean circle seat" layout
+   Restyles the voice room (#view-room) to the deep-violet / starfield /
+   glass-circle look supplied by the user. Every id and class app.js reads
+   or writes (#seat-grid, .seat, .seat-circle, #chest-box, #chat-log,
+   #room-toolbar buttons, etc.) is untouched structurally — this section
+   only overrides appearance, so no existing feature (voice, gifts, chest,
+   chat, YouTube player, room game, admin frames…) needed any JS changes.
+   =========================================================================== */
+
+/* ---- Deep violet stage + starfield backdrop ----
+   Bug fix: this used to be written with the `background` SHORTHAND, which
+   implicitly resets every sub-property it doesn't mention — including
+   background-size/position/repeat — back to their initial values (auto /
+   0% 0% / repeat) on this same #view-room selector. Since it's declared
+   after the earlier #view-room rule that sets background-size:cover;
+   background-position:center top; background-repeat:no-repeat, and has
+   equal specificity, it silently won and clobbered those three. A host's
+   uploaded room background (applied inline via JS as background-image)
+   was therefore rendered tiled at natural size from the top-left corner
+   instead of covering the screen — effectively invisible behind the UI —
+   which is why the theme appeared to "not change" after upload. Using the
+   background-image longhand here instead leaves size/position/repeat
+   alone, so both the default starfield look and a custom uploaded photo
+   render correctly (full-cover, no tiling). */
+#view-room{
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.12), transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(139,92,246,0.28), transparent 60%),
+    linear-gradient(180deg, #3a0f7a 0%, #2a0a5a 60%, #1a1040 100%);
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+#view-room::before{
+  content:"";
+  position:absolute; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    radial-gradient(1.6px 1.6px at 12% 18%, rgba(255,255,255,0.85), transparent 60%),
+    radial-gradient(1.2px 1.2px at 24% 8%,  rgba(255,255,255,0.6),  transparent 60%),
+    radial-gradient(1.8px 1.8px at 38% 32%, rgba(255,255,255,0.7),  transparent 60%),
+    radial-gradient(1.3px 1.3px at 52% 14%, rgba(255,255,255,0.55), transparent 60%),
+    radial-gradient(2px 2px   at 68% 24%,   rgba(255,255,255,0.9),  transparent 60%),
+    radial-gradient(1.4px 1.4px at 80% 12%, rgba(255,255,255,0.6),  transparent 60%),
+    radial-gradient(1.6px 1.6px at 90% 30%, rgba(255,255,255,0.7),  transparent 60%),
+    radial-gradient(1.3px 1.3px at 8% 45%,  rgba(255,255,255,0.5),  transparent 60%),
+    radial-gradient(1.8px 1.8px at 58% 48%, rgba(255,255,255,0.65), transparent 60%),
+    radial-gradient(2px 2px   at 30% 58%,   rgba(255,255,255,0.85), transparent 60%),
+    radial-gradient(1.3px 1.3px at 82% 55%, rgba(255,255,255,0.55), transparent 60%);
+  opacity:0.9;
+}
+.room-topbar, #gift-banner, .stage-wrap, .chest-wrap, .chat-panel{ position:relative; z-index:1; }
+.room-topbar{ z-index:3; }
+
+/* ---- Header: circular avatar chip + glass icon buttons ---- */
+.room-topbar{ align-items:flex-start; padding:12px 12px 4px; gap:10px; }
+#room-logo-display{
+  width:48px; height:48px; border-radius:50%;
+  border:1px solid rgba(255,255,255,0.2); box-shadow:0 2px 10px rgba(0,0,0,0.35);
+}
+.room-title-block h2{ color:#fff; font-size:15px; font-weight:700; }
+#room-host-display.sub{ color:rgba(255,255,255,0.6); font-size:11px; }
+#btn-leave-room, #btn-room-mod{
+  background: rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.12);
+  color:#fff; backdrop-filter: blur(8px); width:34px; height:34px;
+}
+.room-topbar .stat-pill{
+  background: rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.12);
+  color:#fff; backdrop-filter: blur(8px); font-weight:700;
+}
+
+/* ---- Seats: frosted glass circles instead of dashed placeholders ---- */
+.stage-wrap{ padding:14px 14px 6px; }
+.seat-circle{
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.22);
+  backdrop-filter: blur(6px);
+  color: rgba(255,255,255,0.85);
+}
+.seat.occupied .seat-circle{
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.28);
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.12);
+}
+.seat-name{ color: rgba(255,255,255,0.92); font-weight:500; }
+
+/* ---- Treasure chest — moved to a floating gold badge, right side,
+   exactly where the reference art places its round icon button, instead
+   of a full-width bar. All of its live data (level/progress/countdown)
+   and the #btn-chest-info tap target are unchanged, just recomposed into
+   a compact vertical stack. ---- */
+.chest-wrap{
+  position:absolute; right:12px; bottom:calc(92px + env(safe-area-inset-bottom));
+  width:66px; margin:0; padding:0; z-index:5;
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+}
+.chest-box{ width:44px; height:40px; margin:0 auto 2px; }
+.chest-box::before{
+  content:""; position:absolute; inset:-9px; z-index:-1; border-radius:50%;
+  background: linear-gradient(180deg, #fde68a, #d97706);
+  border:1px solid rgba(255,255,255,0.25);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+}
+.chest-info-btn{ position:absolute; top:-6px; right:-2px; width:20px; height:20px; font-size:10px; }
+.chest-level-tag{ font-size:11px; margin-bottom:2px; }
+.chest-progress-track{ width:56px; height:5px; }
+.chest-progress-label{ font-size:8.5px; line-height:1.25; white-space:normal; }
+.chest-countdown{ font-size:8px; }
+
+/* ---- Chat log: translucent pill panel over the stars instead of a
+   plain block, matching the message-bar look of the reference. ---- */
+.chat-panel{
+  padding:4px 14px 6px;
+  /* Room toolbar is now position:fixed (see .room-toolbar override below),
+     so it no longer reserves its own space in the flex column — this
+     bottom padding keeps the last visible chat lines from sitting behind
+     it, on every screen size. */
+  padding-bottom: calc(78px + env(safe-area-inset-bottom));
+}
+/* ---- Stability: no horizontal scroll/drift, seats/chat/toolbar never
+   shift regardless of panel state or screen size. ---- */
+#view-room, .stage-wrap, .seat-grid, .chat-panel, .room-toolbar{ max-width:100%; }
+#view-room{ overflow-x:hidden; }
+.chat-log{
+  background: rgba(0,0,0,0.28); border:1px solid rgba(255,255,255,0.1);
+  border-radius:16px; padding:8px 12px; backdrop-filter: blur(8px);
+}
+/* Bug fix: with zero chat messages this box still rendered at full height
+   with its dark translucent background, showing as a big empty black
+   rounded rectangle under the seats (e.g. right under seat No.8) before
+   anyone had said anything. Collapse it to nothing until there's at least
+   one message (renderChatLog/appendChatMsg toggle the "empty" class). */
+.chat-log.empty{ background:transparent; border-color:transparent; padding:0; min-height:0; }
+.chat-msg{ color:#fff; }
+.chat-msg .who{ color:#fbbf24; }
+.chat-msg.system{ color: rgba(255,255,255,0.55); }
+
+/* ---- Bottom toolbar: floating rounded bar instead of a full-width
+   flush strip, glass buttons to match. ---- */
+.room-toolbar{
+  margin: 0 10px calc(8px + env(safe-area-inset-bottom));
+  border-radius: 28px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(42,10,90,0.85);
+  backdrop-filter: blur(20px);
+}
+.tool-btn{ background: rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.12); color:#fff; }
+.tool-btn.active{ background: rgba(255,255,255,0.22); border-color:#fff; color:#fff; }
+.tool-btn-accent{ background: linear-gradient(135deg, #f97316, #fbbf24); color:#241305; }
+.chat-input{ background: rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.12); color:#fff; }
+.chat-input::placeholder{ color: rgba(255,255,255,0.45); }
+
+/* ---------- God Power popup (5s "Official God Power Holder" banner) ---------- */
+.godpower-popup{
+  position: fixed; left: 50%; top: 14%; transform: translateX(-50%) translateY(-14px);
+  z-index: 9999; padding: 14px 22px; border-radius: 14px; text-align:center;
+  font-weight: 700; font-size: 15px; color:#241305; letter-spacing:.2px;
+  background: linear-gradient(135deg, #FFD76A, #F7CE7E);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 0 0 2px rgba(255,255,255,0.4) inset;
+  opacity: 0; transition: opacity .25s ease, transform .25s ease; pointer-events:none;
+  max-width: 88vw;
+}
+.godpower-popup.revoke{ background: linear-gradient(135deg, #cfd3da, #9aa1ad); color:#1c1f26; }
+.godpower-popup.show{ opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ---------- Room Theme Library grid (Room Theme modal) ---------- */
+.theme-library-grid{
+  display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-top:8px;
+}
+.theme-library-item{
+  position:relative; border-radius:10px; overflow:hidden; aspect-ratio:1/1;
+  border:2px solid rgba(255,255,255,0.12); cursor:pointer; background:#241a35;
+}
+.theme-library-item img{ width:100%; height:100%; object-fit:cover; display:block; }
+.theme-library-item.selected{ border-color:#F7CE7E; box-shadow:0 0 0 2px rgba(247,206,126,0.5) inset; }
+.theme-library-item .theme-library-name{
+  position:absolute; left:0; right:0; bottom:0; padding:3px 5px; font-size:10px; color:#fff;
+  background:linear-gradient(transparent, rgba(0,0,0,0.75)); text-align:left;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+/* ---------- First Time Profile Setup (New User Only) ---------- */
+.ps-card{ display:flex; flex-direction:column; gap:14px; }
+.ps-avatar-wrap{ position:relative; width:96px; margin:0 auto 4px; }
+.ps-avatar-edit-btn{
+  position:absolute; right:-4px; bottom:0; width:30px; height:30px; border-radius:50%;
+  background: var(--accent-gold); border:2px solid var(--bg-raised); color:#1c1f26;
+  font-size:14px; display:flex; align-items:center; justify-content:center; cursor:pointer;
+}
+.ps-photo-sheet{
+  display:flex; flex-direction:column; gap:8px; background: var(--bg-raised);
+  border:1px solid var(--line); border-radius: var(--radius-sm); padding:12px;
+}
+.ps-gender-row{ display:flex; gap:8px; }
+.ps-gender-pill{
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:2px;
+  padding:10px 6px; border-radius: var(--radius-sm); border:1px solid var(--line);
+  background: var(--bg-raised); color: var(--text-soft); font-size:12px; cursor:pointer;
+}
+.ps-gender-pill span:first-child{ font-size:18px; }
+.ps-gender-pill.selected{ border-color: var(--accent-gold); color: var(--text-bright); box-shadow: 0 0 0 2px var(--accent-gold-dim); }
+.ps-field-status{ font-size:12px; margin:-8px 0 0; min-height:14px; }
+.ps-field-status.ok{ color:#4CD37C; }
+.ps-field-status.err{ color:#e5636b; }
+
+/* Country flag prefix wherever an ID is shown (profile / other's profile / seat sheet) */
+.id-flag{ margin-right:2px; }
+
+/* ===================================================================
+   HOME SCREEN — LIGHT THEME REDESIGN (scoped to #view-home only)
+   Every rule below is scoped under #view-home so no other screen
+   (Room, Profile, Wallet, Inbox, Admin, etc.) is touched — they keep
+   the original dark gold/purple theme untouched. No backend/socket
+   logic changes here, purely presentation.
+   =================================================================== */
+#view-home{
+  --home-bg:        #F4F5F9;
+  --home-card:      #FFFFFF;
+  --home-border:    #EDEFF5;
+  --home-text:      #1B1D29;
+  --home-text-dim:  #9297A8;
+  --home-pill-bg:   #FFF4DD;
+  --home-pill-text: #B8860B;
+  --home-shadow:    0 6px 22px rgba(24,26,46,0.07);
+  background: var(--home-bg);
+  color: var(--home-text);
+}
+#view-home .topbar{ background: var(--home-bg); padding:20px 18px 10px; }
+#view-home .profile-chip .name{ color: var(--home-text); }
+#view-home .profile-chip .sub{ color: var(--home-text-dim); }
+#view-home .stat-pill{
+  background: var(--home-card); border:1px solid var(--home-border);
+  color: var(--home-pill-text); box-shadow: var(--home-shadow);
+}
+#view-home .page-body{ background: transparent; }
+
+/* ---- Recently / Follow / Live Rooms tabs ---- */
+#view-home .social-tabs{ margin: 6px 0 16px; }
+#view-home .social-tab{
+  background: var(--home-card); border:1px solid var(--home-border);
+  color: var(--home-text-dim); box-shadow: none;
+}
+#view-home .social-tab.active{
+  background: #14151F; color:#fff; border-color: transparent;
+  box-shadow: var(--home-shadow);
+}
+#view-home .section-head{ color: var(--home-text); }
+#view-home .btn-accent{
+  background: #14151F; color:#fff; box-shadow: var(--home-shadow);
+}
+
+/* ---- Live Room Card ---- */
+#view-home .room-grid{ gap:14px; }
+#view-home .room-card{
+  background: var(--home-card);
+  border: 1px solid var(--home-border);
+  border-radius: 20px;
+  box-shadow: var(--home-shadow);
+  padding: 14px;
+  align-items: flex-start;
+  cursor: pointer; /* whole card is the join target — no separate button */
+}
+#view-home .room-card:active{ transform: scale(0.98); }
+#view-home .room-card-icon{
+  width: 68px; height: 68px; border-radius: 16px;
+  background: linear-gradient(160deg, #EDEFF7, #E3E6F1);
+  border: none; font-size: 26px;
+}
+#view-home .room-card-lock{ color: var(--home-text-dim); }
+#view-home .room-card-body h3{
+  color: var(--home-text); font-size: 15.5px; display:flex; align-items:center; gap:6px;
+}
+#view-home .room-card-host{ color: var(--home-text-dim); font-size: 12px; margin-top:2px; display:block; }
+#view-home .room-flag{ font-size: 15px; line-height:1; }
+#view-home .host-badge{
+  display:inline-flex; align-items:center; gap:4px; margin-top:5px;
+  font-size: 11.5px; font-weight: 800; padding: 3px 10px;
+  border-radius: var(--radius-round); width: fit-content;
+}
+#view-home .room-card-meta{
+  display:flex; align-items:center; gap:8px; margin-top:9px;
+}
+#view-home .avatar-stack{ display:flex; align-items:center; }
+#view-home .avatar-stack img,
+#view-home .avatar-stack .avatar-stack-more{
+  width: 24px; height: 24px; border-radius:50%;
+  border: 2px solid var(--home-card);
+  margin-left: -8px; object-fit: cover; background:#E3E6F1;
+  flex-shrink:0;
+}
+#view-home .avatar-stack img:first-child,
+#view-home .avatar-stack .avatar-stack-more:first-child{ margin-left:0; }
+#view-home .avatar-stack .avatar-stack-more{
+  display:flex; align-items:center; justify-content:center;
+  font-size: 10px; font-weight:800; color: var(--home-text-dim); background:#EDEFF5;
+}
+#view-home .online-pill{
+  display:inline-flex; align-items:center; gap:4px;
+  background: var(--home-pill-bg); color: var(--home-pill-text);
+  font-size: 12.5px; font-weight: 800; padding: 4px 10px; border-radius: var(--radius-round);
+}
+#view-home .live-dot{
+  width:6px; height:6px; border-radius:50%; background:#4ADE80; flex-shrink:0;
+  box-shadow: 0 0 0 rgba(74,222,128,0.6); animation: home-live-pulse 1.6s infinite;
+}
+@keyframes home-live-pulse{
+  0%{ box-shadow: 0 0 0 0 rgba(74,222,128,0.5); }
+  70%{ box-shadow: 0 0 0 6px rgba(74,222,128,0); }
+  100%{ box-shadow: 0 0 0 0 rgba(74,222,128,0); }
+}
+
+/* ---- Empty state ---- */
+#view-home .empty-state{ color: var(--home-text-dim); }
+
+/* ---- Bottom nav ---- */
+#view-home .bottom-nav{
+  background: rgba(255,255,255,0.94); backdrop-filter: blur(14px);
+  border-top: 1px solid var(--home-border);
+}
+#view-home .nav-btn{ color: var(--home-text-dim); }
+#view-home .nav-btn.active{ color: #14151F; text-shadow:none; }
+
+/* ==================================================================
+   PRIVATE AUDIO/VIDEO CALLING (2026-07-27)
+   ================================================================== */
+.thread-call-btns{ display:flex; gap:8px; flex-shrink:0; }
+
+.call-overlay{
+  position:fixed; inset:0; z-index:999; background:#0b0b12;
+  display:flex; flex-direction:column; align-items:center; justify-content:space-between;
+  padding: 40px 24px calc(36px + env(safe-area-inset-bottom));
+  color:#fff;
+}
+.call-overlay.hidden{ display:none; }
+
+.call-video-remote-wrap{ position:absolute; inset:0; background:#000; }
+.call-video-remote-wrap.hidden{ display:none; }
+#call-video-remote{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; background:#000; }
+.call-video-local{
+  position:absolute; top:16px; right:16px; width:110px; height:150px;
+  border-radius:14px; object-fit:cover; background:#111; z-index:2;
+  border:2px solid rgba(255,255,255,0.25); box-shadow:0 4px 14px rgba(0,0,0,0.4);
+}
+
+.call-info{
+  position:relative; z-index:1; display:flex; flex-direction:column; align-items:center;
+  gap:10px; margin-top:10vh; text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+.call-peer-photo{
+  width:104px; height:104px; border-radius:50%; object-fit:cover;
+  background: var(--bg-panel-2); border:3px solid rgba(255,255,255,0.25);
+}
+.call-peer-name{ font-size:20px; font-weight:800; }
+.call-status-text{ font-size:14px; color:rgba(255,255,255,0.75); }
+
+.call-incoming-actions, .call-outgoing-actions, .call-active-controls{
+  position:relative; z-index:1; display:flex; align-items:center; justify-content:center;
+  gap:28px; width:100%;
+}
+.call-incoming-actions.hidden, .call-outgoing-actions.hidden, .call-active-controls.hidden{ display:none; }
+
+.call-round-btn{
+  width:64px; height:64px; border-radius:50%; border:none; font-size:24px;
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+}
+.call-round-btn-accept{ background:#34c759; color:#fff; }
+.call-round-btn-reject{ background:#ff3b30; color:#fff; }
+
+/* Private video call — active controls arranged as a single bottom pill
+   bar (reference layout provided 2026-08-04): mute / speaker / camera-off /
+   camera-switch grouped in one rounded translucent bar, hangup as its own
+   red circle at the end of the same row, everything anchored to the
+   bottom. Same buttons, same ids, same click handlers, same order in the
+   DOM — layout/visual only, no markup or logic change. Audio calls (no
+   video buttons visible, since those get .hidden) get the exact same bar,
+   just with fewer icons in it. */
+.call-active-controls{
+  flex-wrap:nowrap; gap:10px;
+  margin-top:auto;
+  padding:10px 14px;
+  background: rgba(20,20,26,0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius:44px;
+  border:1px solid rgba(255,255,255,0.08);
+  width:auto; max-width:calc(100% - 24px);
+}
+.call-ctrl-btn{
+  width:52px; height:52px; border-radius:50%; border:none; font-size:19px;
+  background: rgba(255,255,255,0.14); color:#fff; cursor:pointer;
+  flex-shrink:0;
+}
+.call-ctrl-btn.active{ background: var(--accent-gold); color:#14151F; }
+.call-ctrl-btn.hidden{ display:none; }
+.call-active-controls .call-round-btn-reject{
+  width:56px; height:56px; font-size:22px; margin-left:4px; flex-shrink:0;
+}
+
+/* Call log line inside a private chat thread — mirrors a regular message
+   bubble's alignment (in/out) but reads as a status line, not text you
+   typed, matching how WhatsApp/Messenger show missed/completed calls. */
+.thread-call-log{
+  display:flex; align-items:center; gap:6px; font-size:12.5px; color: var(--text-dim);
+  background: var(--bg-panel-2); border:1px solid var(--line); border-radius: var(--radius-round);
+  padding:6px 14px; margin:6px auto; width:fit-content; max-width:85%;
+}
+.thread-call-log.missed{ color: var(--accent-rose); }
+
+/* ================================================================
+   Emoji Reaction feature — additive only, own namespace throughout
+   (emoji-sheet-*, emoji-reaction-*). Does not modify any rule above.
+   ================================================================ */
+
+/* ---- Toolbar button ---- */
+#btn-open-emoji{ font-size:20px; line-height:1; }
+
+/* ---- Bottom sheet (own overlay, not .modal-overlay, so opening it
+   never interacts with the Gift/More sheet open/close state) ---- */
+.emoji-sheet-overlay{
+  position:fixed; inset:0; z-index:970;
+  display:flex; align-items:flex-end; justify-content:center;
+}
+.emoji-sheet-overlay.hidden{ display:none; }
+.emoji-sheet-backdrop{
+  position:absolute; inset:0;
+  background: rgba(4,2,8,0.6); backdrop-filter: blur(6px);
+}
+.emoji-sheet-card{
+  position:relative; width:100%; max-width:560px;
+  height:40vh; min-height:260px;
+  background: linear-gradient(180deg, var(--bg-panel), var(--bg-panel-2));
+  border:1px solid var(--line); border-top: 1px solid rgba(247,206,126,0.3);
+  border-radius: 26px 26px 0 0;
+  padding: 10px 18px calc(16px + env(safe-area-inset-bottom));
+  display:flex; flex-direction:column; gap:10px;
+  box-shadow: 0 -10px 40px rgba(0,0,0,0.6);
+  animation: emoji-sheet-up .22s ease-out;
+}
+@keyframes emoji-sheet-up{
+  0%{ transform: translateY(100%); }
+  100%{ transform: translateY(0); }
+}
+.emoji-sheet-handle{
+  width:40px; height:4px; border-radius:2px;
+  background: var(--line); margin: 4px auto 2px;
+}
+.emoji-sheet-grid{
+  display:grid; grid-template-columns: repeat(4, 1fr);
+  gap:12px; overflow-y:auto; padding:4px 2px 8px;
+  justify-items:center;
+}
+.emoji-sheet-item{
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  background: var(--bg-raised); border:1px solid var(--line);
+  border-radius: var(--radius-md);
+  width:64px; height:64px; padding:8px;
+}
+.emoji-sheet-item dotlottie-wc{ width:100%; height:100%; pointer-events:none; }
+
+/* ---- Avatar-anchored reaction overlay ----
+   Sits on the same absolutely-positioned layer as .gift-fly-layer inside
+   #stage-wrap, using the same % coordinate system so each reaction lands
+   exactly above the sender's seat circle. Every reaction gets its own
+   independent dotlottie-wc element (own canvas), so simultaneous
+   reactions from multiple users never share state and each is removed
+   from the DOM on its own once it finishes. */
+.emoji-reaction-layer{ position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:41; }
+.emoji-reaction-item{
+  position:absolute; left:var(--rx); top:var(--ry);
+  width:56px; height:56px;
+  transform: translate(-50%,-50%) scale(0.5);
+  opacity:0;
+  filter: drop-shadow(0 0 10px rgba(247,206,126,0.5));
+  animation: emoji-reaction-pop 3s ease-out forwards;
+}
+@keyframes emoji-reaction-pop{
+  0%{ transform: translate(-50%,-50%) scale(0.5); opacity:0; }
+  12%{ transform: translate(-50%,-50%) scale(1.2); opacity:1; }
+  20%{ transform: translate(-50%,-50%) scale(1); opacity:1; }
+  80%{ transform: translate(-50%,-70%) scale(1); opacity:1; }
+  100%{ transform: translate(-50%,-90%) scale(0.9); opacity:0; }
+}
+@media (prefers-reduced-motion: reduce){
+  .emoji-reaction-item{ animation-duration: .01ms; }
+}
+
+/* =====================================================================
+   PINGPONG — LUMIÈRE VIP UI OVERHAUL v2
+   Visual-only layer: preserves existing markup, IDs, JS hooks and APIs.
+   ===================================================================== */
+:root{
+  --bg-deep:#f7f8fc;
+  --bg-panel:#ffffff;
+  --bg-panel-2:#fbfcff;
+  --bg-raised:#f1f3f8;
+  --line:rgba(151,128,70,.16);
+  --accent-gold:#c99b3b;
+  --accent-gold-2:#e6c56f;
+  --accent-gold-dim:rgba(201,155,59,.14);
+  --accent-rose:#c86f8c;
+  --accent-rose-dim:rgba(200,111,140,.12);
+  --royal-purple:#7254c7;
+  --text-bright:#171923;
+  --text-soft:#55596a;
+  --text-dim:#858998;
+  --shadow-card:0 14px 40px rgba(31,36,52,.10),0 2px 8px rgba(31,36,52,.05);
+  --glow-gold:0 0 24px rgba(201,155,59,.22);
+  --vip-gradient:linear-gradient(135deg,#fffdf6 0%,#f6ead0 48%,#ead0a0 100%);
+  --lux-gradient:linear-gradient(135deg,#fff 0%,#fbf7ee 45%,#f1e6ce 100%);
+}
+html,body{background:#f7f8fc;color:var(--text-bright)}
+body{background:
+ radial-gradient(100% 45% at 50% -5%,rgba(201,155,59,.12),transparent 62%),
+ radial-gradient(80% 55% at 100% 100%,rgba(114,84,199,.07),transparent 65%),#f7f8fc}
+.view{background:linear-gradient(180deg,#fff 0%,#f8f9fc 100%)}
+.topbar,.room-topbar{background:rgba(255,255,255,.86);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.page-body{scrollbar-color:#d4c08b transparent}
+.auth-card,.modal-card,.sheet-card,.gift-modal-card,.room-more-card,.profile-hero,.treasure-card,.gift-level-card,.chest-reward-card,.shop-hub-tile,.room-grid>*,.social-list>*{background:var(--lux-gradient)!important;border:1px solid var(--line)!important;box-shadow:var(--shadow-card)!important;color:var(--text-bright)}
+.field-row,.field-solo{background:#fff;border:1px solid #e4e6ed;color:var(--text-bright)}
+.field-row input,.field-solo{color:var(--text-bright)}
+.field-solo::placeholder{color:#a0a3ad}
+.btn-primary{background:linear-gradient(135deg,#d9b35c,#b98728);color:#fff;box-shadow:0 10px 24px rgba(185,135,40,.22)}
+.btn-accent{background:linear-gradient(135deg,#8064d2,#c86f8c);color:#fff;box-shadow:0 10px 24px rgba(114,84,199,.18)}
+.btn-ghost,.icon-btn{background:#fff;color:#5e543e;border:1px solid var(--line);box-shadow:0 5px 18px rgba(31,36,52,.06)}
+.icon-btn{color:var(--accent-gold)}
+.brand-mark{background:linear-gradient(145deg,#e8ca79,#8a6ad4);color:#fff;box-shadow:0 12px 28px rgba(114,84,199,.18),0 0 20px rgba(201,155,59,.18)}
+.brand h1{color:#171923;text-shadow:none}
+.brand-sub,.field-label,.hint{color:var(--text-soft)}
+.stat-pill,.logout-lock-row{background:#fff;border-color:var(--line);color:#8b6826;box-shadow:0 5px 18px rgba(31,36,52,.06)}
+.social-tabs{background:#fff;border:1px solid var(--line);box-shadow:0 6px 20px rgba(31,36,52,.06);border-radius:18px;padding:4px}
+.social-tab{color:#858998;border-radius:14px;transition:all .25s ease}
+.social-tab.active{background:linear-gradient(135deg,#f6ecd5,#fff);color:#8b6826;box-shadow:0 5px 14px rgba(201,155,59,.14)}
+.bottom-nav{background:rgba(255,255,255,.94)!important;border-top:1px solid var(--line)!important;box-shadow:0 -10px 30px rgba(31,36,52,.08)!important;backdrop-filter:blur(18px)}
+.nav-btn{color:#9699a5}.nav-btn.active{color:#a8791e}
+.modal-overlay,.sheet-overlay,.sheet-backdrop,.emoji-sheet-overlay,.emoji-sheet-backdrop{background:rgba(30,34,46,.34)!important;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.sheet-card,.modal-card,.gift-modal-card{border-radius:26px!important}
+.sheet-handle,.gift-sheet-handle{background:#d6d8df!important}
+.room-grid{gap:12px}
+.room-title-block h3,.room-title-block .room-name{color:#1a1c26}
+.room-lock-badge{background:#fff5d9!important;color:#8b6826!important;border:1px solid rgba(201,155,59,.25)!important}
+.seat-grid{gap:10px!important}
+.seat-grid .seat,.seat{transform:scale(.90);transform-origin:center}
+.seat-grid .seat-avatar,.seat .avatar{box-shadow:0 0 0 2px #fff,0 0 0 4px rgba(201,155,59,.18),0 10px 24px rgba(31,36,52,.12)}
+.seat.speaking,.seat.is-speaking,.seat.speaking .seat-avatar{animation:vipSeatPulse 1.7s ease-in-out infinite!important}
+@keyframes vipSeatPulse{0%,100%{filter:drop-shadow(0 0 0 rgba(201,155,59,0));transform:scale(.90)}50%{filter:drop-shadow(0 0 13px rgba(201,155,59,.38));transform:scale(.94)}}
+.vip-badge{box-shadow:0 5px 16px rgba(201,155,59,.14);border:1px solid rgba(201,155,59,.22)!important}
+.profile-blue-badge{filter:drop-shadow(0 2px 7px rgba(66,132,255,.25))}
+.gift-tabs{background:#fff;border:1px solid var(--line);border-radius:18px;padding:4px}
+.gift-tab.active{background:linear-gradient(135deg,#f8edd4,#fff);color:#8b6826;box-shadow:0 5px 14px rgba(201,155,59,.13)}
+.gift-grid{gap:10px}
+.gift-grid>*{background:linear-gradient(145deg,#fff,#faf7ef)!important;border:1px solid rgba(201,155,59,.13)!important;box-shadow:0 8px 22px rgba(31,36,52,.07)!important;transition:transform .22s ease,box-shadow .22s ease}
+.gift-grid>*:active{transform:scale(.96)}
+.gift-preview{background:linear-gradient(145deg,#fffdf8,#f4ead7)!important;border:1px solid rgba(201,155,59,.20)!important;box-shadow:inset 0 1px 0 #fff,0 12px 30px rgba(31,36,52,.08)}
+.gift-banner{background:linear-gradient(100deg,rgba(255,255,255,.96),rgba(249,240,218,.97))!important;color:#302b21!important;border:1px solid rgba(201,155,59,.22)!important;box-shadow:0 14px 34px rgba(31,36,52,.13)!important}
+.gift-fly-layer{pointer-events:none;filter:drop-shadow(0 10px 18px rgba(201,155,59,.28))}
+.legend-gift-overlay,.video-gift-overlay{background:radial-gradient(circle at center,rgba(255,255,255,.94),rgba(249,242,225,.86) 48%,rgba(114,84,199,.10) 100%)!important}
+.legend-gift-overlay .legend-gift-text{color:#8b6826;text-shadow:0 2px 12px rgba(201,155,59,.25)}
+.room-toolbar{background:rgba(255,255,255,.94)!important;border-top:1px solid var(--line)!important;box-shadow:0 -10px 28px rgba(31,36,52,.08)!important;backdrop-filter:blur(18px)}
+.room-toolbar button,.game-tool-btn{background:#fff!important;color:#6f654e!important;border:1px solid rgba(201,155,59,.14)!important;box-shadow:0 7px 18px rgba(31,36,52,.07)!important}
+.chat-panel{background:linear-gradient(180deg,rgba(255,255,255,.90),rgba(248,249,252,.96))!important;border:1px solid var(--line)!important;box-shadow:0 14px 36px rgba(31,36,52,.10)!important}
+.menu-list{background:#fff!important;border:1px solid var(--line)!important;box-shadow:var(--shadow-card)!important}
+.menu-row{border-bottom-color:#ececf1!important}.menu-row-icon{color:#9a7429!important}.menu-row-label{color:#272934!important}.menu-row-value{color:#858998!important}
+.rank-badge{box-shadow:0 6px 16px rgba(201,155,59,.15)}
+.shop-hub-tile:hover,.room-more-item:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(31,36,52,.10)!important}
+.ps-gender-pill{background:#fff!important;border:1px solid var(--line)!important;color:#666a77!important}.ps-gender-pill.active{background:#f8efd9!important;color:#8b6826!important;border-color:rgba(201,155,59,.35)!important}
+/* richer but restrained micro-interactions */
+.btn,.icon-btn,.nav-btn,.social-tab,.room-more-item,.shop-hub-tile,.gift-tab{transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s ease,background .22s ease,color .22s ease}
+.btn:hover,.icon-btn:hover{transform:translateY(-1px)}
+.avatar-frame-wrap{filter:drop-shadow(0 5px 12px rgba(31,36,52,.10))}
+
+
+/* ================================================================
+   FINAL ROOM POLISH — 2026-08-10
+   Supplied reference theme + clean chat/gift presentation.
+   ================================================================ */
+#view-room.room-default-theme{
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+/* Never put a white rectangle behind the room transcript. The room artwork
+   remains visible; only individual messages receive glass bubbles. */
+.chat-panel{
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding: 2px 12px calc(82px + env(safe-area-inset-bottom)) !important;
+  /* Bug fix (2026-08-20): this used to hard-cap the panel at 126px, which
+     squeezed the whole message transcript into a tiny strip right under
+     the seats and left a large dead gap of background art between it and
+     the toolbar/gift-box row below — new messages never reached anywhere
+     near the bottom input bar. #view-room's flex column already only lets
+     .chat-panel (flex:1, min-height:0, see base rule) give up/gain space,
+     so removing the cap lets it fill the true available height down to
+     the toolbar; justify-content:flex-end (below) keeps it bottom-anchored
+     so messages still rise from the very bottom, right above the gift box.
+  */
+}
+.chat-log{
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 4px 2px !important;
+  gap: 6px !important;
+  justify-content: flex-end !important;
+  overflow-y: auto !important;
+  scrollbar-width: none;
+}
+.chat-log::-webkit-scrollbar{ display:none; }
+.chat-msg{
+  display:flex;
+  width:100%;
+  margin:0;
+  color:#fff;
+  /* Each message rises up from the bottom of the chat box as it's added,
+     independently of every other message already there — a plain CSS
+     entrance animation on the newly-appended element, not a layout/scroll
+     trick, so it never affects older messages already in place. */
+  animation: chatMsgRiseIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes chatMsgRiseIn{
+  from{ opacity:0; transform: translateY(14px); }
+  to{ opacity:1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce){
+  .chat-msg{ animation: none; }
+}
+.chat-msg.mine{ justify-content:flex-end; }
+.chat-bubble{
+  max-width:min(82%, 330px);
+  padding:7px 11px 8px;
+  border-radius:16px 16px 16px 6px;
+  background:rgba(20,10,42,.56);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 7px 18px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  overflow-wrap:anywhere;
+}
+.chat-msg.mine .chat-bubble{
+  border-radius:16px 16px 6px 16px;
+  background:linear-gradient(135deg,rgba(115,82,190,.72),rgba(53,28,103,.72));
+  border-color:rgba(247,206,126,.25);
+}
+.chat-meta{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  min-width:0;
+  margin-bottom:2px;
+  line-height:1.1;
+}
+.chat-meta .who{ margin-right:0 !important; font-size:11px; font-weight:800; }
+.chat-meta .when{ margin-left:auto !important; font-size:9px; color:rgba(255,255,255,.52); }
+.chat-text{ font-size:13px; line-height:1.35; color:rgba(255,255,255,.94); white-space:pre-wrap; }
+.chat-system{ justify-content:center; }
+.chat-system-pill{
+  max-width:88%;
+  padding:5px 10px;
+  border-radius:999px;
+  color:rgba(255,255,255,.68);
+  background:rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.08);
+  font-size:10.5px;
+}
+/* Gift send = animation only. Do not show a text banner over the room. */
+#gift-banner{ display:none !important; }
+/* Full-screen gifts/custom video must cover the room with a premium dark
+   stage so seats, chat, and toolbar never remain visible through the effect. */
+.legend-gift-overlay,
+.video-gift-overlay{
+  background:radial-gradient(circle at center,rgba(93,61,158,.24),rgba(6,2,20,.94) 72%) !important;
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+}
+.legend-gift-text{ color:#f7ce7e !important; text-shadow:0 0 18px rgba(247,206,126,.55) !important; }
+.legend-flash{ background:#fff !important; opacity:.18 !important; }
+
+
+/* ================================================================
+   FINAL PREMIUM ROOM + GIFT UI PATCH — 2026-08-10
+   Visual-only polish plus explicit Gift selection/send UX.
+   Keeps all existing data, socket events, gift tiers, targeting,
+   quantity controls and custom video-gift flows intact.
+   ================================================================ */
+
+/* --- Room chrome: remove the washed-out white treatment from the screenshot. --- */
+#view-room .room-topbar,
+#view-room .room-toolbar{
+  background:rgba(9,7,18,.74)!important;
+  color:#fff!important;
+  border-color:rgba(255,255,255,.12)!important;
+  box-shadow:0 10px 30px rgba(0,0,0,.22)!important;
+  backdrop-filter:blur(18px) saturate(125%)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(125%)!important;
+}
+#view-room .room-topbar{ border-bottom:1px solid rgba(255,255,255,.10)!important; }
+#view-room .room-toolbar{ border-top:1px solid rgba(255,255,255,.10)!important; }
+#view-room .room-topbar .stat-pill,
+#view-room #btn-leave-room,
+#view-room #btn-room-mod{
+  background:rgba(255,255,255,.075)!important;
+  color:#fff!important;
+  border-color:rgba(255,255,255,.14)!important;
+  box-shadow:0 6px 18px rgba(0,0,0,.18)!important;
+}
+#view-room .room-title-block h2{ color:#fff!important; text-shadow:0 2px 10px rgba(0,0,0,.35); }
+#view-room #room-host-display.sub{ color:rgba(255,255,255,.58)!important; }
+
+/* --- Seat bubbles: cleaner, brighter, stable circles with a real glass edge. --- */
+#view-room .seat-grid{ gap:14px 10px!important; }
+#view-room .seat-grid .seat,
+#view-room .seat-grid .seat{ transform:none!important; }
+#view-room .seat-circle{
+  width:82%!important;
+  min-width:0;
+  background:linear-gradient(145deg,rgba(255,255,255,.16),rgba(255,255,255,.055))!important;
+  border:1px solid rgba(255,255,255,.28)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 8px 24px rgba(0,0,0,.28)!important;
+  backdrop-filter:blur(10px) saturate(130%)!important;
+  -webkit-backdrop-filter:blur(10px) saturate(130%)!important;
+}
+#view-room .seat.occupied .seat-circle{
+  background:linear-gradient(145deg,rgba(255,255,255,.105),rgba(0,0,0,.10))!important;
+  border-color:rgba(255,255,255,.32)!important;
+}
+#view-room .seat-circle:not(.occupied){ color:rgba(255,255,255,.9)!important; }
+#view-room .seat-name{ color:rgba(255,255,255,.96)!important; text-shadow:0 2px 7px rgba(0,0,0,.55); }
+#view-room .seat-num{ color:rgba(255,255,255,.62)!important; }
+#view-room .seat.speaking .seat-circle{
+  box-shadow:0 0 0 3px rgba(247,206,126,.40),0 0 26px rgba(247,206,126,.35),inset 0 1px 0 rgba(255,255,255,.18)!important;
+}
+
+/* --- Chat bubbles: compact glass capsules; no black rectangle behind the log. --- */
+#view-room .chat-panel{ background:transparent!important; border:0!important; box-shadow:none!important; }
+#view-room .chat-log{ background:transparent!important; border:0!important; box-shadow:none!important; padding:4px 2px!important; }
+#view-room .chat-bubble{
+  max-width:min(78vw,330px)!important;
+  padding:7px 11px 8px!important;
+  border-radius:17px 17px 17px 6px!important;
+  background:rgba(11,7,24,.64)!important;
+  border:1px solid rgba(255,255,255,.13)!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.08)!important;
+  backdrop-filter:blur(12px) saturate(125%)!important;
+  -webkit-backdrop-filter:blur(12px) saturate(125%)!important;
+}
+#view-room .chat-msg.mine .chat-bubble{
+  background:linear-gradient(135deg,rgba(113,72,194,.82),rgba(53,27,108,.82))!important;
+  border-color:rgba(247,206,126,.28)!important;
+}
+#view-room .chat-meta .who{ color:#f7ce7e!important; }
+#view-room .chat-meta .when{ color:rgba(255,255,255,.50)!important; }
+#view-room .chat-text{ color:rgba(255,255,255,.95)!important; }
+
+/* --- Bottom room controls: dark floating premium bar, never white. --- */
+#view-room .room-toolbar{
+  margin:0 10px calc(8px + env(safe-area-inset-bottom))!important;
+  border-radius:28px!important;
+  padding:8px 10px calc(9px + env(safe-area-inset-bottom))!important;
+}
+#view-room .room-toolbar .tool-btn,
+#view-room .room-toolbar .chat-input{
+  background:rgba(255,255,255,.075)!important;
+  color:#fff!important;
+  border-color:rgba(255,255,255,.13)!important;
+}
+#view-room .room-toolbar .chat-input::placeholder{ color:rgba(255,255,255,.48)!important; }
+#view-room .room-toolbar .tool-btn-accent{
+  background:linear-gradient(135deg,#f8d66d,#f0a43b)!important;
+  color:#241305!important;
+  border-color:transparent!important;
+  box-shadow:0 7px 20px rgba(240,164,59,.24)!important;
+}
+
+/* --- Gift modal: force the actual premium dark sheet above the older white override. --- */
+#modal-gift .gift-modal-card-premium{
+  width:100%!important;
+  max-width:560px!important;
+  max-height:88vh!important;
+  overflow:hidden!important;
+  padding:10px 16px calc(12px + env(safe-area-inset-bottom))!important;
+  gap:10px!important;
+  border-radius:28px 28px 0 0!important;
+  background:linear-gradient(180deg,#171328 0%,#120f20 58%,#0d0a17 100%)!important;
+  border:1px solid rgba(247,206,126,.18)!important;
+  box-shadow:0 -18px 60px rgba(0,0,0,.62),inset 0 1px 0 rgba(255,255,255,.07)!important;
+  color:#fff!important;
+}
+#modal-gift .gift-sheet-handle{ background:rgba(255,255,255,.20)!important; }
+#modal-gift .gift-modal-head{ min-height:38px; }
+#modal-gift .gift-modal-head h3{ color:#fff!important; font-size:18px; }
+#modal-gift .gift-wallet-pill{
+  background:rgba(255,255,255,.07)!important;
+  color:#f7ce7e!important;
+  border-color:rgba(247,206,126,.28)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 5px 18px rgba(0,0,0,.18)!important;
+}
+#modal-gift .gift-close-btn{
+  background:rgba(255,255,255,.07)!important;
+  color:rgba(255,255,255,.82)!important;
+  border-color:rgba(255,255,255,.14)!important;
+}
+#modal-gift .gift-level-card{
+  background:linear-gradient(135deg,rgba(247,206,126,.09),rgba(114,84,199,.10))!important;
+  border:1px solid rgba(247,206,126,.14)!important;
+  color:#fff!important;
+}
+#modal-gift .gift-tabs{
+  background:rgba(255,255,255,.045)!important;
+  border:1px solid rgba(255,255,255,.10)!important;
+  border-radius:16px!important;
+  padding:3px!important;
+}
+#modal-gift .gift-tab{
+  color:rgba(255,255,255,.58)!important;
+  border-radius:13px!important;
+}
+#modal-gift .gift-tab.active{
+  color:#fff!important;
+  background:linear-gradient(135deg,rgba(247,206,126,.17),rgba(247,206,126,.05))!important;
+  box-shadow:inset 0 0 0 1px rgba(247,206,126,.18),0 5px 16px rgba(0,0,0,.12)!important;
+}
+#modal-gift .gift-tab.active::after{ left:18px!important; right:18px!important; bottom:0!important; background:#f7ce7e!important; }
+#modal-gift .gift-target-panel{ margin:0!important; }
+#modal-gift .gift-target-list{
+  background:rgba(255,255,255,.045)!important;
+  border-color:rgba(255,255,255,.10)!important;
+}
+#modal-gift .gift-target-row{ color:rgba(255,255,255,.88)!important; }
+#modal-gift .gift-preview{
+  min-height:48px;
+  background:linear-gradient(135deg,rgba(247,206,126,.11),rgba(114,84,199,.11))!important;
+  border-color:rgba(247,206,126,.18)!important;
+  color:#fff!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07)!important;
+}
+#modal-gift .gift-preview-info span:first-child{ color:#fff!important; }
+#modal-gift .gift-preview-info span:last-child{ color:#f7ce7e!important; }
+#modal-gift .gift-grid{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:9px!important;
+  overflow-y:auto!important;
+  min-height:0!important;
+  padding:2px 2px 6px!important;
+}
+#modal-gift .gift-item{
+  min-height:92px!important;
+  padding:10px 7px!important;
+  border-radius:18px!important;
+  background:linear-gradient(150deg,rgba(255,255,255,.085),rgba(255,255,255,.035))!important;
+  border:1px solid rgba(255,255,255,.11)!important;
+  color:#fff!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 8px 18px rgba(0,0,0,.18)!important;
+}
+#modal-gift .gift-item .emoji{ width:42px!important; height:42px!important; font-size:34px!important; margin-bottom:5px!important; filter:drop-shadow(0 6px 12px rgba(0,0,0,.28))!important; }
+#modal-gift .gift-item .gift-name{ color:rgba(255,255,255,.78)!important; }
+#modal-gift .gift-item .price{ color:#f7ce7e!important; }
+#modal-gift .gift-item.selected{
+  transform:translateY(-2px)!important;
+  border-color:rgba(247,206,126,.72)!important;
+  background:linear-gradient(150deg,rgba(247,206,126,.20),rgba(114,84,199,.12))!important;
+  box-shadow:0 0 0 2px rgba(247,206,126,.16),0 12px 26px rgba(0,0,0,.30),0 0 20px rgba(247,206,126,.12)!important;
+}
+#modal-gift .gift-item.tier-vip{ border-color:rgba(170,116,255,.35)!important; }
+#modal-gift .gift-item.tier-legend{ border-color:rgba(247,206,126,.34)!important; background:linear-gradient(150deg,rgba(247,206,126,.13),rgba(255,255,255,.035))!important; }
+
+/* Quantity + send bar: explicit, always visible, safe-area aware. */
+#modal-gift .gift-modal-footer{
+  position:relative!important;
+  margin:0 -16px calc(-1 * (12px + env(safe-area-inset-bottom))) -16px!important;
+  padding:10px 12px calc(10px + env(safe-area-inset-bottom))!important;
+  display:grid!important;
+  grid-template-columns:1fr auto!important;
+  grid-template-areas:"qty send" "recharge recharge"!important;
+  gap:9px!important;
+  background:linear-gradient(180deg,rgba(18,15,32,.94),rgba(10,8,18,.99))!important;
+  border-top:1px solid rgba(247,206,126,.14)!important;
+  backdrop-filter:blur(16px)!important;
+  -webkit-backdrop-filter:blur(16px)!important;
+}
+#modal-gift .gift-modal-footer .gift-qty-row{ grid-area:qty; display:flex!important; gap:5px!important; margin:0!important; min-width:0; }
+#modal-gift .gift-qty-btn{
+  min-width:0!important;
+  min-height:38px!important;
+  padding:0 7px!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.065)!important;
+  color:rgba(255,255,255,.72)!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+}
+#modal-gift .gift-qty-btn.active{
+  background:linear-gradient(135deg,#f8d66d,#f0a43b)!important;
+  color:#241305!important;
+  border-color:transparent!important;
+  box-shadow:0 5px 16px rgba(240,164,59,.22)!important;
+}
+#modal-gift .btn-send-gift{
+  grid-area:send;
+  min-width:112px;
+  min-height:38px;
+  padding:0 14px;
+  border:0;
+  border-radius:999px;
+  background:rgba(255,255,255,.08);
+  color:rgba(255,255,255,.42);
+  font-weight:900;
+  font-size:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  box-shadow:none;
+  transition:transform .18s ease,filter .18s ease,box-shadow .18s ease,background .18s ease;
+}
+#modal-gift .btn-send-gift.ready{
+  background:linear-gradient(135deg,#f8d66d,#f0a43b);
+  color:#241305;
+  box-shadow:0 7px 22px rgba(240,164,59,.28);
+}
+#modal-gift .btn-send-gift:disabled{ opacity:.75; cursor:not-allowed; }
+#modal-gift .btn-send-gift.ready:active{ transform:scale(.96); }
+#modal-gift .btn-send-gift-icon{ font-size:15px; }
+#modal-gift .btn-gift-recharge{
+  grid-area:recharge;
+  width:100%;
+  min-height:32px;
+  background:transparent!important;
+  border:1px solid rgba(247,206,126,.18)!important;
+  color:rgba(247,206,126,.86)!important;
+}
+
+@media (min-width:520px){
+  #modal-gift .gift-grid{ grid-template-columns:repeat(4,minmax(0,1fr))!important; }
+  #modal-gift .gift-modal-footer{ grid-template-columns:1fr auto!important; grid-template-areas:"qty send" "recharge recharge"!important; }
+}
+@media (max-width:360px){
+  #modal-gift .gift-grid{ grid-template-columns:repeat(2,minmax(0,1fr))!important; }
+  #modal-gift .btn-send-gift{ min-width:100px; padding:0 10px; }
+}
+
+/* ================================================================
+   FINAL REFERENCE-MATCH PATCH — 2026-08-10
+   Uses the supplied peacock artwork as the room's default theme.
+   Keeps existing room structure, seats, chat, toolbar and gift logic.
+   ================================================================ */
+#view-room.room-default-theme{
+  background-color:#170b25!important;
+  background-size:cover!important;
+  background-repeat:no-repeat!important;
+  /* Keep the peacock/logo composition lower so the first seat row stays
+     readable while the artwork still covers the complete room. */
+  background-position:center 18%!important;
+}
+#view-room.room-default-theme::before{ display:none!important; }
+
+/* No washed-out/white blocks inside the themed room. */
+#view-room .room-topbar,
+#view-room .room-toolbar,
+#view-room .chat-panel,
+#view-room .chat-log{
+  background-color:transparent!important;
+}
+#view-room .room-topbar{
+  background:linear-gradient(180deg,rgba(8,5,18,.66),rgba(8,5,18,.32))!important;
+  border-bottom:1px solid rgba(255,255,255,.10)!important;
+}
+
+/* Seats: clean glass circles that preserve the artwork behind them. */
+#view-room .seat-grid{ gap:12px 10px!important; }
+#view-room .seat-circle{
+  width:84%!important;
+  background:rgba(24,13,42,.28)!important;
+  border:1px solid rgba(255,255,255,.30)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 8px 20px rgba(0,0,0,.26)!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+#view-room .seat.occupied .seat-circle{
+  background:rgba(17,9,31,.20)!important;
+  border-color:rgba(255,255,255,.34)!important;
+}
+#view-room .seat-name,
+#view-room .seat-num{
+  text-shadow:0 2px 8px rgba(0,0,0,.70)!important;
+}
+
+/* Chat: only the actual message bubble is a surface; the transcript itself
+   stays fully transparent so the theme remains continuous from top to bottom. */
+#view-room .chat-panel{
+  padding:2px 10px calc(82px + env(safe-area-inset-bottom))!important;
+}
+#view-room .chat-log{
+  padding:3px 0!important;
+  gap:6px!important;
+}
+#view-room .chat-bubble{
+  background:rgba(14,8,28,.62)!important;
+  border:1px solid rgba(255,255,255,.16)!important;
+  box-shadow:0 7px 18px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.08)!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+#view-room .chat-msg.mine .chat-bubble{
+  background:linear-gradient(135deg,rgba(91,54,164,.82),rgba(43,22,86,.82))!important;
+  border-color:rgba(247,206,126,.30)!important;
+}
+
+/* Floating bottom controls remain visible and dark, never the old white bar. */
+#view-room .room-toolbar{
+  background:rgba(10,7,18,.78)!important;
+  border:1px solid rgba(255,255,255,.12)!important;
+  box-shadow:0 12px 30px rgba(0,0,0,.35)!important;
+  backdrop-filter:blur(12px)!important;
+  -webkit-backdrop-filter:blur(12px)!important;
+}
+
+/* Gift sheet: match the supplied premium Gift screenshot and keep all
+   existing catalog/tier/target/quantity/send behavior. */
+#modal-gift .gift-modal-card-premium{
+  background:linear-gradient(180deg,#1d1830 0%,#151124 55%,#0f0b1b 100%)!important;
+}
+#modal-gift .gift-grid{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+}
+#modal-gift .gift-item{
+  min-height:94px!important;
+  border-radius:16px!important;
+  background:linear-gradient(160deg,rgba(255,255,255,.075),rgba(255,255,255,.028))!important;
+}
+#modal-gift .gift-item.selected{
+  border-color:rgba(247,206,126,.80)!important;
+  background:linear-gradient(160deg,rgba(247,206,126,.18),rgba(114,84,199,.10))!important;
+}
+
+/* Bottom controls are one clean row: Recharge | x1 x7 x77 x777 | Send. */
+#modal-gift .gift-modal-footer{
+  display:grid!important;
+  grid-template-columns:auto minmax(0,1fr) auto!important;
+  grid-template-areas:"recharge qty send"!important;
+  align-items:center!important;
+  gap:8px!important;
+  margin:0 -16px calc(-1 * (12px + env(safe-area-inset-bottom))) -16px!important;
+  padding:10px 12px calc(10px + env(safe-area-inset-bottom))!important;
+}
+#modal-gift .gift-modal-footer .gift-qty-row{
+  grid-area:qty!important;
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:5px!important;
+  margin:0!important;
+}
+#modal-gift .gift-qty-btn{
+  width:100%!important;
+  min-width:0!important;
+  min-height:38px!important;
+  padding:0 4px!important;
+  font-size:11px!important;
+}
+#modal-gift .btn-gift-recharge{
+  grid-area:recharge!important;
+  width:auto!important;
+  min-width:88px!important;
+  min-height:38px!important;
+  padding:0 12px!important;
+  margin:0!important;
+  border-radius:999px!important;
+}
+#modal-gift .btn-send-gift{
+  grid-area:send!important;
+  min-width:86px!important;
+  min-height:38px!important;
+  padding:0 12px!important;
+}
+
+@media (max-width:390px){
+  #modal-gift .gift-grid{ grid-template-columns:repeat(3,minmax(0,1fr))!important; }
+  #modal-gift .btn-gift-recharge{ min-width:76px!important; padding:0 9px!important; font-size:11px!important; }
+  #modal-gift .btn-send-gift{ min-width:76px!important; padding:0 9px!important; }
+  #modal-gift .gift-qty-btn{ font-size:10px!important; }
+}
+
+/* ================================================================
+   FRIENDSHIP + CP — additive premium relationship layer
+   No seat dimensions are changed. Relationship artwork is an absolute
+   overlay inside #seat-grid so the room layout never shifts.
+   ================================================================ */
+.relationship-actions{ display:flex; gap:8px; margin-top:12px; }
+.relationship-actions.hidden{ display:none !important; }
+.relationship-btn{
+  flex:1; min-height:42px; border-radius:999px; border:1px solid rgba(247,206,126,.24);
+  background:linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.025));
+  color:#fff; font-weight:800; font-size:12px; cursor:pointer;
+}
+.relationship-btn-friendship{ border-color:rgba(255,170,190,.30); }
+.relationship-btn-cp{ border-color:rgba(247,206,126,.42); }
+.relationship-btn:disabled{ opacity:.55; cursor:default; }
+.relationship-profile-status{
+  margin-top:9px; padding:9px 11px; border-radius:14px;
+  background:rgba(247,206,126,.07); border:1px solid rgba(247,206,126,.16);
+  color:rgba(255,255,255,.82); font-size:11px; text-align:center;
+}
+.relationship-cp-pair{ color:#f7ce7e; font-weight:900; }
+
+#view-room .seat-grid{ overflow:visible !important; }
+.relationship-link-layer{
+  position:absolute; inset:0; pointer-events:none; z-index:25; overflow:visible;
+}
+.relationship-link{
+  position:absolute; left:0; top:0; width:112px; height:112px; object-fit:contain;
+  transform:translate(-50%,-50%) scale(var(--rel-scale, 1)); opacity:.98;
+  will-change:transform,opacity;
+  filter:drop-shadow(0 8px 16px rgba(0,0,0,.36));
+  animation:relationship-link-float 2.4s ease-in-out infinite;
+}
+/* ADMIN-CONTROLLABLE SIZE (2026-08-11): these CSS variables are the ONLY
+   size/opacity/animation-speed source for CP/Friendship hearts. They are
+   NOT hardcoded here — app.js's applyRelationshipVisualConfig() sets the
+   --cp-*/--friendship-* variables on :root from the persisted Admin Panel
+   config (friendshipCp.js relationship_visual_config.json); the pixel
+   values below only act as a fallback before that config has loaded once.
+   Do not hardcode a pixel size back onto .relationship-link.cp/.friendship
+   — change the default in friendshipCp.js's defaultVisual() instead.
+   Offset X/Y is applied directly to left/top in app.js (not via transform
+   here) so it can't fight with the float keyframe below; --rel-scale is
+   set per-element (not on :root) so the shared keyframe animation can
+   multiply in the right scale for whichever type (cp/friendship) this
+   particular image is. */
+.relationship-link.cp{ width:var(--cp-width, 126px); height:var(--cp-height, 126px); opacity:var(--cp-opacity, .98); animation-duration:var(--cp-anim-duration, 2.1s); }
+.relationship-link.friendship{ width:var(--friendship-width, 104px); height:var(--friendship-height, 104px); opacity:var(--friendship-opacity, .98); animation-duration:var(--friendship-anim-duration, 2.7s); }
+.relationship-link::after{ content:""; }
+@keyframes relationship-link-float{
+  0%,100%{ transform:translate(-50%,-50%) scale(calc(var(--rel-scale, 1) * .96)) rotate(-1deg); }
+  50%{ transform:translate(-50%,-50%) scale(calc(var(--rel-scale, 1) * 1.035)) rotate(1deg); }
+}
+.relationship-link-label{
+  position:absolute; transform:translate(-50%,0); padding:3px 8px; border-radius:999px;
+  font-size:9px; font-weight:900; letter-spacing:.2px; white-space:nowrap;
+  background:rgba(12,7,24,.86); border:1px solid rgba(247,206,126,.28);
+  color:#f7ce7e; box-shadow:0 5px 14px rgba(0,0,0,.25);
+}
+
+.relationship-request-card{
+  width:100%; min-width:230px; padding:12px; border-radius:16px;
+  background:linear-gradient(145deg,rgba(120,58,170,.16),rgba(247,206,126,.08));
+  border:1px solid rgba(247,206,126,.24);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 8px 20px rgba(0,0,0,.14);
+}
+.relationship-request-head{ display:flex; align-items:center; gap:9px; }
+.relationship-request-icon{ width:42px; height:42px; object-fit:contain; flex-shrink:0; }
+.relationship-request-title{ font-weight:900; font-size:13px; color:#fff; }
+.relationship-request-sub{ margin-top:2px; font-size:10.5px; color:rgba(255,255,255,.58); }
+.relationship-request-actions{ display:flex; gap:8px; margin-top:10px; }
+.relationship-request-actions .btn{ flex:1; }
+.relationship-request-status{ margin-top:8px; text-align:center; font-size:11px; color:rgba(255,255,255,.65); }
+
+@media (prefers-reduced-motion: reduce){
+  .relationship-link{ animation:none !important; }
+}
+
+/* =====================================================================
+   PRODUCTION ROOM BACKGROUND FIX — 2026-08-11
+   Chat must never blur/composite the themed room artwork. The transcript is
+   transparent; only the message surface is opaque/translucent. This final
+   override intentionally supersedes older visual-polish rules above.
+   ===================================================================== */
+#view-room .chat-panel,
+#view-room .chat-log {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+  isolation: auto !important;
+}
+#view-room .chat-bubble {
+  background: rgba(10, 7, 22, .82) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+}
+#view-room .chat-msg.mine .chat-bubble {
+  background: linear-gradient(135deg, rgba(113,72,194,.90), rgba(53,27,108,.90)) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* =========================================================
+   Official AI Customer Service — Room 101
+   Additive UI: 8 normal seats remain exactly as before.
+   The dedicated AI seat is rendered above the normal seat grid.
+   ========================================================= */
+.cs101-ai-seat{
+  width:min(150px,38vw);
+  margin:0 auto 12px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:5px;
+  cursor:pointer;
+  user-select:none;
+  position:relative;
+  z-index:5;
+}
+.cs101-ai-seat-circle{
+  width:104px;
+  height:104px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  background:radial-gradient(circle at 35% 25%, #fff4cf 0%, #f7ce7e 28%, #9a6b20 72%, #3a2810 100%);
+  border:3px solid var(--accent-gold, #f7ce7e);
+  box-shadow:0 0 0 4px rgba(247,206,126,.16),0 0 28px rgba(247,206,126,.42);
+  animation:cs101Pulse 2.2s ease-in-out infinite;
+}
+.cs101-ai-avatar-img{
+  width:88px;height:88px;border-radius:50%;object-fit:cover;display:block;
+  border:2px solid rgba(255,244,207,.72);
+  background:#21170b;
+}
+.cs101-ai-live{
+  position:absolute;bottom:-5px;right:-8px;
+  padding:3px 7px;border-radius:12px;
+  font-size:9px;font-weight:800;
+  background:#1d8b55;color:#fff;
+  border:1px solid rgba(255,255,255,.25);
+}
+.cs101-ai-seat-name{font-weight:800;font-size:13px;color:#f7ce7e;text-align:center;text-shadow:0 1px 8px rgba(0,0,0,.45)}
+.cs101-ai-seat-id{font-size:9px;color:var(--text-dim)}
+.cs101-ai-seat.hidden{display:none}
+@keyframes cs101Pulse{
+  0%,100%{box-shadow:0 0 0 4px rgba(247,206,126,.14),0 0 22px rgba(247,206,126,.28)}
+  50%{box-shadow:0 0 0 7px rgba(247,206,126,.20),0 0 34px rgba(247,206,126,.52)}
+}
+.cs101-panel{
+  display:none !important;
+  position:absolute;
+  left:8px;right:8px;bottom:74px;
+  z-index:80;
+  border:1px solid rgba(247,206,126,.35);
+  border-radius:18px;
+  background:rgba(20,16,11,.97);
+  box-shadow:0 16px 50px rgba(0,0,0,.45);
+  padding:12px;
+}
+.cs101-panel.hidden{display:none}
+.cs101-silent-log{position:fixed;left:-99999px;top:auto;width:1px;height:1px;overflow:hidden}
+.cs101-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.cs101-panel-head strong{display:block;color:#f7ce7e}
+.cs101-panel-head span{display:block;font-size:10px;color:var(--text-dim);margin-top:2px}
+#cs101-close{border:0;background:transparent;color:var(--text-soft);font-size:24px}
+.cs101-status{font-size:11px;color:var(--text-dim);margin:8px 0}
+.cs101-log{max-height:190px;overflow:auto;display:flex;flex-direction:column;gap:7px}
+.cs101-msg{padding:8px 10px;border-radius:12px;font-size:12px;line-height:1.4;white-space:pre-wrap}
+.cs101-msg.user{align-self:flex-end;background:rgba(247,206,126,.14);color:var(--text-soft)}
+.cs101-msg.ai{align-self:flex-start;background:rgba(255,255,255,.07);color:var(--text-soft)}
+.cs101-controls{display:grid;grid-template-columns:auto 1fr auto;gap:6px;margin-top:9px}
+.cs101-controls button{border:1px solid rgba(247,206,126,.35);border-radius:10px;padding:8px 10px;background:#2a2115;color:#f7ce7e}
+#cs101-input{min-width:0;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:#15120e;color:#fff;padding:8px 10px;outline:none}
+
+/* Room 101 final hands-free policy: the AI seat is always visually separate from the 8 user seats. */
+#view-room .cs101-ai-seat { margin-top: 2px; margin-bottom: 16px; }
+#view-room .cs101-panel, #view-room .cs101-controls, #view-room #cs101-input { display:none !important; }
+
+
+/* FINAL ROOM CHAT BEHAVIOR — bottom anchored, per-user bubbles, 60s visual TTL.
+   Bug fix (2026-08-20): this block is the one that actually wins the
+   cascade (last #view-room .chat-panel rule in the file) — its old
+   max-height:132px!important was the real reason messages stayed squeezed
+   into a tiny strip right under the seats with a big dead gap of
+   background art down to the toolbar/gift-box row. #view-room's flex
+   column already reserves fixed sizes for the header/seats/toolbar and
+   only lets .chat-panel (flex:1, min-height:0) give up or gain space, so
+   removing the cap lets the transcript fill the true available height;
+   justify-content:flex-end on .chat-log (below) keeps everything
+   bottom-anchored so messages still rise from the very bottom. */
+#view-room .chat-panel{
+  overflow:hidden!important;
+  padding:2px 10px calc(82px + env(safe-area-inset-bottom))!important;
+}
+#view-room .chat-log{
+  height:100%!important;
+  min-height:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:flex-end!important;
+  align-items:stretch!important;
+  gap:7px!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  padding:4px 0!important;
+  scroll-behavior:smooth!important;
+  scrollbar-width:none!important;
+}
+#view-room .chat-log::-webkit-scrollbar{display:none!important;}
+#view-room .chat-msg{
+  width:100%!important;
+  display:flex!important;
+  flex:0 0 auto!important;
+  animation:chatBubbleRise .22s ease-out both;
+  will-change:transform,opacity;
+}
+#view-room .chat-msg.mine{justify-content:flex-end!important;}
+#view-room .chat-msg:not(.mine){justify-content:flex-start!important;}
+#view-room .chat-bubble{
+  position:relative!important;
+  max-width:min(82%,330px)!important;
+  min-width:54px!important;
+  padding:7px 11px 8px!important;
+  border-radius:16px 16px 16px 5px!important;
+  overflow:visible!important;
+}
+#view-room .chat-msg.mine .chat-bubble{border-radius:16px 16px 5px 16px!important;}
+#view-room .chat-floating-tag{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  margin-left:3px!important;
+  padding:2px 6px!important;
+  border-radius:999px!important;
+  font-size:9px!important;
+  line-height:1.15!important;
+  font-weight:900!important;
+  white-space:nowrap!important;
+  box-shadow:0 2px 7px rgba(0,0,0,.25)!important;
+  vertical-align:middle!important;
+}
+#view-room .chat-msg-expiring{
+  animation:chatBubbleExpire .26s ease-in forwards!important;
+  pointer-events:none!important;
+}
+@keyframes chatBubbleRise{
+  from{opacity:0;transform:translateY(88px) scale(.98)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes chatBubbleExpire{
+  from{opacity:1;transform:translateY(0)}
+  to{opacity:0;transform:translateY(-12px);height:0;margin:0;padding-top:0;padding-bottom:0}
+}
+
+/* Room 101 is hands-free: no support popup and no mute/unmute control. */
+#vapi-robin-overlay{display:none!important;visibility:hidden!important;pointer-events:none!important;}
+#btn-robin-support{display:none!important;}
+#view-room #btn-mic-toggle.hidden{display:none!important;}
+
+/* ---- Recharge / Payment -> Coin system (2026-08-16) ---- */
+.recharge-package-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px; }
+.recharge-package-card{
+  border:1px solid rgba(255,255,255,.12); border-radius:14px; padding:14px 10px; text-align:center;
+  background:rgba(255,255,255,.04); cursor:pointer; transition:border-color .15s, transform .1s;
+}
+.recharge-package-card:active{ transform:scale(.97); }
+.recharge-package-card.selected{ border-color:var(--accent,#ff5fa2); background:rgba(255,95,162,.10); }
+.recharge-package-card .price{ font-weight:700; font-size:15px; }
+.recharge-package-card .coins{ font-size:13px; opacity:.85; margin-top:4px; }
+.recharge-package-card .bonus{ font-size:11px; color:#3ecf8e; margin-top:2px; }
+.recharge-method-list{ display:flex; flex-direction:column; gap:8px; margin:10px 0; }
+.recharge-method-card{
+  display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:12px;
+  border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04); cursor:pointer;
+}
+.recharge-method-card:active{ transform:scale(.98); }
+.recharge-method-card .method-icon{ font-size:20px; }
+.recharge-status-badge{ font-size:11px; padding:2px 8px; border-radius:8px; font-weight:600; }
+.recharge-status-PENDING{ background:rgba(255,193,7,.18); color:#ffc107; }
+.recharge-status-PAYMENT_SUBMITTED{ background:rgba(90,160,255,.18); color:#5aa0ff; }
+.recharge-status-PAID{ background:rgba(62,207,142,.18); color:#3ecf8e; }
+.recharge-status-FAILED,.recharge-status-REJECTED{ background:rgba(255,90,90,.18); color:#ff5a5a; }
+.recharge-status-CANCELLED{ background:rgba(255,255,255,.12); color:#aaa; }
+.recharge-status-REFUNDED{ background:rgba(90,160,255,.18); color:#5aa0ff; }
+
+/* ---- Wallet visual redesign (2026-08-17) — layout/markup below is
+   unchanged from the original build (same #wallet-coins / #wallet-diamonds
+   / #recharge-* / #coin-seller-* ids app.js already reads/writes); this
+   block is purely cosmetic so the real, already-working manual UPI+UTR+
+   Admin-Approve recharge flow keeps functioning exactly as-is. ---- */
+.wallet-v2 .page-body{ padding-top:14px; }
+
+.wallet-balance-card{
+  position:relative; overflow:hidden;
+  border-radius:22px; padding:22px 20px;
+  background:linear-gradient(135deg,#FFB800,#FF7A00);
+  box-shadow:0 14px 30px rgba(255,122,0,.28);
+  margin-bottom:18px;
+}
+.wallet-balance-glow{
+  position:absolute; right:-40px; top:-40px; width:160px; height:160px;
+  background:rgba(255,255,255,.22); border-radius:50%; filter:blur(24px); pointer-events:none;
+}
+.wallet-balance-row{ position:relative; display:flex; align-items:center; z-index:1; }
+.wallet-balance-item{ display:flex; align-items:center; gap:10px; flex:1; min-width:0; }
+.wallet-balance-icon{
+  width:44px; height:44px; border-radius:50%; background:#fff; flex:0 0 auto;
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+  box-shadow:0 3px 10px rgba(0,0,0,.15);
+}
+.wallet-balance-icon img{ width:78%; height:78%; object-fit:contain; }
+.wallet-balance-text{ display:flex; flex-direction:column; min-width:0; }
+.wallet-balance-num{ font-size:22px; font-weight:800; color:#fff; line-height:1.1; letter-spacing:-.3px; }
+.wallet-balance-label{ font-size:12px; color:rgba(255,255,255,.85); font-weight:600; margin-top:2px; }
+.wallet-balance-divider{ width:1px; align-self:stretch; background:rgba(255,255,255,.3); margin:0 16px; }
+
+.wallet-recharge-card{ border-radius:16px; }
+.wallet-recharge-btn{
+  background:linear-gradient(135deg,#FF9A00,#FF7A00); border:none;
+  box-shadow:0 8px 18px rgba(255,122,0,.35);
+}
+
+.wallet-seller-list .user-row{
+  border-radius:18px; box-shadow:0 2px 14px rgba(0,0,0,.06);
+}
+
+.recharge-modal-box .modal-head{
+  background:linear-gradient(135deg,#FFC300,#FF9A00); color:#1a1a1a;
+  border-radius:18px 18px 0 0; margin:-1px -1px 0 -1px;
+}
+.recharge-modal-box .modal-head h3{ font-weight:800; }
+.recharge-package-card{ border-radius:18px; position:relative; padding-top:16px; }
+.recharge-package-card.selected{
+  border-color:#FF7A00; background:rgba(255,122,0,.10);
+  box-shadow:0 4px 14px rgba(255,122,0,.18);
+}
+.recharge-package-card .coins{ display:flex; align-items:center; justify-content:center; gap:4px; font-weight:700; }
+.recharge-method-card{ border-radius:16px; }
+.recharge-method-card:hover{ border-color:rgba(255,122,0,.4); }
+
+/* ---- Login background video (2026-08-16 / updated 2026-08-16b) ----
+   Per feedback: the video must cover the ENTIRE login screen — no white/
+   cream section below it — with the login form floating on top of it as
+   a translucent "glass" card, centered on the screen. object-fit:cover
+   keeps the 478x850 portrait source filling the box on any phone size
+   without distortion or letterboxing. */
+#view-login{ position:relative; overflow:hidden; padding-top:0; background:#0B0810; }
+.login-bg-video{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; z-index:0; display:block; background:#0B0810;
+}
+.login-bg-fade{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  /* Darkens top (status bar) and bottom (form area) a bit for legibility
+     while leaving the middle of the video fully visible — no solid
+     white/cream block anywhere. */
+  background: linear-gradient(180deg, rgba(4,2,8,0.45) 0%, rgba(4,2,8,0.05) 22%, rgba(4,2,8,0.05) 60%, rgba(4,2,8,0.55) 100%);
+}
+#view-login .auth-wrap{
+  position:relative; z-index:2;
+  justify-content:center; /* login card centered vertically over the full-bleed video */
+  padding: 24px;
+  min-height:100vh; min-height:100dvh;
+}
+#view-login .brand h1{ color:#FBF6EA; text-shadow: 0 2px 18px rgba(0,0,0,0.55); }
+#view-login .brand-sub{ color:#F7CE7E; text-shadow: 0 2px 10px rgba(0,0,0,0.55); }
+#view-login .auth-card{
+  background: rgba(20,14,10,0.42);
+  -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,0.16);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+}
+#view-login .field-label{ color:#F1E6D0; }
+#view-login .field-row, #view-login .field-solo{
+  background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.22);
+}
+#view-login .field-row input, #view-login .field-solo{ color:#111111 !important; -webkit-text-fill-color:#111111 !important; caret-color:#111111; }
+#view-login .field-row input::placeholder, #view-login .field-solo::placeholder{ color:#777777 !important; opacity:1; }
+#view-login .hint{ color:rgba(251,246,234,0.75); }
+#view-login .auth-google-btn{ background: rgba(255,255,255,0.92); border-color:transparent; color:#171923; }
+
+
+/* =====================================================================
+   ROOM BOTTOM-UP ACTIVITY FEED — chat + gifts, single shared flow.
+   Replaces the old left/right WhatsApp-style bubble presentation with a
+   uniform "Name: message" notification line, per spec §7-13. Container
+   positioning, bottom-anchoring, upward stacking, entrance animation
+   (chatBubbleRise, defined earlier in this file) and the 60s/8s auto-
+   expiry (chatBubbleExpire) are all inherited unchanged from the
+   existing #chat-log rules above — only the per-item markup/alignment
+   changes here. z-index stays at the existing .chat-panel value (1),
+   far below .video-gift-overlay's 9999, so a special/video gift overlay
+   (§14) is always drawn above this feed and is never covered by it.
+   ===================================================================== */
+#view-room .chat-msg.activity-line,
+#view-room .chat-msg.activity-line.mine{
+  justify-content:flex-start!important;
+  animation:chatBubbleRise .22s ease-out both;
+}
+.activity-pill{
+  display:inline-flex; align-items:baseline; flex-wrap:wrap; gap:4px;
+  max-width:92%;
+  padding:6px 12px; border-radius:999px;
+  background:rgba(10,7,22,.62);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 4px 14px rgba(0,0,0,.18);
+  font-size:13px; line-height:1.35; color:#fff;
+}
+#view-room .chat-msg.activity-line.mine .activity-pill{
+  background:linear-gradient(135deg,rgba(113,72,194,.55),rgba(53,27,108,.55));
+  border-color:rgba(247,206,126,.24);
+}
+.activity-pill .who{ font-weight:800; color:#fbbf24; }
+.activity-pill .activity-sep{ color:rgba(255,255,255,.5); margin-right:1px; }
+.activity-pill .chat-text{ color:#fff; word-break:break-word; }
+.activity-pill.gift-pill{
+  background:rgba(96,44,10,.55);
+  border-color:rgba(247,206,126,.30);
+}
+.gift-notice-icon{ width:18px; height:18px; object-fit:contain; border-radius:4px; }
+.gift-notice-arrow{ color:rgba(255,255,255,.55); }
+
+
+/* =========================================================
+   PingPong Profile Skin — transplanted visual layer only.
+   Existing IDs/events are intentionally preserved so all
+   profile data remains server-backed.
+   ========================================================= */
+.pp-profile-skin{background:#fff!important;padding:0!important;overflow:hidden!important}
+.pp-profile-skin .pp-profile-shell{min-height:100%;height:100%;display:flex;flex-direction:column;background:#fff}
+.pp-profile-skin .pp-profile-hero{background:linear-gradient(180deg,#fff3dc 0%,#fffbf2 58%,#fff 100%);padding-top:14px;flex:0 0 auto}
+.pp-profile-skin .pp-profile-header{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+.pp-profile-skin .pp-profile-header h2{font-size:18px;font-weight:700;letter-spacing:-.02em;color:#111;margin:0}
+.pp-profile-skin .pp-icon-btn,.pp-profile-skin .pp-copy-btn{border:0;background:transparent}
+.pp-profile-skin .pp-icon-btn{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#1a1a1a}
+.pp-profile-skin .pp-lock-dot{font-size:19px;opacity:.78}
+.pp-profile-skin .pp-logout-lock{margin:0;display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.55);border-radius:18px;padding:5px 8px}
+.pp-profile-skin .pp-profile-main{padding:8px 20px 4px;display:flex;align-items:flex-start;gap:14px}
+.pp-profile-skin .pp-avatar-column{flex:0 0 72px}
+.pp-profile-skin .pp-avatar-ring{width:72px!important;height:72px!important;border-radius:50%;padding:1.5px!important;background:linear-gradient(135deg,#ffd8a8,#ffc18a,#ffb07a);box-shadow:0 4px 16px rgba(255,140,0,.18);position:relative}
+.pp-profile-skin .pp-avatar{width:100%!important;height:100%!important;border-radius:50%;object-fit:cover;background:#fff0db}
+.pp-profile-skin .pp-avatar-edit{right:-2px!important;bottom:-2px!important;width:23px!important;height:23px!important;border-radius:50%;display:flex!important;align-items:center;justify-content:center;background:#fff!important;border:1px solid #eee;box-shadow:0 2px 7px rgba(0,0,0,.12);font-size:12px!important;color:#555}
+.pp-profile-skin .pp-profile-info{flex:1;min-width:0;padding-top:6px}
+.pp-profile-skin .pp-name{font-size:22px!important;line-height:1!important;font-weight:700!important;letter-spacing:-.025em!important;color:#111!important;margin:0!important}
+.pp-profile-skin .pp-edit-link{margin-top:9px;border:0;background:none;padding:0;display:flex;align-items:center;gap:4px;color:#8a8a8a;font-size:13px;font-weight:500;letter-spacing:-.01em}
+.pp-profile-skin .pp-edit-link span:last-child{font-size:20px;line-height:12px}
+.pp-profile-skin .pp-id-line{margin-top:11px;display:flex;align-items:center;gap:7px;min-width:0}
+.pp-profile-skin .pp-id-badge{width:20px;height:20px;border-radius:5px;background:#f0f0f0;border:1px solid #e6e6e6;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;letter-spacing:.05em;color:#777;flex:none}
+.pp-profile-skin .pp-id-value{font-size:13px;font-weight:600;color:#555;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pp-profile-skin .pp-copy-btn{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#999;font-size:14px}
+.pp-profile-skin .pp-stats{margin:18px 8px 0;display:flex;align-items:center}
+.pp-profile-skin .pp-stats i{width:1px;height:32px;background:#ececec;flex:none}
+.pp-profile-skin .pp-stat{flex:1;border:0;background:none;padding:4px 0 7px;display:flex;flex-direction:column;align-items:center;color:#111}
+.pp-profile-skin .pp-stat strong{font-size:18px;line-height:1;font-weight:700}
+.pp-profile-skin .pp-stat span{margin-top:6px;font-size:12px;font-weight:500;color:#8a8a8a}
+.pp-profile-skin .pp-badges{padding:13px 20px 19px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pp-profile-skin .pp-level,.pp-profile-skin .pp-vip{height:24px!important;min-height:24px;padding:0 9px!important;border-radius:999px!important;display:inline-flex!important;align-items:center}
+.pp-profile-skin .pp-gender,.pp-profile-skin .pp-country{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;background:#5aa9ff;color:#fff;font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.pp-profile-skin .pp-country{background:#fff;border:1px solid #e5e5e5;font-size:15px}
+.pp-profile-skin .pp-menu-card{background:#fff;border-radius:20px 20px 0 0;margin-top:-1px;box-shadow:0 -4px 20px rgba(0,0,0,.03);padding-top:4px;flex:1;overflow:auto;padding-bottom:90px}
+.pp-profile-skin .pp-menu-row{width:100%;height:62px;padding:0 20px;border:0;background:#fff;display:flex;align-items:center;text-align:left;gap:12px;transition:background .15s}
+.pp-profile-skin .pp-menu-row:active{background:#fafafa}
+.pp-profile-skin .pp-menu-icon{width:32px;height:32px;border-radius:50%;background:#fff2e0;display:flex;align-items:center;justify-content:center;flex:none;font-size:17px;color:#ff8c00}
+.pp-profile-skin .pp-menu-label{font-size:15px;font-weight:600;color:#1e1e1e;letter-spacing:-.01em;flex:1}
+.pp-profile-skin .pp-menu-values{display:flex;align-items:center;gap:10px;color:#333}
+.pp-profile-skin .pp-coin,.pp-profile-skin .pp-diamond{display:flex;align-items:center;gap:4px;font-size:13px;font-weight:600}
+.pp-profile-skin .pp-coin img{width:20px;height:20px;object-fit:contain}
+.pp-profile-skin .pp-diamond{color:#6d3fd1}
+.pp-profile-skin .pp-arrow{font-size:22px;line-height:1;color:#c8c8c8;margin-left:2px}
+.pp-profile-skin .pp-divider{height:1px;background:#f3f3f3;margin-left:52px}
+.pp-profile-skin .pp-edit-panel{margin:12px 16px 90px!important;border-radius:16px!important}
+.pp-profile-skin .bottom-nav{position:absolute!important;left:0;right:0;bottom:0;z-index:30}
+.pp-profile-skin .pp-menu-row.hidden + .pp-divider{display:none!important}
+
+/* ======================================================================
+   HOME SCREEN — FIXED HEADER + DEDICATED ROOM SCROLLER
+   Inspired by the supplied reference layout, but uses PingPong's own
+   data, names and assets. Only the room/content pane scrolls.
+   ====================================================================== */
+#view-home{
+  background:#f3f4f7!important;
+  color:#25262d!important;
+  overflow:hidden;
+  height:100dvh;
+  min-height:100dvh;
+}
+#view-home .home-fixed-head{
+  flex:0 0 auto;
+  background:#fff;
+  z-index:20;
+  box-shadow:0 1px 0 rgba(0,0,0,.04);
+}
+#view-home .home-mainbar{
+  height:76px;
+  display:flex;
+  align-items:flex-end;
+  gap:12px;
+  padding:0 18px 10px;
+  background:linear-gradient(180deg,#fff8e8 0%,#fff 100%);
+}
+#view-home .home-icon-btn,
+#view-home .home-search-btn{
+  flex:0 0 42px;
+  width:42px;height:42px;
+  border:0;background:transparent;
+  color:#25262d;font-size:31px;line-height:1;
+  display:grid;place-items:center;
+  padding:0;
+}
+#view-home .home-search-btn{font-size:34px;transform:translateY(-1px)}
+#view-home .home-primary-tabs{
+  flex:1;display:flex;align-items:flex-end;justify-content:center;gap:34px;min-width:0;
+}
+#view-home .home-primary-tab{
+  position:relative;border:0;background:transparent;color:#6e6b67;
+  font-family:var(--font-body);font-size:20px;font-weight:800;padding:0 0 8px;
+}
+#view-home .home-primary-tab.active{color:#151515}
+#view-home .home-primary-tab.active::after{
+  content:"";position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+  width:16px;height:4px;border-radius:99px;background:#202020;
+}
+#view-home #banner-slider-container{
+  margin:0!important;padding:8px 18px 10px!important;
+  width:100%;background:#fff;
+}
+#view-home #banner-slider-container .banner-slider{
+  width:100%;height:92px;border-radius:17px;box-shadow:none;
+}
+#view-home .home-my-room{
+  margin:0 12px 10px;
+  min-height:84px;
+  padding:12px 14px;
+  display:flex;align-items:center;gap:12px;
+  border-radius:18px;
+  background:#fff;
+  border:1px solid #ececf0;
+  box-shadow:0 5px 18px rgba(34,35,42,.06);
+  cursor:pointer;
+}
+#view-home .home-my-room-media{
+  width:58px;height:58px;flex:0 0 58px;border-radius:14px;overflow:hidden;background:#eee;
+}
+#view-home .home-my-room-media img{width:100%;height:100%;object-fit:cover;display:block}
+#view-home .home-my-room-body{flex:1;min-width:0}
+#view-home .home-my-room-title-row{display:flex;align-items:center;gap:5px;min-width:0}
+#view-home .home-my-room-title-row h3{font-family:var(--font-body);font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#28282d}
+#view-home .home-my-room-meta{display:block;margin-top:6px;font-size:12px;color:#92939a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#view-home .home-my-room-live{display:flex;align-items:center;gap:5px;font-size:13px;font-weight:800;color:#3c3c42;flex:0 0 auto}
+#view-home .home-my-room-live .live-dot{width:9px;height:9px}
+#view-home .home-secondary-tabs{
+  height:72px;display:flex;align-items:center;justify-content:space-around;
+  padding:0 20px;background:#fff;border-top:1px solid #f0f0f2;
+}
+#view-home .home-secondary-tabs .social-tab{
+  flex:0 0 auto;position:relative;border:0;background:transparent;box-shadow:none!important;
+  border-radius:0;color:#66666d;font-family:var(--font-body);font-size:16px;font-weight:800;padding:20px 8px 15px;
+}
+#view-home .home-secondary-tabs .social-tab.active{color:#28282d;background:transparent}
+#view-home .home-secondary-tabs .social-tab.active::after{
+  content:"";position:absolute;left:50%;bottom:8px;transform:translateX(-50%);
+  width:15px;height:4px;border-radius:99px;background:#292929;
+}
+#view-home .home-room-scroll{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-y:contain;
+  padding:12px 12px 18px;
+  background:#f3f4f7;
+}
+#view-home .home-room-scroll .social-panel{margin:0}
+#view-home .home-room-section-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 4px 10px;color:#5f6068;font-size:14px;font-weight:800;
+}
+#view-home .home-room-scroll .room-grid{gap:12px}
+#view-home .home-room-scroll .room-card{
+  min-height:102px;padding:14px 14px;border-radius:19px;
+  background:#fff;border:1px solid #ededf0;box-shadow:0 5px 17px rgba(34,35,42,.055);
+}
+#view-home .home-room-scroll .room-card-icon{width:64px;height:64px;flex:0 0 64px;border-radius:15px;background:#f1f1f3;border:0}
+#view-home .home-room-scroll .room-card-body h3{font-family:var(--font-body);font-size:16px;font-weight:700;color:#292a30}
+#view-home .home-room-scroll .room-card-host{color:#96979e;font-size:12px;margin-top:5px}
+#view-home .home-room-scroll .room-card-meta{margin-top:7px}
+#view-home .home-room-scroll .online-pill{background:transparent;color:#56575d;padding:0;box-shadow:none}
+#view-home .home-room-scroll .social-list{gap:12px}
+#view-home .home-room-scroll .social-item{background:#fff;border:1px solid #ededf0;box-shadow:0 5px 17px rgba(34,35,42,.055);border-radius:19px}
+#view-home .home-room-scroll .section-head.social-panel-head{margin:0 0 8px}
+#view-home .home-room-scroll .link-btn{color:#8a8b92}
+#view-home .bottom-nav{
+  position:relative!important;flex:0 0 auto;bottom:auto;left:auto;right:auto;
+  background:rgba(255,255,255,.96)!important;border-top:1px solid #e9e9ed!important;
+  box-shadow:0 -7px 22px rgba(34,35,42,.06)!important;backdrop-filter:blur(18px);
+}
+#view-home .nav-btn{color:#77787e}
+#view-home .nav-btn.active{color:#c59a35;text-shadow:none}
+@media (max-width:420px){
+  #view-home .home-primary-tabs{gap:22px}
+  #view-home .home-primary-tab{font-size:18px}
+  #view-home .home-secondary-tabs .social-tab{font-size:15px}
+}
+
+/* =====================================================================
+   HOME POPULAR / SEARCH ROLLOUT
+   Fixed chrome stays outside the dedicated room scroller.
+   ===================================================================== */
+#view-home .home-search-bar{
+  margin:0 18px 8px;
+  height:44px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:#fff;
+  border:1px solid #e8e9ee;
+  border-radius:14px;
+  padding:0 10px;
+  box-shadow:0 3px 12px rgba(34,35,42,.05);
+}
+#view-home .home-search-bar.hidden{display:none!important}
+#view-home .home-search-bar input{
+  flex:1;min-width:0;border:0;outline:0;background:transparent;color:#26272d;font-size:14px;
+}
+#view-home .home-search-icon{font-size:22px;color:#777}
+#view-home .home-search-bar button{border:0;background:none;color:#888;font-size:22px;padding:0 4px}
+#view-home .home-popular-banner.hidden,
+#view-home .home-popular-tools.hidden,
+#view-home .home-popular-filter.hidden{display:none!important}
+#view-home .home-popular-banner{margin:0!important;padding:8px 18px 10px!important;background:#fff}
+#view-home .home-popular-banner .banner-slider{height:118px;border-radius:18px}
+#view-home .home-popular-tools{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 18px 10px;background:#fff;
+}
+#view-home .popular-tool-card{
+  min-height:72px;border:0;border-radius:14px;text-align:left;padding:9px 12px;color:#fff;display:flex;flex-direction:column;justify-content:center;box-shadow:none;
+}
+#view-home .popular-tool-card.ranking{background:linear-gradient(135deg,#ffb11b,#ffd35a)}
+#view-home .popular-tool-card.club{background:linear-gradient(135deg,#4a9de9,#69c4ff)}
+#view-home .popular-tool-card.cp{background:linear-gradient(135deg,#ef6395,#f49dc0)}
+#view-home .popular-tool-card.selected{outline:3px solid rgba(30,30,30,.12);transform:translateY(-1px)}
+#view-home .popular-tool-card strong{font-size:17px;line-height:1.1}
+#view-home .popular-tool-card span{font-size:13px;font-weight:800;margin-top:3px}
+#view-home .popular-tool-card small{font-size:10px;opacity:.9;margin-top:2px}
+#view-home .home-popular-filter{display:flex;gap:10px;padding:0 18px 12px;background:#fff}
+#view-home .popular-filter{border:0;border-radius:999px;background:#ececef;color:#777;padding:8px 18px;font-size:14px}
+#view-home .popular-filter.active{background:#fff0a8;color:#3b3420;font-weight:800}
+#view-home .home-room-mode-label{padding:0 4px 8px;color:#96979e;font-size:11px}
+#view-home .room-card-host{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+
+/* =====================================================================
+   MESSAGE/GIFT BOTTOM-UP PATH — FINAL 2026-08-20
+   The activity feed is bottom-anchored. New items enter at the bottom,
+   while older items remain above them. Room/private message bubbles carry
+   only the message content; gift notices carry only the gift icon/name.
+   ===================================================================== */
+#view-room .chat-panel .chat-log,
+#view-thread .thread-log{
+  justify-content:flex-end;
+  align-content:flex-end;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+}
+
+#view-room .chat-panel .chat-msg.activity-line,
+#view-thread .thread-log .thread-msg{
+  flex:0 0 auto;
+}
+
+#view-room .chat-panel .chat-msg.activity-line .activity-pill{
+  max-width:92%;
+}
+
+#view-room .chat-panel .chat-msg.activity-line .message-only-pill{
+  justify-content:flex-start;
+  align-items:center;
+}
+
+#view-room .chat-panel .chat-msg.activity-line .message-only-pill .chat-text{
+  margin:0;
+}
+
+#view-room .chat-panel .chat-msg.activity-line.gift-notice .gift-pill{
+  justify-content:flex-start;
+  align-items:center;
+}
+
+#view-room .chat-panel .chat-msg.activity-line.gift-notice .gift-pill .chat-text{
+  margin:0;
+}
+
+/* Private inbox: keep the familiar incoming/outgoing bubble style, but make
+   the whole conversation bottom-anchored so the first/only message is
+   visible at the bottom immediately and new messages rise from there. */
+#view-thread .thread-log{
+  display:flex;
+  flex-direction:column;
+  gap:0;
+  min-height:0;
+  padding:12px 18px;
+}
+
+#view-thread .thread-log .thread-msg{
+  width:max-content;
+  max-width:75%;
+  margin-bottom:8px;
+}
+
+#view-thread .thread-log .thread-msg.in{
+  align-self:flex-start;
+}
+
+#view-thread .thread-log .thread-msg.out{
+  align-self:flex-end;
+  margin-left:auto;
+}

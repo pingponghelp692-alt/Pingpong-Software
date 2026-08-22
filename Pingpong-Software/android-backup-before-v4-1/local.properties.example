@@ -1,0 +1,10 @@
+# Local Android release configuration. DO NOT commit local.properties.
+# Required for a production build:
+WEB_APP_URL=https://YOUR_REAL_PRODUCTION_DOMAIN/
+ALLOW_CLEARTEXT=false
+
+# Release signing is supplied through environment variables (recommended):
+# PINGPONG_KEYSTORE_FILE=/absolute/path/to/pingpong-release.jks
+# PINGPONG_KEYSTORE_PASSWORD=...
+# PINGPONG_KEY_ALIAS=pingpong
+# PINGPONG_KEY_PASSWORD=...

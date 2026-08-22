@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pre-Android 12 (API < 31) equivalent of data_extraction_rules.xml — see
+     that file's comment for why the WebView data directory is excluded. -->
+<full-backup-content>
+    <exclude domain="file" path="app_webview"/>
+    <exclude domain="database" path="app_webview"/>
+    <exclude domain="sharedpref" path="WebView"/>
+</full-backup-content>

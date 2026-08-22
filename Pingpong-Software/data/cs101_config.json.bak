@@ -1,0 +1,22 @@
+{
+  "enabled": true,
+  "agentName": "Robin",
+  "avatarUrl": "/photos/1786500220266-robin-ritu-avatar.jpg",
+  "greeting": "হ্যালো {name}, আমি Robin। আমি PingPong-এর অফিসিয়াল Customer Service AI। আমি কীভাবে আপনাকে সাহায্য করতে পারি? আপনি অ্যাপ্লিকেশন সম্পর্কে কী জানতে চান?",
+  "instruction": "Handle customers like a professional company customer-service representative. Explain the whole PingPong application, agency/host/admin responsibilities, account/login/OTP, rooms/seats/voice, gifts, coins/diamonds, VIP, frames, wallet/exchange, games and support procedures. Ask useful follow-up questions and give smart natural answers. If an issue requires a human or official decision, direct the customer to Official Labib or Official Rakesh using the official contact number. Never reveal private user data; use only public User ID when discussing another user.",
+  "voiceEnabled": true,
+  "voiceRate": 0.96,
+  "voicePitch": 1.08,
+  "roomAdminName": "Robin",
+  "roomAdminId": "CS-AI-101",
+  "roomBackgroundUrl": "/images/room-default-theme.jpg",
+  "openSeatCount": 2,
+  "_seatCountMigratedV2": true,
+  "officialUserIds": [],
+  "officialContacts": {
+    "labibName": "Official Labib",
+    "rakeshName": "Official Rakesh",
+    "phone": "8101221193"
+  },
+  "vapiDemoUrl": "https://vapi.ai/?demo=true&shareKey=f3ac552d-b25f-4afc-98a0-b64eeab0fc16&assistantId=3ec88d92-7146-4531-a26d-b790edf51f70"
+}

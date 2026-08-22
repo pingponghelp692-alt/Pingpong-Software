@@ -1,0 +1,18 @@
+groups:
+  - name: pingpong
+    rules:
+      - alert: PingPongDown
+        expr: up{job="pingpong"} == 0
+        for: 1m
+        labels: { severity: critical }
+        annotations: { summary: "PingPong is down" }
+      - alert: PingPongHighRooms
+        expr: pingpong_rooms_active > 1000
+        for: 5m
+        labels: { severity: warning }
+        annotations: { summary: "High active room count" }
+      - alert: PingPongHighVoiceUsers
+        expr: pingpong_voice_participants > 5000
+        for: 5m
+        labels: { severity: warning }
+        annotations: { summary: "High voice participant count" }

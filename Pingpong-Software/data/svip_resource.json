@@ -1,0 +1,36 @@
+{
+  "SVIP1": {
+    "tag": "svip1-tag",
+    "badge": "svip1-badge",
+    "bubble": "svip1-bubble",
+    "frame": "svip1-frame"
+  },
+  "SVIP2": {
+    "bubble": "svip2-bubble",
+    "frame": "svip2-frame"
+  },
+  "SVIP3": {
+    "roomCard": "svip3-room-card",
+    "nicknameColor": "#E5B84B"
+  },
+  "SVIP4": {
+    "roomCard": "svip4-room-card",
+    "nicknameColor": "#E5B84B"
+  },
+  "SVIP5": {
+    "entryEffect": "svip5-entry"
+  },
+  "SVIP6": {
+    "entryEffect": "svip6-entry",
+    "nicknameColor": "#FF7A45"
+  },
+  "SVIP7": {
+    "animatedRoomTheme": "svip7-theme",
+    "entryEffect": "svip7-entry"
+  },
+  "SVIP8": {
+    "animatedRoomTheme": "svip8-theme",
+    "entryEffect": "svip8-entry",
+    "exclusiveGift": "svip8-exclusive-gift"
+  }
+}

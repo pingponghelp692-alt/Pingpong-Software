@@ -1,0 +1,22 @@
+R_DEF: Internal format may change without notice
+local
+color pp_gold
+color pp_splash_background
+drawable ic_pingpong_foreground
+drawable ic_pingpong_logo
+id web_view
+layout activity_main
+mipmap ic_launcher
+mipmap ic_launcher_round
+string app_name
+string app_short_name
+string notification_channel_description
+string notification_channel_name
+string voice_notification_text
+string voice_notification_title
+style Theme.PingPong
+style Theme.PingPongPostSplash
+xml backup_rules
+xml data_extraction_rules
+xml file_paths
+xml network_security_config

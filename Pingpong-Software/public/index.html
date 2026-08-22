@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
+<title>PingPong — Voice Rooms</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=20260811-room101-final">
+
+<style id="vapi-robin-support-css">
+/* Hands-free Customer Service: no Robin popup, mute, end, or start controls are shown. */
+#vapi-robin-overlay{display:none!important;visibility:hidden!important;pointer-events:none!important}
+#btn-robin-support{display:none!important}
+#btn-robin-mute,#btn-robin-end,#btn-robin-close{display:none!important}
+#btn-robin-support{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  min-width:44px;
+}
+#btn-robin-support .robin-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:#63f5b0;
+  box-shadow:0 0 10px rgba(99,245,176,.85);
+}
+#btn-robin-support.robin-active .robin-dot{background:#ffcc66;box-shadow:0 0 10px rgba(255,204,102,.9);}
+#vapi-robin-overlay{
+  position:fixed;inset:0;z-index:99999;
+  display:flex;align-items:flex-end;justify-content:center;
+  padding:18px;pointer-events:none;
+}
+#vapi-robin-overlay.hidden{display:none}
+#vapi-robin-card{
+  width:min(430px,100%);
+  border-radius:24px;
+  padding:18px;
+  background:rgba(12,18,28,.96);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 20px 70px rgba(0,0,0,.45);
+  color:#fff;pointer-events:auto;
+  backdrop-filter:blur(18px);
+}
+.robin-head{display:flex;align-items:center;gap:12px}
+.robin-avatar{
+  width:52px;height:52px;border-radius:50%;object-fit:cover;
+  background:rgba(255,255,255,.08);
+}
+.robin-title{font-weight:800;font-size:17px}
+.robin-subtitle{font-size:12px;opacity:.68;margin-top:2px}
+#vapi-robin-status{
+  margin:16px 0 12px;
+  min-height:22px;
+  text-align:center;
+  font-size:14px;
+  opacity:.88;
+}
+#vapi-robin-transcript{
+  max-height:150px;overflow:auto;
+  padding:10px 12px;border-radius:14px;
+  background:rgba(255,255,255,.055);
+  font-size:12px;line-height:1.45;
+  display:none;
+}
+.robin-controls{display:flex;gap:10px;margin-top:14px}
+.robin-control{
+  flex:1;border:0;border-radius:14px;padding:12px 14px;
+  font-weight:800;cursor:pointer;
+}
+#btn-robin-mute{background:rgba(255,255,255,.10);color:#fff}
+#btn-robin-end{background:#d9535f;color:#fff}
+#btn-robin-close{background:transparent;color:#fff;border:0;font-size:20px;margin-left:auto;cursor:pointer}
+.robin-pulse{
+  width:10px;height:10px;border-radius:50%;display:inline-block;
+  background:#63f5b0;animation:robinPulse 1.25s infinite;
+}
+@keyframes robinPulse{50%{transform:scale(1.65);opacity:.35}}
+</style>
+<style id="mobile-number-black-fix">
+#mobile-input{color:#000 !important;-webkit-text-fill-color:#000 !important;caret-color:#000 !important;}
+#mobile-input::placeholder{color:#777 !important;-webkit-text-fill-color:#777 !important;}
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast" role="alert" aria-live="assertive"></div>
+<div id="announce-banner" class="announce-banner hidden"></div>
+<div id="legend-gift-overlay" class="legend-gift-overlay hidden">
+  <div class="legend-burst-rays"></div>
+  <div id="legend-gift-emoji" class="legend-gift-emoji"></div>
+  <div id="legend-gift-text" class="legend-gift-text"></div>
+</div>
+
+<!-- ============ LOGIN ============ -->
+<section id="view-login" class="view active">
+  <!-- Login background video (2026-08-16): decorative only, so aria-hidden.
+       muted+playsinline+autoplay+loop is required for iOS/Android autoplay
+       to actually work; poster shows instantly while the video buffers. -->
+  <video class="login-bg-video" src="media/login-bg.mp4" poster="media/login-bg-poster.jpg"
+         autoplay muted loop playsinline preload="auto" aria-hidden="true"></video>
+  <div class="login-bg-fade" aria-hidden="true"></div>
+  <div class="auth-wrap">
+    <div class="brand">
+      <div class="brand-mark">PP</div>
+      <h1>PingPong</h1>
+      <p class="brand-sub">Your voice, your stage.</p>
+    </div>
+    <!-- ==========================================================
+         Self-hosted OTP (2026-08-16): Mobile Number + OTP card below is
+         the same markup/design as before. It is now wired to this
+         server's own /api/auth/send-otp and /api/auth/verify-otp — no
+         Firebase, no third-party SMS provider — see security/otpService.js
+         and sms/gateway.js. "Continue with Google" still uses Firebase
+         (Google Sign-In only) and is unchanged.
+         ========================================================== -->
+    <div id="step-mobile" class="auth-card">
+      <label class="field-label" for="mobile-input">Mobile Number</label>
+      <div class="field-row">
+        <span class="prefix">+91</span>
+        <input id="mobile-input" type="tel" inputmode="numeric" maxlength="10" placeholder="10 digit number">
+      </div>
+      <button id="btn-send-otp" class="btn btn-primary btn-block">Send OTP</button>
+      <div class="auth-divider"><span>or</span></div>
+      <button id="btn-google-login" class="btn btn-ghost btn-block auth-google-btn" type="button">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" class="google-icon">
+        Continue with Google
+      </button>
+    </div>
+    <div id="step-otp" class="auth-card hidden">
+      <p class="hint">Enter the OTP sent by SMS. Mobile: <span id="otp-mobile-display"></span></p>
+      <label class="field-label" for="otp-input">OTP Code</label>
+      <input id="otp-input" type="tel" inputmode="numeric" maxlength="6" placeholder="6 digit OTP" class="field-solo">
+      <button id="btn-verify-otp" class="btn btn-primary btn-block">Verify &amp; Login</button>
+      <button id="btn-resend-otp" class="btn btn-ghost btn-block" disabled>Resend OTP (60s)</button>
+      <button id="btn-back-mobile" class="btn btn-ghost btn-block">Change Number</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FIRST TIME PROFILE SETUP (new user only) ============ -->
+<!-- Shown exactly once, right after OTP/password verification succeeds for
+     a brand-new account (profile_completed:false). Old accounts skip this
+     screen forever — see enterApp()/routeAfterLogin() in app.js. -->
+<section id="view-profile-setup" class="view">
+  <div class="auth-wrap">
+    <div class="brand">
+      <div class="brand-mark">PP</div>
+      <h1 data-i18n="ps_title">Create Your Profile</h1>
+      <p class="brand-sub" data-i18n="ps_subtitle">Fill in the details below to complete your account — you'll only need to do this once.</p>
+    </div>
+
+    <div class="auth-card ps-card">
+      <!-- Section 1: Profile Picture -->
+      <div class="ps-avatar-wrap">
+        <div class="avatar-frame-wrap" id="ps-avatar-frame">
+          <img id="ps-avatar-preview" class="avatar avatar-lg" src="" alt="">
+        </div>
+        <button id="ps-avatar-btn" type="button" class="ps-avatar-edit-btn">📷</button>
+        <input id="ps-photo-camera" type="file" accept="image/*" capture="environment" class="hidden">
+        <input id="ps-photo-gallery" type="file" accept="image/*" class="hidden">
+      </div>
+      <div id="ps-photo-sheet" class="ps-photo-sheet hidden">
+        <button id="ps-pick-camera" type="button" class="btn btn-ghost btn-block" data-i18n="ps_camera">📷 Camera</button>
+        <button id="ps-pick-gallery" type="button" class="btn btn-ghost btn-block" data-i18n="ps_gallery">🖼️ Gallery</button>
+        <button id="ps-photo-sheet-close" type="button" class="btn btn-ghost btn-block" data-i18n="ps_skip_photo">✕ Skip</button>
+      </div>
+
+      <!-- Section 2: Gender -->
+      <label class="field-label" data-i18n="ps_gender">Gender</label>
+      <div class="ps-gender-row" id="ps-gender-row">
+        <button type="button" class="ps-gender-pill" data-gender="Male"><span>♂</span> <span data-i18n="ps_male">Male</span></button>
+        <button type="button" class="ps-gender-pill" data-gender="Female"><span>♀</span> <span data-i18n="ps_female">Female</span></button>
+        <button type="button" class="ps-gender-pill" data-gender="Not Specified"><span>⚧</span> <span data-i18n="ps_not_specified">Not Specified</span></button>
+      </div>
+
+      <!-- Section 3: Username -->
+      <label class="field-label" for="ps-username" data-i18n="ps_username">Username</label>
+      <input id="ps-username" class="field-solo" maxlength="20" placeholder="Labib, PingKing, StarHost...">
+      <p id="ps-username-status" class="ps-field-status"></p>
+
+      <!-- Section 4: Country -->
+      <label class="field-label" for="ps-country" data-i18n="ps_country">Country</label>
+      <select id="ps-country" class="field-solo"></select>
+
+      <!-- Section 5: Language -->
+      <label class="field-label" for="ps-language" data-i18n="ps_language">Language</label>
+      <select id="ps-language" class="field-solo"></select>
+
+      <button id="btn-save-profile-setup" class="btn btn-primary btn-block" data-i18n="ps_save">Save</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOME ============ -->
+<section id="view-home" class="view">
+  <div class="home-fixed-head">
+    <header class="home-mainbar">
+      <button class="home-icon-btn" type="button" aria-label="Home">⌂</button>
+      <div class="home-primary-tabs" id="home-primary-tabs">
+        <button class="home-primary-tab active" data-home-tab="mine" type="button">Mine</button>
+        <button class="home-primary-tab" data-home-tab="popular" type="button">Popular</button>
+        <button class="home-primary-tab" data-home-tab="explore" type="button">Explore</button>
+      </div>
+      <button class="home-search-btn" id="btn-home-search" type="button" aria-label="Search">⌕</button>
+    </header>
+
+    <div id="home-search-bar" class="home-search-bar hidden">
+      <span class="home-search-icon">⌕</span>
+      <input id="home-search-input" type="search" placeholder="Search rooms, hosts or room ID" autocomplete="off">
+      <button id="home-search-clear" type="button" aria-label="Clear search">×</button>
+    </div>
+
+    <div id="banner-slider-container" class="home-popular-banner hidden"></div>
+
+    <section id="home-popular-tools" class="home-popular-tools hidden" aria-label="Popular features">
+      <button class="popular-tool-card ranking" data-popular-tool="ranking" type="button"><strong>Ranking</strong><span id="popular-ranking-count">—</span><small>Top live rooms</small></button>
+      <button class="popular-tool-card club" data-popular-tool="club" type="button"><strong>Club</strong><span id="popular-club-count">—</span><small>Active hosts</small></button>
+      <button class="popular-tool-card cp" data-popular-tool="cp" type="button"><strong>CP</strong><span id="popular-cp-count">—</span><small>Popular rooms</small></button>
+    </section>
+
+    <div id="home-popular-filter" class="home-popular-filter hidden" role="tablist">
+      <button class="popular-filter active" data-popular-filter="recommend" type="button">Recommend</button>
+      <button class="popular-filter" data-popular-filter="new" type="button">New</button>
+    </div>
+
+    <section id="home-my-room-card" class="home-my-room hidden" aria-label="My room">
+      <div class="home-my-room-media"><img id="home-my-room-logo" src="" alt=""></div>
+      <div class="home-my-room-body">
+        <div class="home-my-room-title-row">
+          <span id="home-my-room-flag" class="room-flag"></span>
+          <h3 id="home-my-room-name"></h3>
+        </div>
+        <span id="home-my-room-meta" class="home-my-room-meta"></span>
+      </div>
+      <div class="home-my-room-live"><span class="live-dot"></span><span id="home-my-room-online">0</span></div>
+    </section>
+
+    <div class="home-secondary-tabs" id="social-tabs">
+      <button class="social-tab active" data-tab="recently" type="button">Recently</button>
+      <button class="social-tab" data-tab="following" type="button">Following</button>
+      <button class="social-tab" data-tab="myroom" type="button">My Room</button>
+    </div>
+  </div>
+
+  <main class="home-room-scroll" id="home-room-scroll">
+    <div id="social-panel-live" class="social-panel">
+      <div class="home-room-section-head">
+        <span id="home-room-section-title">Rooms</span>
+        <button id="btn-create-room" class="btn btn-accent btn-sm">+ Create Room</button>
+      </div>
+      <div id="home-room-mode-label" class="home-room-mode-label hidden"></div>
+      <div id="room-list" class="room-grid"></div>
+      <div id="room-empty" class="empty-state hidden">
+        <p>No rooms yet.</p>
+        <p class="empty-sub">Be the first to create a room.</p>
+      </div>
+    </div>
+
+    <div id="social-panel-following" class="social-panel hidden">
+      <div id="following-list" class="social-list"></div>
+      <div id="following-empty" class="empty-state hidden">
+        <p>You haven't followed anyone yet.</p>
+      </div>
+      <button id="btn-following-load-more" class="btn btn-ghost btn-block hidden">Show more</button>
+    </div>
+
+    <div id="social-panel-recently" class="social-panel hidden">
+      <div class="section-head social-panel-head">
+        <span></span>
+        <button id="btn-clear-recent" class="link-btn">Clear History</button>
+      </div>
+      <div id="recent-rooms-list" class="social-list"></div>
+      <div id="recent-rooms-empty" class="empty-state hidden">
+        <p>No history yet.</p>
+      </div>
+      <button id="btn-recent-load-more" class="btn btn-ghost btn-block hidden">Show more</button>
+    </div>
+
+    <div id="social-panel-myroom" class="social-panel hidden">
+      <div id="my-room-list" class="social-list"></div>
+      <div id="my-room-empty" class="empty-state hidden">
+        <p>You don't have a live room.</p>
+        <button id="btn-create-my-room" class="btn btn-accent btn-sm">Create Room</button>
+      </div>
+    </div>
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-nav="home">🏠<span data-i18n="nav_home">Home</span></button>
+    <button class="nav-btn" data-nav="inbox">💬<span data-i18n="nav_inbox">Inbox</span></button>
+    <button class="nav-btn" data-nav="profile">👤<span data-i18n="nav_profile">Profile</span></button>
+  </nav>
+</section>
+
+<!-- ============ CREATE ROOM MODAL ============ -->
+<div id="modal-create-room" class="modal-overlay hidden">
+  <div class="modal-card">
+    <h3>Create a New Room</h3>
+    <input id="create-room-name" type="text" placeholder="Room name" class="field-solo">
+    <div class="modal-actions">
+      <button id="btn-cancel-create-room" class="btn btn-ghost">Cancel</button>
+      <button id="btn-confirm-create-room" class="btn btn-primary">Create</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-create-group" class="modal-overlay hidden">
+  <div class="modal-card">
+    <h3>Create New Group</h3>
+    <input id="create-group-name" type="text" placeholder="Group name" class="field-solo">
+    <div class="modal-actions">
+      <button id="btn-cancel-create-group" class="btn btn-ghost">Cancel</button>
+      <button id="btn-confirm-create-group" class="btn btn-primary">Create</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-group-detail" class="modal-overlay hidden">
+  <div class="modal-card">
+    <h3 id="group-detail-name"></h3>
+    <p class="hint" id="group-detail-meta"></p>
+    <input id="group-icon-file" type="file" accept="image/*" class="hidden">
+    <div class="modal-actions">
+      <button id="btn-group-change-icon" class="btn btn-ghost hidden">Change Icon</button>
+      <button id="btn-group-delete" class="btn btn-danger hidden">Delete Group</button>
+      <button id="btn-group-leave" class="btn btn-ghost hidden">Leave Group</button>
+      <button id="btn-group-detail-close" class="btn btn-primary">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ VOICE ROOM ============ -->
+<section id="view-room" class="view">
+  <header class="room-topbar">
+    <button id="btn-leave-room" class="icon-btn">←</button>
+    <img id="room-logo-display" class="room-logo-display hidden" alt="">
+    <div class="room-title-block" id="room-title-block">
+      <h2 id="room-name-display">Room <span id="room-lock-badge" class="room-lock-badge hidden" title="Room locked">🔒</span></h2>
+      <span id="room-host-display" class="sub"></span>
+    </div>
+    <button class="stat-pill stat-pill-btn" id="btn-room-ranking" title="Room Ranking">🏆</button>
+    <button class="stat-pill stat-pill-btn" id="btn-level-info" title="My Level">⭐</button>
+    <button id="btn-room-mod" class="icon-btn hidden" title="Room settings">⚙️</button>
+    <button class="stat-pill stat-pill-btn" id="room-online-count" title="See who's here">👥 0</button>
+  </header>
+
+  <!-- YouTube Room Player (2026-07-27 layout update) — its own full-width
+       block between the header and the seat grid, kept to a fixed 16:9
+       aspect ratio (roughly the top quarter of the screen on a typical
+       phone). Sits in normal document flow, so the seat grid below it is
+       automatically pushed down whenever this block is visible — nothing
+       needs to be positioned or sized manually. Hidden entirely while Video
+       Mode is off, so the room looks/behaves exactly as before in that
+       case. -->
+  <div id="yt-player-wrap" class="yt-player-wrap hidden">
+    <div id="yt-player-frame" class="yt-player-frame">
+      <img id="yt-player-poster" class="yt-player-poster hidden" alt="">
+      <div id="yt-player-mount"></div>
+      <div id="yt-player-loading" class="yt-player-loading hidden">Loading...</div>
+      <div id="yt-player-empty" class="yt-player-empty">Play a video from the Playlist</div>
+    </div>
+
+    <!-- The ONE permanent control per spec: small, circular, semi-
+         transparent, top-right, always tappable regardless of the
+         tap-to-reveal overlay state below. -->
+    <button id="btn-yt-mini-close" class="yt-mini-close" title="Close video">✕</button>
+
+    <!-- Everything else (title/info + prev/play/next/more) is hidden by
+         default and only appears when the user taps the video, then
+         auto-hides again — driven by the .yt-controls-visible class on
+         #yt-player-wrap (see app.js). -->
+    <div id="yt-overlay-controls" class="yt-overlay-controls">
+      <div class="yt-player-info">
+        <img id="yt-player-thumb" class="yt-player-thumb" alt="">
+        <div class="yt-player-titlewrap">
+          <div id="yt-player-title" class="yt-player-title">No video playing</div>
+          <div id="yt-player-sub" class="yt-player-sub"></div>
+        </div>
+        <span class="yt-badge">▶ YouTube</span>
+      </div>
+      <!-- Compact control bar: Prev/Play-Pause/Next are only for the
+           owner/admin (they actually drive playback), spread out because
+           they're the frequent one-tap actions. Everything else — Playlist,
+           Share, Refresh, Voice, Close — lives behind a single ⋮ so the
+           video area stays clean, and the ⋮ itself is available to every
+           viewer (not just the controller). -->
+      <div id="yt-player-controls" class="yt-player-controls hidden">
+        <button id="btn-yt-prev" class="yt-ctrl-btn hidden" title="Previous">⏮</button>
+        <button id="btn-yt-playpause" class="yt-ctrl-btn yt-ctrl-btn-main hidden" title="Play/Pause">▶️</button>
+        <button id="btn-yt-next" class="yt-ctrl-btn hidden" title="Next">⏭</button>
+        <div id="yt-more-wrap" class="yt-more-wrap">
+          <button id="btn-yt-more" class="yt-ctrl-btn" title="More">⋮</button>
+          <div id="yt-more-menu" class="yt-more-menu hidden">
+            <button id="btn-open-yt-playlist-2" class="yt-more-item">📋 Play List</button>
+            <button id="btn-yt-share" class="yt-more-item">📤 Share</button>
+            <button id="btn-yt-refresh" class="yt-more-item">🔄 Refresh</button>
+            <button id="btn-yt-voice" class="yt-more-item">🔊 Sound On</button>
+            <button id="btn-yt-open-external" class="yt-more-item">▶ Open in YouTube</button>
+            <button id="btn-yt-copy-link" class="yt-more-item">🔗 Copy Link</button>
+            <button id="btn-yt-close" class="yt-more-item yt-more-item-danger">✕ Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="gift-banner" class="gift-banner"></div>
+
+  <div class="stage-wrap" id="stage-wrap">
+    <div class="stage-glow"></div>
+    <div id="gift-fly-layer" class="gift-fly-layer"></div>
+    <div id="emoji-reaction-layer" class="emoji-reaction-layer"></div>
+    <div id="video-gift-overlay" class="video-gift-overlay hidden">
+      <video id="video-gift-player" playsinline></video>
+    </div>
+    <div id="vehicle-entry-overlay" class="video-gift-overlay hidden">
+      <video id="vehicle-entry-player" playsinline></video>
+      <audio id="vehicle-entry-music"></audio>
+      <audio id="vehicle-entry-sound"></audio>
+    </div>
+
+    <div id="cs101-ai-seat" class="cs101-ai-seat hidden" aria-label="AI Customer Service">
+      <div class="cs101-ai-seat-circle">
+        <img id="cs101-ai-avatar-img" class="cs101-ai-avatar-img" src="/photos/cs101-female.svg" alt="AI Customer Service">
+        <span class="cs101-ai-live">● LIVE</span>
+      </div>
+      <div id="cs101-ai-seat-name" class="cs101-ai-seat-name">Robin</div>
+      <div class="cs101-ai-seat-id">ID: CS-AI-101</div>
+    </div>
+    <div id="seat-grid" class="seat-grid"></div>
+    <div id="cs101-log" class="cs101-log cs101-silent-log" aria-live="polite"></div>
+    <audio id="cs101-audio" playsinline></audio>
+    <div id="room-tv-screen" class="room-tv-screen">
+      <button id="btn-room-tv-close" class="room-tv-close">✕</button>
+      <div class="room-tv-tabs">
+        <button class="room-tv-tab active" data-game="foodwheel">🍀 Lucky Fruit</button>
+        <button class="room-tv-tab" data-game="teenpatti">🃏 Teen Patti</button>
+      </div>
+      <div class="room-tv-frame-wrap" id="room-tv-frame-wrap">
+        <iframe id="room-tv-frame" class="room-tv-frame" title="Room Game" src="about:blank" allow="autoplay"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Treasure Chest -->
+  <div id="chest-wrap" class="chest-wrap">
+    <button id="btn-chest-info" class="chest-info-btn" title="Chest levels">ⓘ</button>
+    <div id="chest-box" class="chest-box">
+      <div class="chest-glow-ring"></div>
+      <div class="chest-body">
+        <img class="chest-img" src="/images/chest-box.png" alt="Treasure Chest">
+        <div class="chest-flash"></div>
+      </div>
+      <div class="chest-sparkle s1"></div>
+      <div class="chest-sparkle s2"></div>
+      <div class="chest-sparkle s3"></div>
+    </div>
+    <div class="chest-level-tag">LV.<span id="chest-level">1</span></div>
+    <div class="chest-progress-track">
+      <div id="chest-progress-fill" class="chest-progress-fill"></div>
+    </div>
+    <div class="chest-progress-label"><span id="chest-contributed">0</span> / <span id="chest-target">100000</span> <img src="/images/icons/icon-diamond.png" class="currency-icon" alt="diamond"></div>
+    <div class="chest-countdown">Reset: <span id="chest-countdown">--:--:--</span></div>
+  </div>
+
+  <div id="vapi-robin-overlay" class="hidden" aria-live="polite">
+    <div id="vapi-robin-card" role="dialog" aria-modal="true" aria-label="Robin AI Voice Support">
+      <div class="robin-head">
+        <img id="vapi-robin-avatar" class="robin-avatar" src="/photos/cs101-female.svg" alt="Robin">
+        <div>
+          <div class="robin-title">Robin — PingPong Support</div>
+          <div class="robin-subtitle"><span id="vapi-robin-pulse" class="robin-pulse"></span> <span id="vapi-robin-status-label">Ready</span></div>
+        </div>
+        <button id="btn-robin-close" title="Close">✕</button>
+      </div>
+      <div id="vapi-robin-status">Tap Start to speak with Robin.</div>
+      <div id="vapi-robin-transcript"></div>
+      <div class="robin-controls">
+        <button id="btn-robin-mute" class="robin-control">🎤 Mute</button>
+        <button id="btn-robin-end" class="robin-control">End Support Call</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-panel">
+    <div id="chat-log" class="chat-log empty"></div>
+  </div>
+
+  <div class="room-toolbar">
+    <button id="btn-robin-support" class="tool-btn hidden" title="Robin AI Voice Support" aria-label="Robin AI Voice Support"><span class="robin-dot"></span>🤖</button>
+    <button id="btn-mic-toggle" class="tool-btn" title="Mic"><img src="/images/icons/icon-mic.png" class="tool-icon-img" alt="Mic"></button>
+    <button id="btn-open-gift" class="tool-btn" title="Gift"><img src="/images/icons/icon-gift.png" class="tool-icon-img" alt="Gift"></button>
+    <button id="btn-open-emoji" class="tool-btn" title="Reactions">😊</button>
+    <input id="chat-input" type="text" placeholder="Type a message..." class="chat-input">
+    <button id="btn-send-chat" class="tool-btn tool-btn-accent" title="Send">➤</button>
+    <button id="btn-room-more" class="tool-btn" title="More">☰</button>
+  </div>
+
+  <!-- "More" bottom sheet — houses Music / TV / Game / Shop. These are the
+       exact same buttons/IDs that used to sit directly in the room toolbar
+       (see the git history / previous layout); only their location in the
+       DOM moved so they now live behind the ☰ toggle instead of always-on
+       in the bar. No listener, handler, or feature logic was touched —
+       every button below still fires the identical click handler in
+       app.js it always did. -->
+  <div id="room-more-menu" class="modal-overlay hidden">
+    <div class="modal-card room-more-card">
+      <div class="room-more-head">
+        <h3>More</h3>
+        <button id="btn-room-more-close" class="icon-btn">✕</button>
+      </div>
+      <div class="room-more-grid">
+        <button id="btn-toggle-game" class="room-more-item game-tool-btn hidden">
+          <img src="/images/icons/icon-controller.png" class="tool-icon-img" alt="Game"><span class="new-badge">NEW</span>
+          <span class="room-more-label">🎮 Games</span>
+        </button>
+        <button id="btn-open-music" class="room-more-item">
+          <img src="/images/icons/icon-music.png" class="tool-icon-img" alt="Music">
+          <span class="room-more-label">🎵 Music</span>
+        </button>
+        <button id="btn-toggle-yt" class="room-more-item hidden">
+          <img src="/images/icons/icon-tv.png" class="tool-icon-img" alt="TV">
+          <span class="room-more-label">📺 TV</span>
+        </button>
+        <button id="btn-open-yt-playlist" class="room-more-item">
+          <img src="/images/icons/icon-menu.png" class="tool-icon-img" alt="Play List">
+          <span class="room-more-label">📋 Play List</span>
+        </button>
+        <button id="btn-open-shop" class="room-more-item">
+          <span class="room-more-shop-icon">🛍</span>
+          <span class="room-more-label">🛍 Shop</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Emoji Reaction bottom sheet — additive, own markup only. Tapping the
+       😊 toolbar button opens this; picking an emoji closes it immediately
+       and fires the reaction (see emojiReaction.js). Does not touch the
+       Gift modal, More menu, or any existing toolbar logic. -->
+  <div id="emoji-reaction-sheet" class="emoji-sheet-overlay hidden">
+    <div id="emoji-sheet-backdrop" class="emoji-sheet-backdrop"></div>
+    <div class="emoji-sheet-card">
+      <div class="emoji-sheet-handle"></div>
+      <div id="emoji-sheet-grid" class="emoji-sheet-grid"></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============ GIFT MODAL (Premium UI) ============
+     Visual upgrade only. Every id/class an existing app.js listener or
+     renderer depends on (gift-modal-coins, gift-level-*, gift-target-*,
+     gift-tabs, gift-preview-*, gift-catalog, gift-qty-row, btn-close-gift,
+     btn-gift-target-toggle) is unchanged, so no JS logic below needed to
+     change — this is still the same production Gift Box, restyled. -->
+<div id="modal-gift" class="modal-overlay hidden">
+  <div class="modal-card gift-modal-card gift-modal-card-premium">
+    <div class="gift-sheet-handle"></div>
+    <div class="gift-modal-head">
+      <h3>Send Gift</h3>
+      <div class="gift-head-right">
+        <button type="button" id="btn-gift-target-toggle" class="gift-target-toggle-btn" title="Choose who to send to">
+          👥<span id="gift-target-count" class="gift-target-count-badge hidden">0</span>
+        </button>
+        <div class="gift-wallet-pill"><img src="/images/icons/icon-coin.png" class="currency-icon" alt="coin"> <span id="gift-modal-coins">0</span></div>
+        <button type="button" id="btn-close-gift" class="gift-close-btn" title="Close">✕</button>
+      </div>
+    </div>
+    <!-- Gift Level Progress card — display only, driven by the existing
+         me.level / me.coins (see renderGiftLevelCard in app.js). -->
+    <div id="gift-level-card" class="gift-level-card">
+      <div id="gift-level-badge" class="level-badge gift-level-badge lvl-tier-1">
+        <span class="gift-level-badge-icon">💠</span>
+        <span id="gift-level-badge-text">Lv.1</span>
+      </div>
+      <div class="gift-level-progress-wrap">
+        <div class="gift-level-progress-track">
+          <div id="gift-level-progress-fill" class="gift-level-progress-fill" style="width:0%"></div>
+        </div>
+        <div id="gift-level-remaining" class="gift-level-remaining">Need 0 <img src="/images/icons/icon-diamond.png" class="currency-icon" alt="diamond"> more to reach Lv.2</div>
+      </div>
+    </div>
+    <!-- Compact target picker — hidden until the 👥 button above is tapped. -->
+    <div id="gift-target-panel" class="gift-target-panel hidden">
+      <div class="gift-target-head">
+        <label class="gift-select-all">
+          <input type="checkbox" id="gift-target-select-all">
+          <span>All Users</span>
+        </label>
+      </div>
+      <div id="gift-target-list" class="gift-target-list"></div>
+    </div>
+    <div id="gift-tabs" class="gift-tabs">
+      <button class="gift-tab active" data-tier="normal">Normal</button>
+      <button class="gift-tab" data-tier="vip">VIP</button>
+      <button class="gift-tab" data-tier="legend">Legend</button>
+      <button class="gift-tab" data-tier="custom">Custom</button>
+    </div>
+    <div id="gift-preview" class="gift-preview hidden">
+      <span id="gift-preview-emoji" class="gift-preview-emoji"></span>
+      <div class="gift-preview-info">
+        <span id="gift-preview-name"></span>
+        <span id="gift-preview-price"></span>
+      </div>
+    </div>
+    <div id="gift-catalog" class="gift-grid"></div>
+    <!-- Footer: real Recharge (opens the existing Wallet view via
+         openWallet(), same function the sidebar Wallet menu and the
+         insufficient-coins paths already use) + the same x1/x7/x77/x777
+         quantity control, just restyled to sit in a sticky bottom bar. -->
+    <div class="gift-modal-footer">
+      <button type="button" id="btn-gift-recharge" class="btn-gift-recharge">Recharge ›</button>
+      <div id="gift-qty-row" class="gift-qty-row">
+        <button type="button" class="gift-qty-btn active" data-qty="1">x1</button>
+        <button type="button" class="gift-qty-btn" data-qty="7">x7</button>
+        <button type="button" class="gift-qty-btn" data-qty="77">x77</button>
+        <button type="button" class="gift-qty-btn" data-qty="777">x777</button>
+      </div>
+      <button type="button" id="btn-send-gift" class="btn-send-gift" disabled>
+        <span class="btn-send-gift-icon">🎁</span><span>Send Gift</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MUSIC MODAL ============ -->
+<div id="modal-music" class="modal-overlay hidden">
+  <div class="modal-card">
+    <h3>Room Music</h3>
+    <div id="music-now-playing" class="hint">No song playing</div>
+    <input id="music-file-input" type="file" accept="audio/*" class="field-solo">
+    <div class="modal-actions">
+      <button id="btn-music-playpause" class="btn btn-primary">Play / Pause</button>
+      <button id="btn-close-music" class="btn btn-ghost">Close</button>
+    </div>
+    <audio id="room-audio" preload="none"></audio>
+  </div>
+</div>
+
+<!-- ============ YOUTUBE PLAY LIST MODAL ============ -->
+<div id="modal-yt-playlist" class="modal-overlay hidden">
+  <div class="modal-card">
+    <h3>Room Play List</h3>
+    <!-- Add-by-link row: only rendered visible for the room owner/admin via
+         JS (btn-yt-add / yt-add-row toggled with the same canControlYt flag
+         used for the player controls). -->
+    <div id="yt-add-row" class="yt-add-row hidden">
+      <input id="yt-link-input" type="text" placeholder="Paste YouTube Link..." class="field-solo">
+      <button id="btn-yt-add" class="btn btn-primary">Add</button>
+    </div>
+    <div id="yt-playlist-list" class="yt-playlist-list">
+      <div class="gift-target-empty">Playlist is empty</div>
+    </div>
+    <div class="modal-actions">
+      <button id="btn-close-yt-playlist" class="btn btn-ghost btn-block">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ROOM THEME (BACKGROUND) MODAL ============ -->
+<div id="modal-room-theme" class="modal-overlay hidden">
+  <div class="modal-card">
+    <h3>Room Theme</h3>
+    <p class="hint">Choosing an image shows a preview. Saving makes it visible to everyone and stores it on the server — Cancel leaves everything unchanged.</p>
+    <div id="theme-preview-wrap" class="theme-preview-wrap">
+      <img id="theme-preview-img" class="theme-preview-img" alt="Theme Preview">
+      <div id="theme-preview-empty" class="theme-preview-empty">No image selected</div>
+    </div>
+    <input id="theme-file-input" type="file" accept="image/*" class="field-solo">
+    <p class="field-label" style="margin-top:12px;">Or choose from the Theme Library</p>
+    <div id="theme-library-grid" class="theme-library-grid"></div>
+    <div id="theme-library-empty" class="theme-preview-empty hidden">Admin hasn't added any themes yet</div>
+    <div class="modal-actions">
+      <button id="btn-theme-save" class="btn btn-primary" disabled>Save</button>
+      <button id="btn-theme-cancel" class="btn btn-ghost">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CHEST INFO MODAL ============ -->
+<div id="modal-chest-info" class="modal-overlay hidden">
+  <div class="modal-card">
+    <h3>🎁 Treasure Chest</h3>
+    <p class="hint">Sending a gift in the room adds its diamond value to the chest. When the level fills up, the chest opens and the Room Owner + Top 3 Gifters get rewards.</p>
+    <div id="chest-level-list" class="user-list"></div>
+    <button id="btn-close-chest-info" class="btn btn-ghost btn-block">Close</button>
+  </div>
+</div>
+
+<!-- ============ CHEST REWARD POPUP ============ -->
+<div id="modal-chest-reward" class="modal-overlay hidden">
+  <div class="modal-card chest-reward-card">
+    <div class="chest-reward-burst"></div>
+    <h3>🎉 Chest Opened — Level <span id="chest-reward-level">1</span>!</h3>
+    <div id="chest-reward-visual-wrap" class="chest-reward-visual-wrap">
+      <img id="chest-reward-mystery-img" class="chest-reward-mystery-img" src="/images/chest-mystery.png" alt="?">
+      <div id="chest-reward-card-visual" class="chest-reward-visual hidden">🎁</div>
+    </div>
+    <div id="chest-reward-amount" class="chest-reward-amount">+0 <img src="/images/icons/icon-coin.png" class="currency-icon" alt="coin"></div>
+    <div id="chest-reward-top" class="chest-reward-top"></div>
+    <button id="btn-close-chest-reward" class="btn btn-primary btn-block">Awesome!</button>
+  </div>
+</div>
+
+
+<!-- ============ ROOM SETTINGS MODAL ============
+     Simplified: only Room Theme + Room Logo live here now. Kick, bulk
+     actions, mute, invite-to-seat, move-to-audience, admin grant/revoke,
+     chat clear and room close all moved to the touch-based ID Tap / Seat
+     Tap popups (#sheet-user-profile → #sheet-admin-grid, and the seat
+     tap handler for empty seats). The old controls are kept in the DOM
+     but hidden so app.js's existing element lookups / listeners for
+     them keep working without touching any other room logic. -->
+<div id="modal-room-mod" class="modal-overlay hidden">
+  <div class="modal-card">
+    <button id="btn-mod-x-close" class="modal-x-close" title="Close" aria-label="Close">✕</button>
+    <h3>Room Settings</h3>
+
+    <div class="mod-section">
+      <p class="field-label">Room Logo</p>
+      <input id="mod-logo-input" type="file" accept="image/*" class="field-solo">
+    </div>
+
+    <div class="mod-section">
+      <p class="field-label">Room Theme (Background)</p>
+      <button id="btn-open-room-theme" class="btn btn-primary btn-block">Upload / Change Theme</button>
+    </div>
+
+    <div id="mod-room-lock-section" class="mod-section hidden">
+      <p class="field-label">🔒 Room Lock</p>
+      <label class="logout-lock-row" title="When ON, no one can enter the room without a password">
+        <span>Lock room with password</span>
+        <input type="checkbox" id="mod-room-lock-toggle">
+      </label>
+      <input id="mod-room-lock-password" type="password" placeholder="Room Password" class="field-solo hidden">
+      <button id="btn-mod-room-lock-save" class="btn btn-primary btn-block">Save</button>
+    </div>
+
+    <button id="btn-close-mod" class="btn btn-ghost btn-block">Close</button>
+
+    <div class="hidden" aria-hidden="true">
+      <div id="seat-lock-row"></div>
+      <select id="mod-kick-select"></select>
+      <button id="btn-mod-kick"></button>
+      <input type="checkbox" id="mod-bulk-select-all">
+      <div id="mod-bulk-list"></div>
+      <select id="mod-bulk-mute-minutes">
+        <option value="5">5</option><option value="15">15</option><option value="60">60</option><option value="0">0</option>
+      </select>
+      <button id="btn-mod-bulk-mute"></button>
+      <button id="btn-mod-bulk-invite"></button>
+      <button id="btn-mod-bulk-audience"></button>
+      <input id="mod-bulk-label-text">
+      <button id="btn-mod-bulk-label"></button>
+      <input id="mod-bulk-announce-text">
+      <button id="btn-mod-bulk-announce"></button>
+      <select id="mod-admin-select"></select>
+      <button id="btn-mod-make-admin"></button>
+      <button id="btn-mod-remove-admin"></button>
+      <button id="btn-mod-clear-chat"></button>
+      <button id="btn-mod-close-room"></button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ROOM RANKING POPUP ============ -->
+<div id="modal-room-ranking" class="modal-overlay hidden">
+  <div class="modal-card">
+    <button id="btn-ranking-x-close" class="modal-x-close" title="Close" aria-label="Close">✕</button>
+    <h3>🏆 Room Ranking</h3>
+    <div class="social-tabs" id="ranking-tabs">
+      <button class="social-tab active" data-period="daily" type="button">Daily</button>
+      <button class="social-tab" data-period="weekly" type="button">Weekly</button>
+      <button class="social-tab" data-period="monthly" type="button">Monthly</button>
+    </div>
+    <div id="ranking-list" class="user-list"></div>
+    <div id="ranking-empty" class="hint hidden">No one has sent a gift yet.</div>
+  </div>
+</div>
+
+<!-- ============ GIFT BOX / LEVEL INFORMATION POPUP ============ -->
+<!-- Level increases ONLY from successfully sending gifts inside a room —
+     see idLevel.js. This popup is a pure read-out of that: current level,
+     lifetime gift sent, next level, remaining gift value, and a progress
+     bar. It never writes anything itself.
+     UPGRADE (2026-08-04, Level Management): now also shows the current
+     group's theme (badge PNG behind the level number, group name, gradient
+     background) and a small "next badge" preview when the next level is in
+     a different group — all populated from idLevel.js's per-group theme,
+     live-updated app-wide the instant an admin saves a new theme (see
+     "level-theme-update" socket listener in app.js). -->
+<div id="modal-level-info" class="modal-overlay hidden">
+  <div class="modal-card">
+    <button id="btn-level-info-x-close" class="modal-x-close" title="Close" aria-label="Close">✕</button>
+    <h3>⭐ My Level</h3>
+    <div class="level-info-current" id="level-info-current-panel">
+      <div class="rank-badge rank-top1 level-info-badge-wrap" id="level-info-badge-wrap">
+        <img id="level-info-badge-img" class="level-info-badge-img hidden" alt="">
+        <span id="level-info-badge">0</span>
+      </div>
+      <div>
+        <div class="level-info-current-label" id="level-info-group-label">Current Level</div>
+        <div class="level-info-current-value" id="level-info-current-level">Level 0</div>
+      </div>
+    </div>
+    <div class="level-info-row">
+      <span>Lifetime Gift Sent</span>
+      <span id="level-info-lifetime">0</span>
+    </div>
+    <div id="level-info-next-wrap">
+      <div class="level-info-row">
+        <span>Next Level</span>
+        <span id="level-info-next-level">—</span>
+      </div>
+      <div class="level-info-progress-track">
+        <div class="level-info-progress-fill" id="level-info-progress-fill" style="width:0%"></div>
+      </div>
+      <div class="hint" id="level-info-remaining">Need XXXXX more gift value to reach the next level.</div>
+      <div class="level-info-next-badge-preview hidden" id="level-info-next-badge-wrap">
+        <img id="level-info-next-badge-img" class="level-info-badge-img-sm hidden" alt="">
+        <span class="hint">Next Badge: <b id="level-info-next-group-label">—</b></span>
+      </div>
+    </div>
+    <div class="hint hidden" id="level-info-max">🏆 Max Level reached!</div>
+  </div>
+</div>
+
+<div id="modal-online-members" class="modal-overlay hidden">
+  <div class="modal-card">
+    <h3>Online in Room</h3>
+    <div id="online-members-list" class="gift-target-list"></div>
+    <button id="btn-close-online-members" class="btn btn-ghost btn-block">Close</button>
+  </div>
+</div>
+
+<div id="modal-room-password" class="modal-overlay hidden">
+  <div class="modal-card">
+    <h3>Room is Locked</h3>
+    <p class="field-label">Enter password to join</p>
+    <input id="room-password-input" type="password" class="field-solo" placeholder="Password" maxlength="32" autocomplete="off">
+    <div class="modal-actions">
+      <button id="btn-room-password-submit" class="btn btn-primary">Enter</button>
+      <button id="btn-room-password-cancel" class="btn btn-ghost">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ USER PROFILE BOTTOM SHEET (seat/member tap) ============ -->
+<div id="sheet-user-profile" class="sheet-overlay hidden">
+  <div class="sheet-backdrop" id="sheet-backdrop"></div>
+  <div class="sheet-card">
+    <div class="sheet-handle"></div>
+
+    <div class="sheet-profile-header">
+      <div class="avatar-frame-wrap avatar-frame-md" id="sheet-avatar-frame">
+        <img id="sheet-avatar" class="avatar avatar-md" src="" alt="">
+      </div>
+      <div class="sheet-profile-info">
+        <div class="sheet-name-row">
+          <h3 id="sheet-name"></h3>
+        </div>
+        <div class="sheet-badge-row">
+          <span id="sheet-vip-badge" class="vip-badge vip-0 hidden"></span>
+          <img id="sheet-svip-tag" class="svip-tag-img hidden" alt="SVIP">
+          <span id="sheet-tag-badge" class="tag-badge hidden"></span>
+        </div>
+        <div class="sheet-sub-row">
+          <span>ID: <span id="sheet-userid"></span></span>
+          <span class="chip-badge chip-level" id="sheet-level-chip">Lv.1</span>
+          <span id="sheet-followers-row">👥 <span id="sheet-followers">0</span> Followers</span>
+        </div>
+        <p id="sheet-bio" class="sheet-bio hidden"></p>
+      </div>
+    </div>
+
+    <div class="sheet-actions-row" id="sheet-quick-actions">
+      <button id="sheet-btn-profile" class="btn btn-ghost btn-sm">Profile</button>
+      <button id="sheet-btn-chat" class="btn btn-ghost btn-sm">Chat</button>
+      <button id="sheet-btn-mention" class="btn btn-ghost btn-sm">@ Mention</button>
+    </div>
+
+    <div class="relationship-actions hidden" id="sheet-relationship-actions">
+      <button id="sheet-btn-friendship" class="relationship-btn relationship-btn-friendship" type="button">🤝 Friendship</button>
+      <button id="sheet-btn-cp" class="relationship-btn relationship-btn-cp" type="button">💞 CP</button>
+    </div>
+    <div id="sheet-relationship-status" class="relationship-profile-status hidden"></div>
+
+    <div class="sheet-section hidden" id="sheet-admin-section">
+      <p class="field-label">Admin Controls</p>
+      <div class="sheet-admin-grid" id="sheet-admin-grid"></div>
+    </div>
+
+    <div class="sheet-bottom-actions hidden" id="sheet-bottom-actions">
+      <button id="sheet-btn-follow" class="btn btn-primary btn-block">Follow</button>
+      <button id="sheet-btn-gift" class="btn btn-accent btn-block">🎁 Send Gift</button>
+    </div>
+
+    <div class="sheet-bottom-actions hidden" id="sheet-own-actions">
+      <button id="sheet-btn-leave-seat" class="btn btn-ghost btn-block">Leave Seat</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PROFILE ============ -->
+<section id="view-profile" class="view pp-profile-skin">
+  <div class="pp-profile-shell">
+    <div class="pp-profile-hero">
+      <header class="pp-profile-header">
+        <div class="pp-header-spacer" aria-hidden="true"></div>
+        <h2>Me</h2>
+        <label class="logout-lock-row pp-logout-lock" title="When ON, this ID will never log out until you tap Logout yourself">
+          <span>🔒</span>
+          <input id="toggle-logout-lock" type="checkbox">
+        </label>
+        <label id="row-godpower-invisible" class="logout-lock-row hidden" title="When ON, you won't appear in the Member/Online list, but voice/seat stay normal">
+          <span>👻</span><input id="toggle-godpower-invisible" type="checkbox">
+        </label>
+      </header>
+
+      <div class="pp-profile-main">
+        <div class="pp-avatar-column">
+          <div class="avatar-upload-wrap avatar-frame-wrap avatar-frame-lg pp-avatar-ring" id="profile-avatar-frame">
+            <img id="profile-avatar" class="avatar avatar-lg pp-avatar" src="" alt="Profile photo">
+            <label for="profile-photo-input" class="avatar-edit-btn pp-avatar-edit" aria-label="Change profile photo">✎</label>
+            <input id="profile-photo-input" type="file" accept="image/*" class="hidden">
+          </div>
+        </div>
+
+        <div class="pp-profile-info">
+          <div class="pp-name-line">
+            <h2 id="profile-name-display" class="pp-name">User</h2>
+          </div>
+          <button id="menu-edit-profile" type="button" class="pp-edit-link">
+            <span>View or edit your profile</span><span>›</span>
+          </button>
+          <div class="pp-id-line">
+            <span class="pp-id-badge">ID</span>
+            <span id="profile-userid" class="pp-id-value"></span>
+            <button id="btn-copy-id" type="button" class="pp-copy-btn" title="Copy ID" aria-label="Copy ID">⧉</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="pp-stats">
+        <button type="button" class="pp-stat" data-follow-list="followers">
+          <strong id="profile-followers">0</strong><span>Followers</span>
+        </button>
+        <i></i>
+        <button type="button" class="pp-stat" data-follow-list="following">
+          <strong id="profile-following">0</strong><span>Following</span>
+        </button>
+        <i></i>
+        <button type="button" class="pp-stat">
+          <strong id="profile-visitors">0</strong><span>Visitors</span>
+        </button>
+      </div>
+
+      <div class="pp-badges">
+        <span id="profile-level-chip" class="chip-badge chip-level pp-level">Lv.1</span>
+        <span id="profile-vip-badge" class="vip-badge vip-0 pp-vip">VIP 0</span>
+        <img id="profile-svip-tag" class="svip-tag-img hidden pp-svip" alt="SVIP">
+        <span id="profile-tag-badge" class="tag-badge hidden pp-custom-tag"></span>
+        <span id="pp-gender-badge" class="pp-gender">♂</span>
+        <span id="pp-country-badge" class="pp-country">🇮🇳</span>
+      </div>
+    </div>
+
+    <div class="pp-menu-card">
+      <button id="menu-wallet" class="pp-menu-row" type="button">
+        <span class="pp-menu-icon pp-orange">💰</span>
+        <span class="pp-menu-label">Wallet</span>
+        <span class="pp-menu-values">
+          <span class="pp-coin"><img src="/images/icons/icon-coin.png" alt=""> <b id="menu-wallet-coins">0</b></span>
+          <span class="pp-diamond">◆ <b id="menu-wallet-diamonds">0</b></span>
+          <span class="pp-arrow">›</span>
+        </span>
+      </button>
+
+      <div class="pp-divider"></div>
+
+      <button id="menu-treasure" class="pp-menu-row" type="button">
+        <span class="pp-menu-icon pp-orange">🎁</span>
+        <span class="pp-menu-label">Treasure</span><span class="pp-arrow">›</span>
+      </button>
+
+      <div class="pp-divider"></div>
+
+      <button id="menu-frames" class="pp-menu-row" type="button">
+        <span class="pp-menu-icon pp-orange">✦</span>
+        <span class="pp-menu-label">Frames</span><span class="pp-arrow">›</span>
+      </button>
+
+      <div class="pp-divider"></div>
+
+      <button id="menu-agency" class="pp-menu-row hidden" type="button">
+        <span class="pp-menu-icon pp-orange">♛</span>
+        <span class="pp-menu-label">Agency</span><span class="pp-arrow">›</span>
+      </button>
+
+      <div class="pp-divider menu-agency-divider hidden"></div>
+
+      <button id="menu-coin-center" class="pp-menu-row hidden" type="button">
+        <span class="pp-menu-icon pp-orange">◎</span>
+        <span class="pp-menu-label">Coin Center</span><span class="pp-arrow">›</span>
+      </button>
+
+      <div class="pp-divider menu-coin-center-divider hidden"></div>
+
+      <button id="menu-host-center" class="pp-menu-row hidden" type="button">
+        <span class="pp-menu-icon pp-orange">♟</span>
+        <span class="pp-menu-label">Host Center</span><span class="pp-arrow">›</span>
+      </button>
+
+      <div class="pp-divider menu-host-center-divider hidden"></div>
+    </div>
+
+    <div id="profile-edit-panel" class="auth-card hidden pp-edit-panel">
+      <label class="field-label">Name</label>
+      <input id="profile-name-input" type="text" class="field-solo" placeholder="Your name">
+      <label class="field-label">Bio</label>
+      <textarea id="profile-bio-input" placeholder="Write a bio..." class="field-solo"></textarea>
+      <label class="field-label" data-i18n="ps_gender">Gender</label>
+      <div class="ps-gender-row" id="edit-gender-row">
+        <button type="button" class="ps-gender-pill" data-gender="Male"><span>♂</span> <span data-i18n="ps_male">Male</span></button>
+        <button type="button" class="ps-gender-pill" data-gender="Female"><span>♀</span> <span data-i18n="ps_female">Female</span></button>
+        <button type="button" class="ps-gender-pill" data-gender="Not Specified"><span>⚧</span> <span data-i18n="ps_not_specified">Not Specified</span></button>
+      </div>
+      <label class="field-label" for="edit-country" data-i18n="ps_country">Country</label>
+      <select id="edit-country" class="field-solo"></select>
+      <label class="field-label" for="edit-language" data-i18n="ps_language">Language</label>
+      <select id="edit-language" class="field-solo"></select>
+      <button id="btn-save-profile" class="btn btn-primary btn-block">Save</button>
+    </div>
+
+    <nav class="bottom-nav">
+      <button class="nav-btn" data-nav="home">🏠<span data-i18n="nav_home">Home</span></button>
+      <button class="nav-btn" data-nav="inbox">💬<span data-i18n="nav_inbox">Inbox</span></button>
+      <button class="nav-btn active" data-nav="profile">👤<span data-i18n="nav_profile">Profile</span></button>
+    </nav>
+  </div>
+</section>
+
+<!-- ============ WALLET ============ -->
+<section id="view-wallet" class="view wallet-v2">
+  <iframe id="wallet-ui-frame" title="PingPong Wallet" src="about:blank" style="display:block;width:100%;height:100%;min-height:calc(100vh - 72px);border:0;background:#F2F2F3;"></iframe>
+</section>
+
+<!-- ============ RECHARGE MODAL ============ -->
+<div id="recharge-modal" class="modal-overlay hidden">
+  <div class="modal-box recharge-modal-box">
+    <div class="modal-head">
+      <h3 id="recharge-step-title">Recharge</h3>
+      <button id="btn-recharge-close" class="icon-btn">✕</button>
+    </div>
+
+    <!-- Step 1: pick a package -->
+    <div id="recharge-step-package" class="recharge-step">
+      <div id="recharge-package-grid" class="recharge-package-grid"></div>
+      <p id="recharge-package-empty" class="hint hidden">No recharge packages are available right now.</p>
+    </div>
+
+    <!-- Step 2: pick a payment method -->
+    <div id="recharge-step-method" class="recharge-step hidden">
+      <p class="hint">Selected package: <span id="recharge-selected-summary"></span></p>
+      <p class="field-label">Select Payment Method</p>
+      <div id="recharge-method-list" class="recharge-method-list"></div>
+      <button id="btn-recharge-back-to-package" class="btn btn-ghost btn-block">← Back</button>
+    </div>
+
+    <!-- Step 3: pay + submit UTR -->
+    <div id="recharge-step-pay" class="recharge-step hidden">
+      <div class="auth-card">
+        <p class="hint">Pay <b id="recharge-pay-amount"></b> to:</p>
+        <p class="field-label" id="recharge-pay-upi"></p>
+        <p class="hint" id="recharge-pay-name"></p>
+        <p class="hint">Ref: <span id="recharge-pay-ref"></span></p>
+        <img id="recharge-pay-qr" class="hidden" style="width:160px;height:160px;margin:8px auto;display:block;" alt="UPI QR">
+        <p class="hint" id="recharge-pay-instructions"></p>
+      </div>
+      <button id="btn-recharge-open-app" class="btn btn-accent btn-block">Open Payment App</button>
+      <p class="hint" id="recharge-pay-fallback-note" style="text-align:center;">If the app didn't open automatically, tap the button above, or pay manually to the UPI ID shown.</p>
+      <label class="field-label">Transaction ID / UTR (from your payment app)</label>
+      <input id="recharge-utr-input" type="text" class="field-solo" placeholder="e.g. 123456789012" maxlength="64">
+      <button id="btn-recharge-submit" class="btn btn-primary btn-block">Submit for Verification</button>
+      <button id="btn-recharge-back-to-method" class="btn btn-ghost btn-block">← Back</button>
+      <p class="hint">Coins are credited only after an Admin verifies this payment. This is not instant.</p>
+    </div>
+
+    <!-- Step 4: pending confirmation -->
+    <div id="recharge-step-pending" class="recharge-step hidden">
+      <div class="auth-card" style="text-align:center;">
+        <p style="font-size:32px;">⏳</p>
+        <p class="field-label">Payment Submitted — Pending Verification</p>
+        <p class="hint">An Admin will verify your UTR and credit your Coins soon. You can check the status anytime in Recharge History.</p>
+        <button id="btn-recharge-done" class="btn btn-primary btn-block">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TREASURE BOX ============ -->
+<section id="view-treasure" class="view">
+  <header class="topbar">
+    <button class="icon-btn" data-back="view-profile">←</button>
+    <h2>Treasure Box</h2>
+  </header>
+  <main class="page-body">
+    <div class="treasure-card">
+      <div class="treasure-icon">🎁</div>
+      <h3>Daily Lucky Box</h3>
+      <p class="hint">Can open once a day</p>
+      <button id="btn-claim-daily" class="btn btn-primary btn-block">Open</button>
+    </div>
+    <div class="treasure-card">
+      <div class="treasure-icon">🏆</div>
+      <h3>Weekly Reward</h3>
+      <p class="hint">Once a week</p>
+      <button id="btn-claim-weekly" class="btn btn-accent btn-block">Open</button>
+    </div>
+  </main>
+</section>
+
+<!-- ============ FRAMES ============ -->
+<section id="view-frames" class="view">
+  <header class="topbar">
+    <button class="icon-btn" data-back="view-profile">←</button>
+    <h2>Frames</h2>
+  </header>
+  <main class="page-body">
+    <p class="hint">If Admin sends you a frame, it will show here as active. All catalog frames are shown below.</p>
+    <div id="active-frame-box" class="auth-card"></div>
+    <div class="section-head"><h2>Catalog</h2></div>
+    <div id="frame-catalog-list" class="gift-grid"></div>
+  </main>
+</section>
+
+<!-- ============ SHOP ============ -->
+<!-- Hub screen only — each tile opens whatever real system already backs
+     that item type. Frames -> reuses the existing view-frames/openFrames()
+     screen and /api/frames/* endpoints as-is (no new backend). Vehicles ->
+     the add-on Vehicle Entry System (see vehicles.js) — admin assigns
+     directly, no purchase step, same "select and use" UX as Frames.
+     Themes still has no per-user admin-grant system in this codebase
+     (Theme Library is a shared room-background list any owner can pick
+     from, not something Admin assigns to a specific user) — surfaced
+     honestly below rather than faked. -->
+<section id="view-shop" class="view">
+  <header class="topbar">
+    <button class="icon-btn" data-back="view-room">←</button>
+    <h2>🛍 Shop</h2>
+  </header>
+  <main class="page-body">
+    <p class="hint">Items Admin sends you show up here as your inventory.</p>
+    <div class="section-head"><h2>My Items</h2></div>
+    <div class="shop-hub-grid">
+      <button id="btn-shop-frames" class="shop-hub-tile">
+        <span class="shop-hub-icon">🖼️</span>
+        <span>Avatar Frames</span>
+      </button>
+      <button class="shop-hub-tile" disabled>
+        <span class="shop-hub-icon">🎨</span>
+        <span>Themes</span>
+        <span class="hint">Not available yet</span>
+      </button>
+      <button id="btn-shop-vehicles" class="shop-hub-tile">
+        <span class="shop-hub-icon">🚗</span>
+        <span>Vehicles</span>
+      </button>
+    </div>
+  </main>
+</section>
+
+<!-- ============ MY VEHICLES (Vehicle Entry System add-on) ============ -->
+<section id="view-vehicles" class="view">
+  <header class="topbar">
+    <button class="icon-btn" data-back="view-shop">←</button>
+    <h2>My Vehicles</h2>
+  </header>
+  <main class="page-body">
+    <p class="hint">If Admin sends you a Vehicle, it shows here. Pick one as Active to play its entry animation when you join a room.</p>
+    <div id="vehicle-list" class="gift-grid"></div>
+    <p id="vehicle-list-empty" class="hint hidden">No Vehicles assigned yet.</p>
+  </main>
+</section>
+
+
+<!-- ============ AGENCY CENTER ============ -->
+<section id="view-agency" class="view">
+  <header class="topbar">
+    <button class="icon-btn" data-back="view-profile">←</button>
+    <h2>Agency Center</h2>
+  </header>
+  <main class="page-body" id="agency-body"></main>
+</section>
+
+<!-- ============ HOST CENTER ============ -->
+<section id="view-host-center" class="view">
+  <header class="topbar">
+    <button class="icon-btn" data-back="view-profile">←</button>
+    <h2>Host Center</h2>
+  </header>
+  <main class="page-body">
+    <div class="stat-grid">
+      <div class="stat-box"><span class="stat-label">Daily Gifts</span><span class="stat-value" id="hc-daily-gifts">0</span></div>
+      <div class="stat-box"><span class="stat-label">Weekly Gifts</span><span class="stat-value" id="hc-weekly-gifts">0</span></div>
+      <div class="stat-box"><span class="stat-label">Monthly Gifts</span><span class="stat-value" id="hc-monthly-gifts">0</span></div>
+      <div class="stat-box"><span class="stat-label">Total Gifts</span><span class="stat-value" id="hc-total-gifts">0</span></div>
+      <div class="stat-box"><span class="stat-label">Total Diamonds</span><span class="stat-value"><img src="/images/icons/icon-diamond.png" class="currency-icon" alt="diamond"> <span id="hc-total-diamonds">0</span></span></div>
+      <div class="stat-box"><span class="stat-label">Estimated Coin Value</span><span class="stat-value"><img src="/images/icons/icon-coin.png" class="currency-icon" alt="coin"> <span id="hc-coin-value">0</span></span></div>
+    </div>
+    <div class="section-head"><h2>Gift Details</h2></div>
+    <div class="social-tabs" id="hc-period-tabs">
+      <button class="social-tab active" data-period="all" type="button">All</button>
+      <button class="social-tab" data-period="daily" type="button">Today</button>
+      <button class="social-tab" data-period="weekly" type="button">This Week</button>
+      <button class="social-tab" data-period="monthly" type="button">This Month</button>
+    </div>
+    <div id="hc-gift-list" class="user-list"></div>
+    <div id="hc-gift-empty" class="empty-state hidden"><p>No gifts yet.</p></div>
+  </main>
+</section>
+
+<!-- ============ COIN CENTER (Agency-style operator panel) ============ -->
+<section id="view-coin-center" class="view">
+  <header class="topbar">
+    <button class="icon-btn" data-back="view-profile">←</button>
+    <h2>Coin Center</h2>
+  </header>
+  <main class="page-body">
+    <div class="auth-card">
+      <p class="hint">Your Coin Center Balance</p>
+      <p style="font-size:22px;font-weight:700;"><img src="/images/icons/icon-coin.png" class="currency-icon" alt="coin"> <span id="cc-my-balance">0</span></p>
+    </div>
+    <div class="section-head"><h2>Find User and Send Coins</h2></div>
+    <div class="field-row">
+      <input id="cc-op-search" type="text" class="field-solo" placeholder="Enter User ID">
+      <button id="btn-cc-op-search" class="btn btn-ghost">Search</button>
+    </div>
+    <div id="cc-op-user-card" class="auth-card hidden"></div>
+    <input id="cc-op-amount" type="number" min="1" step="1" class="field-solo" placeholder="Coin Amount">
+    <input id="cc-op-reason" type="text" class="field-solo" placeholder="Reason / Note (optional)" maxlength="200">
+    <button id="btn-cc-op-send" class="btn btn-primary btn-block" disabled>Send Coins</button>
+
+    <div class="section-head"><h2>Recent Transactions</h2></div>
+    <div id="cc-op-log" class="user-list"></div>
+  </main>
+</section>
+
+<!-- ============ FOLLOW LIST ============ -->
+<section id="view-follow-list" class="view">
+  <header class="topbar">
+    <button id="btn-back-follow-list" class="icon-btn">←</button>
+    <h2 id="follow-list-title">Followers</h2>
+  </header>
+  <main class="page-body">
+    <div id="follow-list-items" class="user-list"></div>
+    <div id="follow-list-empty" class="empty-state hidden"><p>No one yet.</p></div>
+  </main>
+</section>
+
+<!-- ============ OTHER USER PROFILE ============ -->
+<section id="view-other-profile" class="view">
+  <header class="topbar">
+    <button id="btn-back-other-profile" class="icon-btn">←</button>
+    <h2>Profile</h2>
+  </header>
+  <main class="page-body">
+    <div class="profile-hero">
+      <div class="avatar-frame-wrap avatar-frame-lg" id="other-avatar-frame">
+        <img id="other-avatar" class="avatar avatar-lg" src="" alt="">
+        <img id="other-blue-badge" class="profile-blue-badge hidden" src="/images/badges/blue_diamond_v.png" alt="Blue Diamond V">
+      </div>
+      <span id="other-vip-badge" class="vip-badge vip-0">VIP 0</span>
+      <img id="other-svip-tag" class="svip-tag-img hidden" alt="SVIP">
+      <span id="other-tag-badge" class="tag-badge hidden"></span>
+      <h3 id="other-name"></h3>
+      <div class="id-tag">ID: <span id="other-userid"></span></div>
+      <div class="modal-actions">
+        <button id="btn-follow-toggle" class="btn btn-primary">Follow</button>
+        <button id="btn-message-user" class="btn btn-accent">Message</button>
+        <!-- Call Hosting: hidden by default, shown only for approved hosts — see chApplyCallButtonVisibility() -->
+        <button id="btn-call-host-audio" class="btn btn-accent hidden">📞 Call</button>
+        <button id="btn-call-host-video" class="btn btn-accent hidden">🎥 Video Call</button>
+      </div>
+      <div id="other-relationship-actions" class="relationship-actions profile-relationship-actions">
+        <button id="btn-other-friendship" class="relationship-btn relationship-btn-friendship" type="button">🤝 Friendship</button>
+        <button id="btn-other-cp" class="relationship-btn relationship-btn-cp" type="button">💞 CP</button>
+      </div>
+      <div id="other-relationship-status" class="relationship-profile-status hidden"></div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-box"><span id="other-followers" class="stat-num">0</span><span class="stat-label">Followers</span></div>
+      <div class="stat-box"><span id="other-following" class="stat-num">0</span><span class="stat-label">Following</span></div>
+      <div class="stat-box"><span id="other-level" class="stat-num">1</span><span class="stat-label">Level</span></div>
+    </div>
+  </main>
+</section>
+
+<!-- ============ INBOX ============ -->
+<section id="view-inbox" class="view">
+  <header class="topbar"><h2>Inbox</h2></header>
+  <main class="page-body">
+    <div id="inbox-list" class="user-list"></div>
+    <div id="inbox-empty" class="empty-state hidden"><p>No messages.</p></div>
+  </main>
+  <nav class="bottom-nav">
+    <button class="nav-btn" data-nav="home">🏠<span data-i18n="nav_home">Home</span></button>
+    <button class="nav-btn active" data-nav="inbox">💬<span data-i18n="nav_inbox">Inbox</span></button>
+    <button class="nav-btn" data-nav="profile">👤<span data-i18n="nav_profile">Profile</span></button>
+  </nav>
+</section>
+
+<!-- ============ MESSAGE THREAD ============ -->
+<section id="view-thread" class="view">
+  <header class="topbar">
+    <button id="btn-back-thread" class="icon-btn">←</button>
+    <h2 id="thread-title">Chat</h2>
+    <div class="thread-call-btns">
+      <button id="btn-thread-audio-call" class="icon-btn" title="Audio call">📞</button>
+      <button id="btn-thread-video-call" class="icon-btn" title="Video call">🎥</button>
+    </div>
+  </header>
+  <div id="thread-log" class="chat-log thread-log"></div>
+  <div class="room-toolbar">
+    <input id="thread-input" type="text" placeholder="Type a message..." class="chat-input">
+    <button id="btn-thread-send" class="tool-btn tool-btn-accent">➤</button>
+  </div>
+</section>
+
+
+
+<!-- ============ PRIVATE AUDIO/VIDEO CALL OVERLAY ============
+     One overlay covers both the incoming-ring screen and the in-call
+     screen (audio + video); app.js toggles a couple of classes/hidden
+     states on it depending on the call's current stage. Lives outside
+     the normal .view stack (position:fixed, own z-index) so it can pop
+     up over any screen — Inbox, thread, home — the moment a call comes
+     in. -->
+<div id="call-overlay" class="call-overlay hidden">
+  <div id="call-video-remote-wrap" class="call-video-remote-wrap hidden">
+    <video id="call-video-remote" playsinline autoplay></video>
+    <video id="call-video-local" class="call-video-local" playsinline autoplay muted></video>
+  </div>
+
+  <div class="call-info">
+    <img id="call-peer-photo" class="call-peer-photo" alt="">
+    <div id="call-peer-name" class="call-peer-name">User</div>
+    <div id="call-status-text" class="call-status-text">Calling...</div>
+  </div>
+
+  <!-- Incoming call (callee, before accept/reject) -->
+  <div id="call-incoming-actions" class="call-incoming-actions hidden">
+    <button id="btn-call-reject" class="call-round-btn call-round-btn-reject" title="Decline">✕</button>
+    <button id="btn-call-accept" class="call-round-btn call-round-btn-accept" title="Accept">📞</button>
+  </div>
+
+  <!-- Active call controls (both sides, once connecting/connected) -->
+  <div id="call-active-controls" class="call-active-controls hidden">
+    <button id="btn-call-mute" class="call-ctrl-btn" title="Mute">🎤</button>
+    <button id="btn-call-speaker" class="call-ctrl-btn" title="Speaker">🔊</button>
+    <button id="btn-call-camera-toggle" class="call-ctrl-btn hidden" title="Camera on/off">📷</button>
+    <button id="btn-call-camera-switch" class="call-ctrl-btn hidden" title="Switch camera">🔄</button>
+    <button id="btn-call-hangup" class="call-round-btn call-round-btn-reject" title="End call">☎</button>
+  </div>
+
+  <!-- Outgoing call (caller, waiting to be answered) — just a cancel button -->
+  <div id="call-outgoing-actions" class="call-outgoing-actions hidden">
+    <button id="btn-call-cancel" class="call-round-btn call-round-btn-reject" title="Cancel">✕</button>
+  </div>
+</div>
+
+<!-- CALL HOSTING — paid Voice/Video calls to approved hosts. Deliberately a
+     separate overlay/DOM/button-set from #call-overlay above (the free
+     private-inbox call feature) so nothing here ever shares a click
+     listener with it — the only thing reused is getIceServers() (a
+     read-only helper) and the same WebRTC APIs, per the "reuse existing
+     architecture, don't rebuild the call engine" requirement, without
+     touching a single line of the existing call:* code above. -->
+<div id="hostcall-overlay" class="call-overlay hidden">
+  <div id="hostcall-video-remote-wrap" class="call-video-remote-wrap hidden">
+    <video id="hostcall-video-remote" playsinline autoplay></video>
+    <video id="hostcall-video-local" class="call-video-local" playsinline autoplay muted></video>
+  </div>
+  <div class="call-info">
+    <img id="hostcall-peer-photo" class="call-peer-photo" alt="">
+    <div id="hostcall-peer-name" class="call-peer-name">Host</div>
+    <div id="hostcall-status-text" class="call-status-text">Calling...</div>
+    <div id="hostcall-billing-text" class="call-status-text" style="font-size:13px;opacity:.85;"></div>
+  </div>
+  <div id="hostcall-incoming-actions" class="call-incoming-actions hidden">
+    <button id="btn-hostcall-reject" class="call-round-btn call-round-btn-reject" title="Decline">✕</button>
+    <button id="btn-hostcall-accept" class="call-round-btn call-round-btn-accept" title="Accept">📞</button>
+  </div>
+  <div id="hostcall-active-controls" class="call-active-controls hidden">
+    <button id="btn-hostcall-mute" class="call-ctrl-btn" title="Mute">🎤</button>
+    <button id="btn-hostcall-hangup" class="call-round-btn call-round-btn-reject" title="End call">☎</button>
+  </div>
+  <div id="hostcall-outgoing-actions" class="call-outgoing-actions hidden">
+    <button id="btn-hostcall-cancel" class="call-round-btn call-round-btn-reject" title="Cancel">✕</button>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<!-- Firebase Auth Migration — Phase C. Compat SDK (no bundler in this
+     project, so the compat build keeps this a plain <script> include like
+     everything else here). Loaded before app.js/firebaseClient.js so
+     `firebase` is defined when they run. -->
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="firebaseClient.js?v=20260804a"></script>
+<!-- YouTube Room Player — official IFrame Player API, loaded once app-wide.
+     Only used when a room actually turns Video Mode on; does nothing otherwise. -->
+<script src="https://www.youtube.com/iframe_api"></script>
+<script src="i18n.js?v=20260726"></script>
+<!-- Phase 3 / Step 3.3: client-side SFU (LiveKit) integration. Additive —
+     defines window.PingPongVoiceSFU and otherwise does nothing at load
+     time (no network request, no SDK download) unless app.js actually
+     calls connect(), which only happens when GET /api/voice-sfu/mode
+     reports the server is running VOICE_MODE=sfu. Loaded before app.js so
+     window.PingPongVoiceSFU exists by the time app.js's SFU branch could
+     ever call it. -->
+<script src="voice-sfu.js?v=20260807a"></script>
+<script src="app.js?v=20260814-robin-final"></script>
+<script src="vapi-support.js?v=20260814-robin-final"></script>
+<script src="bannerSlider.js?v=20260727"></script>
+<!-- Emoji Reaction feature: dotLottie web component renders the .lottie
+     files as-is (no re-export/conversion) and gives each avatar overlay
+     its own independent canvas, so simultaneous reactions from many users
+     never share animation state. Loaded as a module (required for the
+     component), emojiReaction.js itself is a plain classic script so it
+     can read app.js's existing `socket`/`me`/`currentRoomId` state. -->
+<script type="module" src="https://unpkg.com/@lottiefiles/dotlottie-wc@latest/dist/dotlottie-wc.js"></script>
+<script src="emojiReaction.js?v=20260728"></script>
+</body>
+</html>

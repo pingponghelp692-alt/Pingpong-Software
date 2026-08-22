@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="pp_gold">#F0A868</color>
+    <color name="pp_splash_background">#241A31</color>
+    <string name="app_name">Ping Pong</string>
+    <string name="app_short_name">Ping Pong</string>
+    <string name="notification_channel_description">Ping Pong app notifications</string>
+    <string name="notification_channel_name">Ping Pong notifications</string>
+    <string name="voice_notification_text">Tap to return to your room</string>
+    <string name="voice_notification_title">Ping Pong voice room active</string>
+    <style name="Theme.PingPong" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/pp_splash_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_pingpong_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.PingPongPostSplash</item>
+    </style>
+    <style name="Theme.PingPongPostSplash" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:navigationBarColor">@color/pp_splash_background</item>
+        <item name="android:statusBarColor">@color/pp_splash_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

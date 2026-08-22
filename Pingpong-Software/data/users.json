@@ -1,0 +1,52 @@
+{
+  "8101221193": {
+    "userId": "20486928",
+    "name": "Rohan",
+    "mobile": "8101221193",
+    "photo": "",
+    "followers": 0,
+    "following": 0,
+    "followersList": [],
+    "followingList": [],
+    "visitors": 0,
+    "coins": 100,
+    "diamonds": 100000,
+    "level": 1,
+    "idLevel": 0,
+    "lifetimeGiftSent": 0,
+    "vipLevel": 5,
+    "banned": false,
+    "verified": false,
+    "agencyId": null,
+    "isHost": true,
+    "isCoinCenter": false,
+    "activeFrame": null,
+    "customTag": null,
+    "nameEffect": null,
+    "lastDailyRewardAt": null,
+    "lastWeeklyRewardAt": null,
+    "recentRooms": [
+      {
+        "roomId": "f6002f66cd",
+        "roomNumber": "20486928",
+        "roomName": "Offical",
+        "hostId": "20486928",
+        "hostName": "Rohan",
+        "lastVisitAt": "2026-08-20T05:04:08.181Z"
+      }
+    ],
+    "groups": [],
+    "countryId": "IN",
+    "profile_completed": true,
+    "gender": "Male",
+    "country": "IN",
+    "language": "en",
+    "svipWealth": 0,
+    "svipLevel": 0,
+    "svipMembershipType": "permanent",
+    "svipExpireAt": null,
+    "svipExpiryWarned": false,
+    "assignedTagLevel": null,
+    "vehicleInventory": []
+  }
+}

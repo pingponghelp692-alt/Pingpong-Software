@@ -1,0 +1,47 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.pingpong.voice.app-mergeDebugResources-28:/values-v31/values-v31.xml",
+            "map": [
+                {
+                    "source": "/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/res/values-v31/themes.xml",
+                    "from": {
+                        "startLines": "1,6",
+                        "startColumns": "4,4",
+                        "startOffsets": "16,344",
+                        "endLines": "5,11",
+                        "endColumns": "12,12",
+                        "endOffsets": "339,729"
+                    },
+                    "to": {
+                        "startLines": "2,7",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,383",
+                        "endLines": "6,12",
+                        "endColumns": "12,12",
+                        "endOffsets": "378,768"
+                    }
+                },
+                {
+                    "source": "/data/data/com.termux/files/home/.gradle/caches/8.9/transforms/257bf4ceb08cb5df5eb1f505df117e22/transformed/core-splashscreen-1.0.1/res/values-v31/values-v31.xml",
+                    "from": {
+                        "startLines": "2,9",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,473",
+                        "endLines": "8,13",
+                        "endColumns": "12,12",
+                        "endOffsets": "468,697"
+                    },
+                    "to": {
+                        "startLines": "13,20",
+                        "startColumns": "4,4",
+                        "startOffsets": "773,1191",
+                        "endLines": "19,24",
+                        "endColumns": "12,12",
+                        "endOffsets": "1186,1415"
+                    }
+                }
+            ]
+        }
+    ]
+}

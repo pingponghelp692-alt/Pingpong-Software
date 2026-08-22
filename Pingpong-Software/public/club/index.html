@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PingPong Club</title>
+<link rel="stylesheet" href="/club/club.css">
+</head>
+<body>
+<div id="clubApp" class="club-app">
+  <header class="club-header">
+    <button class="icon-btn" data-action="back" aria-label="Back">‹</button>
+    <h1>Club</h1>
+    <button class="icon-btn" data-action="help" aria-label="Help">?</button>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="recommend">Recommend</button>
+    <button class="tab" data-tab="ranking">Ranking</button>
+  </div>
+
+  <main>
+    <section id="recommendView" class="view active">
+      <div class="hero">
+        <div>
+          <div class="eyebrow">YOUR CLUB</div>
+          <h2 id="myClubName">No club yet</h2>
+          <p id="myClubMeta">Create or join a club to start.</p>
+        </div>
+        <div id="myClubBadge" class="club-badge">—</div>
+      </div>
+
+      <div id="clubActions" class="action-row"></div>
+      <div id="recommendList" class="card-list"></div>
+    </section>
+
+    <section id="rankingView" class="view">
+      <div class="ranking-head">
+        <div>
+          <div class="eyebrow">MONTHLY CLUB RANKING</div>
+          <h2 id="rankingPeriod">—</h2>
+        </div>
+        <button class="small-btn" data-action="refresh">Refresh</button>
+      </div>
+      <div id="topThree" class="top-three"></div>
+      <div id="rankingList" class="ranking-list"></div>
+    </section>
+  </main>
+
+  <button class="create-btn" data-action="create">＋ <span>Create a Club</span></button>
+
+  <div id="modal" class="modal hidden">
+    <div class="modal-card">
+      <button class="modal-close" data-action="closeModal">×</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+</div>
+<script src="/club/club.js"></script>
+</body>
+</html>

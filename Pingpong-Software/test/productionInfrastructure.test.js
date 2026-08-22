@@ -1,0 +1,17 @@
+'use strict';
+const assert=require('assert');
+const cfg=require('../integration_update/config');
+const mw=require('../integration_update/middleware');
+const admin=require('../integration_update/admin_updates');
+const {listMigrations}=require('../integration_update/database');
+const files=listMigrations();
+assert.ok(files.some(x=>x.module==='module4_wallet_ledger'),'module4 wallet migration is discoverable');
+assert.throws(()=>cfg.getConfig({NODE_ENV:'production'}),/Missing production configuration/);
+const c=cfg.getConfig({NODE_ENV:'production',ADMIN_USERNAME:'owner',ADMIN_PASSWORD:'strong',METRICS_TOKEN:'token'});
+assert.strictEqual(c.production,true);
+assert.strictEqual(c.port,3000);
+assert.strictEqual(mw.requestId.length,3);
+assert.strictEqual(mw.noStore.length,1);
+assert.ok(admin.list().some(x=>x.name==='merchants'));
+assert.deepStrictEqual(admin.visibleFor(['merchant:view']).map(x=>x.name),['merchants']);
+console.log('Production infrastructure assertions: 7 passed, 0 failed');

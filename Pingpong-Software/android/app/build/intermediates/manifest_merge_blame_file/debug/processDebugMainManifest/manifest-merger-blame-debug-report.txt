@@ -1,0 +1,215 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.pingpong.voice.debug"
+4    android:versionCode="3"
+5    android:versionName="1.2.0-debug" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+9        android:targetSdkVersion="35" />
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:4:5-67
+11-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:4:22-64
+12    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+12-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:5:5-79
+12-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:5:22-76
+13    <uses-permission android:name="android.permission.CAMERA" />
+13-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:6:5-65
+13-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:6:22-62
+14    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+14-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:7:5-71
+14-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:7:22-68
+15    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+15-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:8:5-77
+15-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:8:22-74
+16    <uses-permission android:name="android.permission.VIBRATE" />
+16-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:9:5-66
+16-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:9:22-63
+17    <uses-permission android:name="android.permission.WAKE_LOCK" />
+17-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:10:5-68
+17-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:10:22-65
+18    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+18-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:11:5-80
+18-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:11:22-77
+19    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+19-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:12:5-76
+19-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:12:22-73
+20    <uses-permission
+20-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:13:5-120
+21        android:name="android.permission.BLUETOOTH_SCAN"
+21-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:13:22-70
+22        android:usesPermissionFlags="neverForLocation" />
+22-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:13:71-117
+23    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+23-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:14:5-77
+23-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:14:22-74
+24    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
+24-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:15:5-88
+24-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:15:22-85
+25
+26    <permission
+26-->[androidx.core:core:1.15.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/3e85dc3a27e7bbf172ac49206d18ddee/transformed/core-1.15.0/AndroidManifest.xml:22:5-24:47
+27        android:name="com.pingpong.voice.debug.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+27-->[androidx.core:core:1.15.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/3e85dc3a27e7bbf172ac49206d18ddee/transformed/core-1.15.0/AndroidManifest.xml:23:9-81
+28        android:protectionLevel="signature" />
+28-->[androidx.core:core:1.15.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/3e85dc3a27e7bbf172ac49206d18ddee/transformed/core-1.15.0/AndroidManifest.xml:24:9-44
+29
+30    <uses-permission android:name="com.pingpong.voice.debug.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+30-->[androidx.core:core:1.15.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/3e85dc3a27e7bbf172ac49206d18ddee/transformed/core-1.15.0/AndroidManifest.xml:26:5-97
+30-->[androidx.core:core:1.15.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/3e85dc3a27e7bbf172ac49206d18ddee/transformed/core-1.15.0/AndroidManifest.xml:26:22-94
+31
+32    <application
+33        android:name="com.pingpong.voice.PingPongApplication"
+33-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:18:9-62
+34        android:allowBackup="true"
+34-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:19:9-35
+35        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+35-->[androidx.core:core:1.15.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/3e85dc3a27e7bbf172ac49206d18ddee/transformed/core-1.15.0/AndroidManifest.xml:28:18-86
+36        android:dataExtractionRules="@xml/data_extraction_rules"
+36-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:20:9-65
+37        android:debuggable="true"
+38        android:extractNativeLibs="false"
+39        android:fullBackupContent="@xml/backup_rules"
+39-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:21:9-54
+40        android:hardwareAccelerated="true"
+40-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:28:9-43
+41        android:icon="@drawable/ic_pingpong_logo"
+41-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:24:9-50
+42        android:label="@string/app_name"
+42-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:26:9-41
+43        android:networkSecurityConfig="@xml/network_security_config"
+43-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:22:9-69
+44        android:roundIcon="@drawable/ic_pingpong_logo"
+44-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:25:9-55
+45        android:supportsRtl="true"
+45-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:27:9-35
+46        android:theme="@style/Theme.PingPong"
+46-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:29:9-46
+47        android:usesCleartextTraffic="false" >
+47-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:23:9-57
+48        <activity
+48-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:31:9-41:20
+49            android:name="com.pingpong.voice.MainActivity"
+49-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:32:13-59
+50            android:configChanges="orientation|screenSize|keyboardHidden|uiMode|smallestScreenSize|layoutDirection|locale"
+50-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:35:13-123
+51            android:exported="true"
+51-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:33:13-36
+52            android:screenOrientation="portrait"
+52-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:34:13-49
+53            android:windowSoftInputMode="adjustResize" >
+53-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:36:13-55
+54            <intent-filter>
+54-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:37:13-40:29
+55                <action android:name="android.intent.action.MAIN" />
+55-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:38:17-69
+55-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:38:25-66
+56
+57                <category android:name="android.intent.category.LAUNCHER" />
+57-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:39:17-77
+57-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:39:27-74
+58            </intent-filter>
+59        </activity>
+60
+61        <service
+61-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:43:9-46:58
+62            android:name="com.pingpong.voice.VoiceForegroundService"
+62-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:44:13-69
+63            android:exported="false"
+63-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:45:13-37
+64            android:foregroundServiceType="microphone" />
+64-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:46:13-55
+65
+66        <!--
+67             FIX (2026-08-14 Android production audit): app/src/main/res/xml/file_paths.xml
+68             already existed in the project but was never actually wired up — there was no
+69             <provider> declaring it, so any code path that needed a content:// URI for a
+70             freshly-captured photo (camera capture from a file-upload <input>) had no way
+71             to get one. See MainActivity's onShowFileChooser for the camera-capture intent
+72             this authority is used by.
+73        -->
+74        <provider
+75            android:name="androidx.core.content.FileProvider"
+75-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:55:13-62
+76            android:authorities="com.pingpong.voice.debug.fileprovider"
+76-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:56:13-64
+77            android:exported="false"
+77-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:57:13-37
+78            android:grantUriPermissions="true" >
+78-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:58:13-47
+79            <meta-data
+79-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:59:13-61:54
+80                android:name="android.support.FILE_PROVIDER_PATHS"
+80-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:60:17-67
+81                android:resource="@xml/file_paths" />
+81-->/data/data/com.termux/files/home/PingPong-LuckyFruit-Full-Fix-2026-08-22-FINAL-v3/src/Pingpong-Software/android/app/src/main/AndroidManifest.xml:61:17-51
+82        </provider>
+83        <provider
+83-->[androidx.emoji2:emoji2:1.3.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/268b965e38ac6c3d7965eb62437bdecd/transformed/emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
+84            android:name="androidx.startup.InitializationProvider"
+84-->[androidx.emoji2:emoji2:1.3.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/268b965e38ac6c3d7965eb62437bdecd/transformed/emoji2-1.3.0/AndroidManifest.xml:25:13-67
+85            android:authorities="com.pingpong.voice.debug.androidx-startup"
+85-->[androidx.emoji2:emoji2:1.3.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/268b965e38ac6c3d7965eb62437bdecd/transformed/emoji2-1.3.0/AndroidManifest.xml:26:13-68
+86            android:exported="false" >
+86-->[androidx.emoji2:emoji2:1.3.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/268b965e38ac6c3d7965eb62437bdecd/transformed/emoji2-1.3.0/AndroidManifest.xml:27:13-37
+87            <meta-data
+87-->[androidx.emoji2:emoji2:1.3.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/268b965e38ac6c3d7965eb62437bdecd/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+88                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+88-->[androidx.emoji2:emoji2:1.3.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/268b965e38ac6c3d7965eb62437bdecd/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
+89                android:value="androidx.startup" />
+89-->[androidx.emoji2:emoji2:1.3.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/268b965e38ac6c3d7965eb62437bdecd/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
+90            <meta-data
+90-->[androidx.lifecycle:lifecycle-process:2.6.2] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/36c498859f8ef032ab3bccbc4ca6ea99/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:29:13-31:52
+91                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+91-->[androidx.lifecycle:lifecycle-process:2.6.2] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/36c498859f8ef032ab3bccbc4ca6ea99/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:30:17-78
+92                android:value="androidx.startup" />
+92-->[androidx.lifecycle:lifecycle-process:2.6.2] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/36c498859f8ef032ab3bccbc4ca6ea99/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:31:17-49
+93            <meta-data
+93-->[androidx.profileinstaller:profileinstaller:1.4.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19a04c9820552e8deab86a79cc2427e8/transformed/profileinstaller-1.4.0/AndroidManifest.xml:29:13-31:52
+94                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+94-->[androidx.profileinstaller:profileinstaller:1.4.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19a04c9820552e8deab86a79cc2427e8/transformed/profileinstaller-1.4.0/AndroidManifest.xml:30:17-85
+95                android:value="androidx.startup" />
+95-->[androidx.profileinstaller:profileinstaller:1.4.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19a04c9820552e8deab86a79cc2427e8/transformed/profileinstaller-1.4.0/AndroidManifest.xml:31:17-49
+96        </provider>
+97
+98        <receiver
+98-->[androidx.profileinstaller:profileinstaller:1.4.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19a04c9820552e8deab86a79cc2427e8/transformed/profileinstaller-1.4.0/AndroidManifest.xml:34:9-52:20
+99            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+99-->[androidx.profileinstaller:profileinstaller:1.4.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19a04c9820552e8deab86a79cc2427e8/transformed/profileinstaller-1.4.0/AndroidManifest.xml:35:13-76
+100            android:directBootAware="false"
+100-->[androidx.profileinstaller:profileinstaller:1.4.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19a04c9820552e8deab86a79cc2427e8/transformed/profileinstaller-1.4.0/AndroidManifest.xml:36:13-44
+101            android:enabled="true"
+101-->[androidx.profileinstaller:profileinstaller:1.4.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19a04c9820552e8deab86a79cc2427e8/transformed/profileinstaller-1.4.0/AndroidManifest.xml:37:13-35
+102            android:exported="true"
+102-->[androidx.profileinstaller:profileinstaller:1.4.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19a04c9820552e8deab86a79cc2427e8/transformed/profileinstaller-1.4.0/AndroidManifest.xml:38:13-36
+103            android:permission="android.permission.DUMP" >
+103-->[androidx.profileinstaller:profileinstaller:1.4.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19a04c9820552e8deab86a79cc2427e8/transformed/profileinstaller-1.4.0/AndroidManifest.xml:39:13-57
+104            <intent-filter>
+104-->[androidx.profileinstaller:profileinstaller:1.4.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19a04c9820552e8deab86a79cc2427e8/transformed/profileinstaller-1.4.0/AndroidManifest.xml:40:13-42:29
+105                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+105-->[androidx.profileinstaller:profileinstaller:1.4.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19a04c9820552e8deab86a79cc2427e8/transformed/profileinstaller-1.4.0/AndroidManifest.xml:41:17-91
+105-->[androidx.profileinstaller:profileinstaller:1.4.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19a04c9820552e8deab86a79cc2427e8/transformed/profileinstaller-1.4.0/AndroidManifest.xml:41:25-88
+106            </intent-filter>
+107            <intent-filter>
+107-->[androidx.profileinstaller:profileinstaller:1.4.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19a04c9820552e8deab86a79cc2427e8/transformed/profileinstaller-1.4.0/AndroidManifest.xml:43:13-45:29
+108                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+108-->[androidx.profileinstaller:profileinstaller:1.4.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19a04c9820552e8deab86a79cc2427e8/transformed/profileinstaller-1.4.0/AndroidManifest.xml:44:17-85
+108-->[androidx.profileinstaller:profileinstaller:1.4.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19a04c9820552e8deab86a79cc2427e8/transformed/profileinstaller-1.4.0/AndroidManifest.xml:44:25-82
+109            </intent-filter>
+110            <intent-filter>
+110-->[androidx.profileinstaller:profileinstaller:1.4.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19a04c9820552e8deab86a79cc2427e8/transformed/profileinstaller-1.4.0/AndroidManifest.xml:46:13-48:29
+111                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+111-->[androidx.profileinstaller:profileinstaller:1.4.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19a04c9820552e8deab86a79cc2427e8/transformed/profileinstaller-1.4.0/AndroidManifest.xml:47:17-88
+111-->[androidx.profileinstaller:profileinstaller:1.4.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19a04c9820552e8deab86a79cc2427e8/transformed/profileinstaller-1.4.0/AndroidManifest.xml:47:25-85
+112            </intent-filter>
+113            <intent-filter>
+113-->[androidx.profileinstaller:profileinstaller:1.4.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19a04c9820552e8deab86a79cc2427e8/transformed/profileinstaller-1.4.0/AndroidManifest.xml:49:13-51:29
+114                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+114-->[androidx.profileinstaller:profileinstaller:1.4.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19a04c9820552e8deab86a79cc2427e8/transformed/profileinstaller-1.4.0/AndroidManifest.xml:50:17-95
+114-->[androidx.profileinstaller:profileinstaller:1.4.0] /data/data/com.termux/files/home/.gradle/caches/8.9/transforms/19a04c9820552e8deab86a79cc2427e8/transformed/profileinstaller-1.4.0/AndroidManifest.xml:50:25-92
+115            </intent-filter>
+116        </receiver>
+117    </application>
+118
+119</manifest>
