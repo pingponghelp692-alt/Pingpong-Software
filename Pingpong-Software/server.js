@@ -1748,6 +1748,14 @@ app.post("/api/auth/send-otp", otpLimiter, async (req, res) => {
             return res.json({ success: true, message: "OTP sent.", testMode: true });
         }
 
+        const OTP_TEST_MODE = String(process.env.OTP_TEST_MODE || "").trim().toLowerCase() === "true";
+        const OTP_TEST_CODE = String(process.env.OTP_TEST_CODE || "123456").trim();
+
+        if (OTP_TEST_MODE) {
+            console.log(`[otp-test] Test OTP ready for ${otpService.maskMobile(mobile)}`);
+            return res.json({ success: true, message: "OTP sent.", testMode: true });
+        }
+
         const ttlMin = Math.max(1, Math.round(otpService.OTP_TTL_MS / 60000));
         const smsText = `${APP_NAME} verification code: ${issued.otp}\nValid for ${ttlMin} minutes.\nDo not share this code.`;
         const smsResult = await smsGateway.sendSms({ to: "+91" + mobile, message: smsText });
