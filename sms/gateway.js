@@ -1,37 +1,50 @@
-// ==================================================
-// SMS GATEWAY — abstraction layer (2026-08-16)
-// ==================================================
-// This is the ONLY entry point the authentication system (server.js /
-// security/otpService.js) is allowed to call for SMS delivery. It
-// dispatches to a concrete provider based on SMS_GATEWAY_MODE.
-//
-// Only "local" is implemented — this server's own Android/Termux SIM (see
-// localGateway.js). There is intentionally no cloud/third-party SMS API
-// branch (no Twilio/MSG91/Vonage/AWS SNS/etc.) anywhere in this file or
-// this project, per the self-hosted-OTP requirement. Do not add one without
-// revisiting that requirement first.
-
 const localGateway = require("./localGateway");
 
-const MODE = process.env.SMS_GATEWAY_MODE || "local";
+const MODE = (process.env.SMS_GATEWAY_MODE || "local").toLowerCase();
+const REMOTE_URL = (process.env.SMS_GATEWAY_URL || "").replace(/\/+$/, "");
+const SECRET = process.env.SMS_API_SECRET || "";
 
-/**
- * @param {{to: string, message: string}} params - `to` should already be
- *   in the form the local gateway expects (e.g. "+919876543210").
- * @returns {Promise<{success: boolean, error?: string}>}
- *   `success` is true ONLY when the underlying gateway actually accepted
- *   the send request — this function never fabricates a success result.
- */
+async function sendRemoteSms({ to, message }) {
+    if (!REMOTE_URL) return { success: false, error: "SMS_GATEWAY_URL is not configured" };
+    if (!SECRET) return { success: false, error: "SMS_API_SECRET is not configured" };
+
+    try {
+        const response = await fetch(`${REMOTE_URL}/send-sms`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${SECRET}`
+            },
+            body: JSON.stringify({ phone: String(to), message: String(message) }),
+            signal: AbortSignal.timeout(25000)
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok || !data.success) {
+            return {
+                success: false,
+                error: data.error || `Remote SMS gateway HTTP ${response.status}`
+            };
+        }
+
+        console.log("[otp] Remote SMS gateway accepted");
+        return { success: true };
+    } catch (err) {
+        console.error("[SMS-GATEWAY] Remote gateway failed:", err.message);
+        return { success: false, error: "Remote SMS gateway unavailable" };
+    }
+}
+
 async function sendSms({ to, message }) {
     if (!to || !message) {
         return { success: false, error: "Missing destination number or message" };
     }
-    switch (MODE) {
-        case "local":
-            return localGateway.sendSms({ to, message });
-        default:
-            return { success: false, error: `Unknown SMS_GATEWAY_MODE "${MODE}" — only "local" is implemented` };
-    }
+
+    if (MODE === "remote") return sendRemoteSms({ to, message });
+    if (MODE === "local") return localGateway.sendSms({ to, message });
+
+    return { success: false, error: `Unknown SMS_GATEWAY_MODE "${MODE}"` };
 }
 
 module.exports = { sendSms };
