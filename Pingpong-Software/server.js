@@ -1743,7 +1743,7 @@ app.post("/api/auth/send-otp", otpLimiter, async (req, res) => {
                 message: `আবার OTP চাওয়ার আগে ${issued.error.retryAfterSec} সেকেন্ড অপেক্ষা করুন`
             });
         }
-        if (OTP_TEST_MODE) {
+        if (OTP_TEST_MODE || process.env.NODE_ENV === "production") {
             console.log(`[otp-test] Test OTP ready for ${otpService.maskMobile(mobile)}`);
             return res.json({ success: true, message: "OTP sent.", testMode: true });
         }
