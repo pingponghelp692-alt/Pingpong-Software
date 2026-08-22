@@ -1723,62 +1723,23 @@ function resolveUserKey(req) {
 // device's own Android/Termux SIM (sms/gateway.js -> sms/localGateway.js).
 // See docs/LOCAL_SMS_GATEWAY.md for the Termux:API setup this depends on.
 app.post("/api/auth/send-otp", otpLimiter, async (req, res) => {
-    const OTP_TEST_MODE = String(process.env.OTP_TEST_MODE || "").trim().toLowerCase() === "true";
-    const OTP_TEST_CODE = String(process.env.OTP_TEST_CODE || "123456").trim();
-
     try {
         const mobile = normalizeMobile(req.body.mobile);
-        if (!mobile || mobile.length !== 10) {
-            return res.json({ success: false, message: "Enter a 10 digit mobile number" });
+        if (!mobile || mobile.length !== 10) return res.json({success:false,message:"Enter a 10 digit mobile number"});
+        const issued = otpService.issueOtp(mobile);
+        if (issued.error) return res.json({success:false,code:issued.error.code,retryAfterSec:issued.error.retryAfterSec,message:`আবার OTP চাওয়ার আগে ${issued.error.retryAfterSec} সেকেন্ড অপেক্ষা করুন`});
+        const testMode = String(process.env.OTP_TEST_MODE || "").trim().toLowerCase() === "true";
+        if (testMode || process.env.NODE_ENV === "production") {
+            console.log(`[otp-test] Test mode active for ${otpService.maskMobile(mobile)}`);
+            return res.json({success:true,message:"OTP sent.",testMode:true});
         }
-        const existing = otpService.getActiveOtp ? otpService.getActiveOtp(mobile) : null;
-        const issued = existing || otpService.issueOtp(mobile);
-        if (issued.error) {
-            // Resend cooldown — a previous OTP for this number was issued
-            // less than OTP_RESEND_COOLDOWN_SECONDS ago and is still valid.
-            return res.json({
-                success: false,
-                code: issued.error.code,
-                retryAfterSec: issued.error.retryAfterSec,
-                message: `আবার OTP চাওয়ার আগে ${issued.error.retryAfterSec} সেকেন্ড অপেক্ষা করুন`
-            });
-        }
-        if (OTP_TEST_MODE || process.env.NODE_ENV === "production") {
-            console.log(`[otp-test] Test OTP ready for ${otpService.maskMobile(mobile)}`);
-            return res.json({ success: true, message: "OTP sent.", testMode: true });
-        }
-
-        const OTP_TEST_MODE = String(process.env.OTP_TEST_MODE || "").trim().toLowerCase() === "true";
-        const OTP_TEST_CODE = String(process.env.OTP_TEST_CODE || "123456").trim();
-
-        if (OTP_TEST_MODE) {
-            console.log(`[otp-test] Test OTP ready for ${otpService.maskMobile(mobile)}`);
-            return res.json({ success: true, message: "OTP sent.", testMode: true });
-        }
-
-        const ttlMin = Math.max(1, Math.round(otpService.OTP_TTL_MS / 60000));
-        const smsText = `${APP_NAME} verification code: ${issued.otp}\nValid for ${ttlMin} minutes.\nDo not share this code.`;
-        const smsResult = await smsGateway.sendSms({ to: "+91" + mobile, message: smsText });
-        if (!smsResult.success) {
-            // Never mark an OTP as delivered if the local SMS gateway did
-            // not actually accept the send — invalidate it immediately so
-            // it can't be silently reused, and let the client retry once
-            // the gateway (Termux:API / SIM / permissions) is working.
-            otpService.revokeOtp(mobile, issued.requestId);
-            console.error(`[otp] SMS gateway send failed for ${otpService.maskMobile(mobile)}: ${smsResult.error}`);
-            return res.json({
-                success: false,
-                code: "sms-gateway-unavailable",
-                message: "SMS gateway এই মুহূর্তে উপলব্ধ নেই — কিছুক্ষণ পরে আবার চেষ্টা করুন।"
-            });
-        }
-        console.log(`[otp] SMS gateway requested for ${otpService.maskMobile(mobile)}`);
-        console.log(`[otp] SMS gateway accepted`);
-        res.json({ success: true, message: "OTP sent." });
-    } catch (err) {
-        console.error("send-otp error:", err);
-        res.status(500).json({ success: false, message: "Server error" });
-    }
+        const ttlMin=Math.max(1,Math.round(otpService.OTP_TTL_MS/60000));
+        const smsText=`${APP_NAME} verification code: ${issued.otp}\\nValid for ${ttlMin} minutes.\\nDo not share this code.`;
+        const smsResult=await smsGateway.sendSms({to:"+91"+mobile,message:smsText});
+        if (!smsResult.success) { otpService.revokeOtp(mobile,issued.requestId); console.error(`[otp] SMS gateway send failed for ${otpService.maskMobile(mobile)}: ${smsResult.error}`); return res.json({success:false,code:"sms-gateway-unavailable",message:"SMS gateway এই মুহূর্তে উপলব্ধ নেই — কিছুক্ষণ পরে আবার চেষ্টা করুন।"}); }
+        console.log(`[otp] SMS gateway accepted for ${otpService.maskMobile(mobile)}`);
+        return res.json({success:true,message:"OTP sent."});
+    } catch(err) { console.error("send-otp error:",err); return res.status(500).json({success:false,message:"Server error"}); }
 });
 
 app.post("/api/auth/verify-otp", authLimiter, (req, res) => {
